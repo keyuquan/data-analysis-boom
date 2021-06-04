@@ -1,6 +1,7 @@
 package com.analysis.booms.common.utils;
 
-import com.analysis.nxd.common.conf.Config;
+
+import com.analysis.booms.common.conf.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

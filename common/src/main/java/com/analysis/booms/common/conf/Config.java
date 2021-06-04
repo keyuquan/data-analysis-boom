@@ -22,6 +22,12 @@ public class Config {
     public static String HDFS_URL;
     public static String BROKER_NAME;
     public static String PARTITION_MIN_TIME;
+
+    //mysql config
+    public static String USER_NAME;
+    public static String PASS_WORD;
+    public static String MYSQL_URL;
+
     static {
         //指定要读取的配置文件
         ResourceBundle bundle = ResourceBundle.getBundle("common");
@@ -35,6 +41,11 @@ public class Config {
         HDFS_URL = bundle.getString("hdfs.url").trim();
         BROKER_NAME = bundle.getString("broker.name").trim();
         PARTITION_MIN_TIME=bundle.getString("partition.min.time").trim();
+
+        USER_NAME = bundle.getString("mysql.username");
+        PASS_WORD = bundle.getString("mysql.password");
+        MYSQL_URL = bundle.getString("mysql.url");
+
         logger.info("----------  start  ------------- ");
         logger.info("----------  运行环境 : {}------------- ", ENV_ACTIVE);
     }
