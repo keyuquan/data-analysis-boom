@@ -3,17 +3,17 @@ package com.analysis.booms.source.ocean.entity;
 /**
  * 广告主ID 实体类
  */
-public class AdvertiserIdEntity {
+public class AdvertiserEntity {
     private int platform;
     private String accessToken;
     private String refreshToken;
     private int mainId;
     private String advertiserId; // 广告主ID
 
-    public AdvertiserIdEntity() {
+    public AdvertiserEntity() {
     }
 
-    public AdvertiserIdEntity(int platform, String accessToken, String refreshToken, int mainId, String advertiserId) {
+    public AdvertiserEntity(int platform, String accessToken, String refreshToken, int mainId, String advertiserId) {
         this.platform = platform;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;

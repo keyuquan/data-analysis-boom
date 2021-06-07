@@ -20,6 +20,7 @@ public class JsonUtils {
      **/
     public static void jsonToCsvAndSave(String provincesJsonString, String fileName) {
         try {
+            System.out.println(provincesJsonString);
             FileUtils.appendToFile(fileName, json2csv(provincesJsonString));
         } catch (JSONException e) {
             e.printStackTrace();

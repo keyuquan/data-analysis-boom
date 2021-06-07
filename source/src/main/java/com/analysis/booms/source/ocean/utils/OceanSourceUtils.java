@@ -1,6 +1,5 @@
 package com.analysis.booms.source.ocean.utils;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -24,33 +23,13 @@ public class OceanSourceUtils {
 
     public static String open_api_url_prefix = "https://ad.oceanengine.com/open_api/";
 
+
     /**
      * 获取广告计划配置
      *
      * @return
      */
-    public static JSONObject getAdPlanConf(String access_token, String advertiser_id, String ad_create_time, int page) {
-        // 拉取的字段
-        final String[] fields = new String[]{"id", "name", "budget", "budget_mode", "status", "opt_status", "open_url", "modify_time", "start_time", "end_time", "bid", "advertiser_id", "pricing", "flow_control_mode", "download_url", "quick_app_url", "schedule_type", "app_type", "cpa_bid", "cpa_skip_first_phrase", "external_url", "package", "campaign_id", "ad_modify_time", "ad_create_time", "audit_reject_reason", "retargeting_type", "retargeting_tags", "convert_id", "interest_tags", "hide_if_converted", "external_actions", "device_type", "auto_extend_enabled", "auto_extend_targets", "dpa_lbs", "dpa_city", "dpa_province", "dpa_recommend_type", "roi_goal", "subscribe_url", "form_id", "form_index", "app_desc", "app_thumbnails", "feed_delivery_search", "intelligent_flow_switch"}; //查询字段集合
-        // 请求参数
-        final Map<String, Object> filtering = new HashMap() {
-            {
-                put("ad_create_time", ad_create_time);
-            }
-        };
-        // 分页
-        final int page_size = 1000;
-        // 请求地址
-        String uri = "2/ad/get/";
-        Map<String, Object> data = new HashMap() {
-            {
-                put("advertiser_id", advertiser_id);
-                put("page", page);
-                put("page_size", page_size);
-                put("filtering", null);
-                put("fields", fields);
-            }
-        };
+    public static JSONObject getDataFromOcean(String access_token, String uri,  Map<String, Object> data, int page) {
         // 构造请求
         HttpEntityEnclosingRequestBase httpEntity = new HttpEntityEnclosingRequestBase() {
             @Override
@@ -92,6 +71,5 @@ public class OceanSourceUtils {
         }
         return null;
     }
-
 
 }
