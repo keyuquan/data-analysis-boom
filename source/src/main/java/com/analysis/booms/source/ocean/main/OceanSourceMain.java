@@ -17,11 +17,12 @@ public class OceanSourceMain {
     private final static Logger logger = LoggerFactory.getLogger(OceanSourceMain.class);
 
     public static void main(String[] args) {
-        BasicDataSource boomDataSource = JdbcHelper.getBoomDataSource();
+        BasicDataSource boomDataSource = JdbcHelper.getBoomsDataSource();
         List<AdvertiserIdEntity> list = AdvertiserDao.getTtPlatformTokenAdvertiserIdData(boomDataSource);
         for (int i = 0; i < list.size(); i++) {
             AdvertiserIdEntity s = list.get(i);
-            OceanSourceUtils.getAdPlanConf(s.getAccessToken(), s.getAdvertiserId(), "2021-06-04");
+            System.out.println(s.toString());
+            OceanSourceUtils.getAdPlanConf(s.getAccessToken(), s.getAdvertiserId(), "2021-06-07");
         }
     }
 }

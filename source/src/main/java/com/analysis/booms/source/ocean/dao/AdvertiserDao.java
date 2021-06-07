@@ -25,7 +25,7 @@ public class AdvertiserDao {
                     "platform_token t\n" +
                     "join  advertiser_id  a \n" +
                     "on t.main_id=a.main_id\n" +
-                    "where  t.platform=10";
+                    "where  t.platform=1 ";
             List<AdvertiserIdEntity> list = new QueryRunner(datasource).query(sql, new BeanListHandler<>(AdvertiserIdEntity.class));
             return list;
         } catch (SQLException e) {
@@ -33,13 +33,5 @@ public class AdvertiserDao {
             return null;
         }
     }
-//
-//    public static void main(String[] args) {
-//
-//        List<AdvertiserId> list = getTtPlatformTokenAdvertiserIdData(JdbcHelper.getBoomDataSource());
-//        for (int i = 0; i < list.size(); i++) {
-//            AdvertiserId s = list.get(i);
-//            System.out.println(s.toString());
-//        }
-//    }
+
 }

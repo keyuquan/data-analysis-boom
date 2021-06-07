@@ -1,7 +1,7 @@
 package com.analysis.booms.source.utils;
 
 
-import com.analysis.booms.source.common.conf.Config;
+import com.analysis.booms.common.conf.Config;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.SQLException;
@@ -13,35 +13,35 @@ import java.sql.SQLException;
 public class JdbcHelper {
 
     // baoliang 数据库连接
-    private static BasicDataSource datasource_boom;
+    private static BasicDataSource datasource_booms;
 
-    public static BasicDataSource getBoomDataSource() {
-        if (datasource_boom == null) {
+    public static BasicDataSource getBoomsDataSource() {
+        if (datasource_booms == null) {
             System.out.println("JdbcHelper getDataSource----------------------");
-            datasource_boom = new BasicDataSource();
-            datasource_boom.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            datasource_boom.setUrl(Config.MYSQL_URL);
-            datasource_boom.setUsername(Config.USER_NAME);
-            datasource_boom.setPassword(Config.PASS_WORD);
-            datasource_boom.setPoolPreparedStatements(true);
-            datasource_boom.setInitialSize(2);//初始化的连接数
-            datasource_boom.setMaxIdle(2);//最大空闲数
-            datasource_boom.setMinIdle(1);//最小空闲
-            datasource_boom.setTimeBetweenEvictionRunsMillis(6000L);
-            datasource_boom.setMinEvictableIdleTimeMillis(300000L);
-            datasource_boom.setValidationQuery("SELECT 1 FROM DUAL");
+            datasource_booms = new BasicDataSource();
+            datasource_booms.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            datasource_booms.setUrl(Config.MYSQL_URL);
+            datasource_booms.setUsername(Config.USER_NAME);
+            datasource_booms.setPassword(Config.PASS_WORD);
+            datasource_booms.setPoolPreparedStatements(true);
+            datasource_booms.setInitialSize(2);//初始化的连接数
+            datasource_booms.setMaxIdle(2);//最大空闲数
+            datasource_booms.setMinIdle(1);//最小空闲
+            datasource_booms.setTimeBetweenEvictionRunsMillis(6000L);
+            datasource_booms.setMinEvictableIdleTimeMillis(300000L);
+            datasource_booms.setValidationQuery("SELECT 1 FROM DUAL");
         }
-        return datasource_boom;
+        return datasource_booms;
     }
 
     public static synchronized void Close() {
-        if (datasource_boom != null) {
+        if (datasource_booms != null) {
             try {
-                datasource_boom.close();
+                datasource_booms.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            datasource_boom = null;
+            datasource_booms = null;
         }
     }
 

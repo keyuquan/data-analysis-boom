@@ -155,46 +155,6 @@ public class JdbcUtils {
         }
     }
 
-    /**
-     * 把 hdfs数据加载到 doris
-     *
-     * @throws SQLException
-     */
-    public static void LoadHdfsToDoris(Connection conn, String label, String dataUrl, String dbName, String tableName, String columnsNames) throws SQLException {
-
-        String SYSTEM_DATE = DateUtils.getSysFullDateNUmber();
-        String HDFS_URL = Config.HDFS_URL + dataUrl + "/part-*";
-        String BROKER_NAME = Config.BROKER_NAME;
-        String DORIS_USER = Config.DORIS_USER;
-        String DORIS_PASSWORD = Config.DORIS_PASSWORD;
-
-        String sql_load = "LOAD LABEL dbName.tableName_SYSTEM_DATE\n" +
-                "(\n" +
-                "    DATA INFILE(\"HDFS_URL\")\n" +
-                "    INTO TABLE tableName\n" +
-                "    COLUMNS TERMINATED BY \"|\"\n" +
-                "    (columnsNames)\n" +
-                ")\n" +
-                "WITH BROKER 'BROKER_NAME'\n" +
-                "(\n" +
-                "    \"username\"=\"DORIS_USER\",\n" +
-                "    \"password\"=\"DORIS_PASSWORD\"\n" +
-                ")\n" +
-                "PROPERTIES\n" +
-                "(\n" +
-                "    \"timeout\" = \"3600\"\n" +
-                ")";
-
-        JdbcUtils.execute(conn, label, sql_load.replace("SYSTEM_DATE", SYSTEM_DATE)
-                .replace("HDFS_URL", HDFS_URL)
-                .replace("dbName", dbName)
-                .replace("tableName", tableName)
-                .replace("columnsNames", columnsNames)
-                .replace("BROKER_NAME", BROKER_NAME)
-                .replace("DORIS_USER", DORIS_USER)
-                .replace("DORIS_PASSWORD", DORIS_PASSWORD)
-        );
-    }
 
 }
 
