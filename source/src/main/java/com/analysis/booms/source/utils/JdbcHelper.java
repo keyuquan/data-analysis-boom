@@ -34,7 +34,7 @@ public class JdbcHelper {
         return datasource_booms;
     }
 
-    public static synchronized void Close() {
+    public static  void close() {
         if (datasource_booms != null) {
             try {
                 datasource_booms.close();

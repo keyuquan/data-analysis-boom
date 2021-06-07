@@ -25,7 +25,7 @@ public class AdvertiserDao {
                     "platform_token t\n" +
                     "join  advertiser_id  a \n" +
                     "on t.main_id=a.main_id\n" +
-                    "where  t.platform=1 ";
+                    "where  t.platform=1 limit 1 ";
             List<AdvertiserIdEntity> list = new QueryRunner(datasource).query(sql, new BeanListHandler<>(AdvertiserIdEntity.class));
             return list;
         } catch (SQLException e) {
