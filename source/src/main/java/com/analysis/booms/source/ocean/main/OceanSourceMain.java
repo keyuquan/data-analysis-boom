@@ -26,11 +26,13 @@ public class OceanSourceMain {
         // ocean_ad_plan_data   广告计划数据
         // ocean_ad_creative_conf   广告创意配置
         // ocean_ad_creative_data   广告创意数据
-
         String dataMode = args[0];
 
+        //  获取广告Id 数据
         BasicDataSource boomDataSource = JdbcHelper.getBoomsDataSource();
         List<AdvertiserEntity> list = AdvertiserDao.getTtPlatformTokenAdvertiserIdData(boomDataSource);
+
+        //  遍历广告Id,获取对应数据
         for (int i = 0; i < list.size(); i++) {
             AdvertiserEntity s = list.get(i);
             logger.info("AdvertiserEntity : {} ", s.toString());
@@ -56,14 +58,12 @@ public class OceanSourceMain {
 //                                    put("ad_create_time", "2021-06-07");
 //                                }
 //                            });
-                            put("fields", null);
+                            put("fields", finalFields);
                         }
                     };
                 } else if (dataMode.equals("ocean_ad_plan_data")) {
                     // ocean_ad_plan_data   广告计划数据
                     uri = "2/report/ad/get/";
-                    fields = new String[]{"id", "name", "budget", "budget_mode", "status", "opt_status", "open_url", "modify_time", "start_time", "end_time", "bid", "advertiser_id", "pricing", "flow_control_mode", "download_url", "quick_app_url", "schedule_type", "app_type", "cpa_bid", "cpa_skip_first_phrase", "external_url", "package", "campaign_id", "ad_modify_time", "ad_create_time", "audit_reject_reason", "retargeting_type", "retargeting_tags", "convert_id", "interest_tags", "hide_if_converted", "external_actions", "device_type", "auto_extend_enabled", "auto_extend_targets", "dpa_lbs", "dpa_city", "dpa_province", "dpa_recommend_type", "roi_goal", "subscribe_url", "form_id", "form_index", "app_desc", "app_thumbnails", "feed_delivery_search", "intelligent_flow_switch"}; //查询字段集合
-                    String[] finalFields = fields;
                     map = new HashMap() {
                         {
                             put("advertiser_id", s.getAdvertiserId());
@@ -113,8 +113,7 @@ public class OceanSourceMain {
                     JSONArray listData = data.getJSONArray("list");
                     JSONObject page_info = data.getJSONObject("page_info");
                     total_page = page_info.getInteger("total_page");
-                    current_page = page_info.getInteger("page") + 1;
-                    // logger.info("page_info : {} ", page_info);
+                    logger.info("page_info : {} ", page_info);
                     if (dataMode.equals("ocean_ad_plan_conf")) {
                         JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告计划配置表_" + s.getAdvertiserId() + ".csv");
                     } else if (dataMode.equals("ocean_ad_plan_data")) {
@@ -124,11 +123,11 @@ public class OceanSourceMain {
                     } else if (dataMode.equals("ocean_ad_creative_data")) {
                         JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告创意数据表_" + s.getAdvertiserId() + ".csv");
                     }
+                    current_page = page_info.getInteger("page") + 1;
                 }
-                //logger.info("object : {} ", object.toJSONString());
+                current_page = current_page + 1;
             } while (current_page <= total_page);
         }
         JdbcHelper.close();
-
     }
 }
