@@ -1,7 +1,7 @@
-package com.analysis.booms.utils;
+package com.analysis.booms.source.utils;
 
 
-import com.analysis.booms.common.conf.Config;
+import com.analysis.booms.source.common.conf.Config;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.SQLException;
