@@ -29,6 +29,9 @@ public class Config {
     public static String PRESTO_USER;
     public static String PRESTO_PASSWORD;
 
+    // kafka config
+    public static String KAFKA_SERVERS;
+
     static {
         //指定要读取的配置文件
         ResourceBundle bundle = ResourceBundle.getBundle("common");
@@ -46,6 +49,8 @@ public class Config {
         PRESTO_URL = bundle.getString("presto.url").trim();
         PRESTO_USER = bundle.getString("presto.user").trim();
         PRESTO_PASSWORD = bundle.getString("presto.password").trim();
+
+        KAFKA_SERVERS = bundle.getString("kafka.bootstrap.servers").trim();
 
         logger.info("----------  start  ------------- ");
         logger.info("----------  运行环境 : {}------------- ", ENV_ACTIVE);
