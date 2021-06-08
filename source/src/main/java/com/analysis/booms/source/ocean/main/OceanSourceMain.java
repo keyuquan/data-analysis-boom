@@ -6,7 +6,7 @@ import com.analysis.booms.source.ocean.dao.AdvertiserDao;
 import com.analysis.booms.source.ocean.entity.AdvertiserEntity;
 import com.analysis.booms.source.ocean.utils.JsonUtils;
 import com.analysis.booms.source.ocean.utils.OceanSourceUtils;
-import com.analysis.booms.source.utils.JdbcHelper;
+import com.analysis.booms.source.ocean.utils.JdbcHelper;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

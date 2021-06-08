@@ -1,4 +1,4 @@
-package com.analysis.booms.source.utils;
+package com.analysis.booms.source.ocean.utils;
 
 
 import com.analysis.booms.common.conf.Config;

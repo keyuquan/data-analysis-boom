@@ -24,6 +24,11 @@ public class Config {
     public static String PASS_WORD;
     public static String MYSQL_URL;
 
+    // presto config
+    public static String PRESTO_URL;
+    public static String PRESTO_USER;
+    public static String PRESTO_PASSWORD;
+
     static {
         //指定要读取的配置文件
         ResourceBundle bundle = ResourceBundle.getBundle("common");
@@ -37,6 +42,10 @@ public class Config {
         USER_NAME = bundle.getString("mysql.username");
         PASS_WORD = bundle.getString("mysql.password");
         MYSQL_URL = bundle.getString("mysql.url");
+
+        PRESTO_URL = bundle.getString("presto.url").trim();
+        PRESTO_USER = bundle.getString("presto.user").trim();
+        PRESTO_PASSWORD = bundle.getString("presto.password").trim();
 
         logger.info("----------  start  ------------- ");
         logger.info("----------  运行环境 : {}------------- ", ENV_ACTIVE);
