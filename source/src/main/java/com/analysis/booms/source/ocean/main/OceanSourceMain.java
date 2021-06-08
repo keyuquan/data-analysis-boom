@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.analysis.booms.source.ocean.dao.AdvertiserDao;
 import com.analysis.booms.source.ocean.entity.AdvertiserEntity;
-import com.analysis.booms.source.ocean.utils.JsonUtils;
 import com.analysis.booms.source.ocean.utils.OceanSourceUtils;
 import com.analysis.booms.source.ocean.utils.JdbcHelper;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -115,13 +114,13 @@ public class OceanSourceMain {
                     total_page = page_info.getInteger("total_page");
                     logger.info("page_info : {} ", page_info);
                     if (dataMode.equals("ocean_ad_plan_conf")) {
-                        JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告计划配置表_" + s.getAdvertiserId() + ".csv");
+                       // JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告计划配置表_" + s.getAdvertiserId() + ".csv");
                     } else if (dataMode.equals("ocean_ad_plan_data")) {
-                        JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告计划数据表_" + s.getAdvertiserId() + ".csv");
+                       // JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告计划数据表_" + s.getAdvertiserId() + ".csv");
                     } else if (dataMode.equals("ocean_ad_creative_conf")) {
-                        JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告创意配置表_" + s.getAdvertiserId() + ".csv");
+                       // JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告创意配置表_" + s.getAdvertiserId() + ".csv");
                     } else if (dataMode.equals("ocean_ad_creative_data")) {
-                        JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告创意数据表_" + s.getAdvertiserId() + ".csv");
+                      //  JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告创意数据表_" + s.getAdvertiserId() + ".csv");
                     }
                     current_page = page_info.getInteger("page") + 1;
                 }
