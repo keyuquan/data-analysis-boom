@@ -14,8 +14,8 @@ import java.util.Map;
 /**
  * 巨量广告数据拉取:ocean_ad_plan_conf
  */
-public class OceanAdPlanDataMain {
-    private final static Logger logger = LoggerFactory.getLogger(OceanAdPlanDataMain.class);
+public class AdPlanDataMain {
+    private final static Logger logger = LoggerFactory.getLogger(AdPlanDataMain.class);
 
     public static void main(String[] args) throws Exception {
         // ocean_ad_plan_conf   广告计划配置

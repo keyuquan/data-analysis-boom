@@ -40,7 +40,7 @@ public class JdbcUtils {
      * @throws SQLException
      */
     public static Connection getDtConnection() throws SQLException {
-        conn_dt = DriverManager.getConnection(Config.MYSQL_DT_URL, Config.DORIS_USER, Config.DORIS_PASSWORD);
+        conn_dt = DriverManager.getConnection(Config.MYSQL_DT_URL, Config.USER_NAME, Config.PASS_WORD);
         logger.info("获取mysql连接:" + Config.DORIS_URL);
         return conn_dt;
     }

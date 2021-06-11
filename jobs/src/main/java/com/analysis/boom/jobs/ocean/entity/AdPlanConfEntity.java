@@ -117,7 +117,7 @@ public class AdPlanConfEntity {
         }
 
         @JsonIgnoreProperties(ignoreUnknown = true)
-        public static class ListDTO implements Serializable {
+        public static class ListDTO extends AdPlanConfEntity implements Serializable {
             @JsonProperty("app_type")
             private String appType;
             @JsonProperty("modify_time")

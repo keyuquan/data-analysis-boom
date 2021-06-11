@@ -2,13 +2,13 @@ package com.analysis.boom.jobs.ocean.main;
 
 import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.utils.JdbcUtils;
+import com.analysis.boom.jobs.ocean.dao.AdPlanConfDao;
 import com.analysis.boom.jobs.ocean.dao.AdvertiserDao;
 import com.analysis.boom.jobs.ocean.entity.AdPlanConfEntity;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
 import com.analysis.boom.jobs.ocean.utils.OceanSourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +17,8 @@ import java.util.Map;
 /**
  * 巨量广告数据拉取 :ocean_ad_plan_data
  */
-public class OceanAdPlanConfMain {
-    private final static Logger logger = LoggerFactory.getLogger(OceanAdPlanConfMain.class);
+public class AdPlanConfMain {
+    private final static Logger logger = LoggerFactory.getLogger(AdPlanConfMain.class);
 
     public static void main(String[] args) throws Exception {
         //  获取数据库连接
@@ -59,10 +59,10 @@ public class OceanAdPlanConfMain {
                 if (data == null) {
                     continue;
                 }
+                // 存入数据库
                 List<AdPlanConfEntity.DataDTO.ListDTO> list = data.getList();
-                for (AdPlanConfEntity.DataDTO.ListDTO dto : list) {
-                    System.out.println(JSONObject.toJSONString(dto));
-                }
+                AdPlanConfDao.batch(dtConnection, list);
+
                 AdPlanConfEntity.DataDTO.PageInfoDTO pageInfo = data.getPageInfo();
                 currentPage = pageInfo.getPage() + 1;
                 totalPage = pageInfo.getTotalPage();
