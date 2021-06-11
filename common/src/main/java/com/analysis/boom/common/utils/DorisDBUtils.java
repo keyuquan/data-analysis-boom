@@ -17,7 +17,7 @@ public class DorisDBUtils {
      */
     static {
         try {
-            Class.forName(Config.DORIS_DRIVER);//注册加载驱动
+            Class.forName(Config.JDBC_DRIVER);//注册加载驱动
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

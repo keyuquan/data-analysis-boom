@@ -14,16 +14,17 @@ import java.util.ResourceBundle;
 public class Config {
     private static final Logger logger = LoggerFactory.getLogger(Config.class);
     public static String ENV_ACTIVE;
-    public static String DORIS_DRIVER;
+    public static String JDBC_DRIVER;
     public static String DORIS_URL;
     public static String DORIS_LOAD_URL;
     public static String DORIS_USER;
     public static String DORIS_PASSWORD;
 
-    //mysql config
+    //booms  mysql config
     public static String USER_NAME;
     public static String PASS_WORD;
     public static String MYSQL_URL;
+    public static String MYSQL_DT_URL;
 
     // presto config
     public static String PRESTO_URL;
@@ -39,22 +40,23 @@ public class Config {
         ResourceBundle bundle = ResourceBundle.getBundle("common");
         //获取配置文件里面内容
         ENV_ACTIVE = bundle.getString("env.active").trim();
-        DORIS_DRIVER = bundle.getString("doris.driver").trim();
+        JDBC_DRIVER = bundle.getString("jdbc.driver").trim();
         DORIS_URL = bundle.getString("doris.url").trim();
-        DORIS_LOAD_URL= bundle.getString("doris.load.url").trim();
+        DORIS_LOAD_URL = bundle.getString("doris.load.url").trim();
         DORIS_USER = bundle.getString("doris.user").trim();
         DORIS_PASSWORD = bundle.getString("doris.password").trim();
 
         USER_NAME = bundle.getString("mysql.username");
         PASS_WORD = bundle.getString("mysql.password");
         MYSQL_URL = bundle.getString("mysql.url");
+        MYSQL_DT_URL = bundle.getString("mysql.dt.url");
 
         PRESTO_URL = bundle.getString("presto.url").trim();
         PRESTO_USER = bundle.getString("presto.user").trim();
         PRESTO_PASSWORD = bundle.getString("presto.password").trim();
 
         KAFKA_SERVERS = bundle.getString("kafka.bootstrap.servers").trim();
-        ZOOKEEPER_SERVERS= bundle.getString("kafka.zookeeper.connect").trim();
+        ZOOKEEPER_SERVERS = bundle.getString("kafka.zookeeper.connect").trim();
         logger.info("----------  start  ------------- ");
         logger.info("----------  运行环境 : {}------------- ", ENV_ACTIVE);
     }

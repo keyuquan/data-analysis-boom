@@ -28,7 +28,7 @@ public class OceanSourceUtils {
      *
      * @return
      */
-    public static JSONObject getDataFromOcean(String access_token, String uri,  Map<String, Object> data, int page) {
+    public static String getDataFromOcean(String access_token, String uri,  Map<String, Object> data) {
         // 构造请求
         HttpEntityEnclosingRequestBase httpEntity = new HttpEntityEnclosingRequestBase() {
             @Override
@@ -52,7 +52,7 @@ public class OceanSourceUtils {
                     result.append(line);
                 }
                 bufferedReader.close();
-                return JSONObject.parseObject(result.toString());
+                return result.toString();
             }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
