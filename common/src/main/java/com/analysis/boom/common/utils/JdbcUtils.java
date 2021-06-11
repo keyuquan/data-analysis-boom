@@ -30,7 +30,7 @@ public class JdbcUtils {
      */
     public static Connection getBoomConnection() throws Exception {
         conn_boom = DriverManager.getConnection(Config.MYSQL_URL, Config.USER_NAME, Config.PASS_WORD);
-        logger.info("获取mysql连接:" + Config.DORIS_URL);
+        logger.info("获取mysql连接:" + Config.MYSQL_URL);
         return conn_boom;
     }
     /**
@@ -41,7 +41,7 @@ public class JdbcUtils {
      */
     public static Connection getDtConnection() throws SQLException {
         conn_dt = DriverManager.getConnection(Config.MYSQL_DT_URL, Config.USER_NAME, Config.PASS_WORD);
-        logger.info("获取mysql连接:" + Config.DORIS_URL);
+        logger.info("获取mysql连接:" + Config.MYSQL_DT_URL);
         return conn_dt;
     }
 

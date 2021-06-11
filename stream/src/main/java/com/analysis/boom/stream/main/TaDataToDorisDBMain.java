@@ -2,11 +2,9 @@ package com.analysis.boom.stream.main;
 
 import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.utils.DateUtils;
-import com.analysis.boom.stream.entity.DataObjectEntity;
 import com.analysis.boom.stream.entity.TaDataEntity;
 import com.analysis.boom.stream.sink.DataSink;
 import com.analysis.boom.stream.source.DataSource;
-import com.analysis.boom.stream.entity.DataEntity;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -18,7 +16,7 @@ import org.apache.flink.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 读取数数kafka的数据，存储在DorisDB
@@ -47,18 +45,18 @@ public class TaDataToDorisDBMain {
 
                 TaDataEntity taDataEntity = JSONObject.parseObject(str, TaDataEntity.class);
                 // 第一层数据解析
-                DataObjectEntity dataObjectEntity = taDataEntity.getDataObject();
-                String appId = taDataEntity.getAppId();
+                TaDataEntity.DataObjectDTO dataObjectEntity = taDataEntity.getDataObject();
+                String appId = taDataEntity.getAppid();
                 if (dataObjectEntity == null || StringUtils.isNullOrWhitespaceOnly(appId)) {
                     return;
                 }
                 //第二层数据解析
-                ArrayList<DataEntity> data = dataObjectEntity.getData();
+                List<TaDataEntity.DataObjectDTO.DataDTO> data = dataObjectEntity.getData();
                 if (data == null || data.size() == 0) {
                     return;
                 }
                 // 第三层数据解析
-                for (DataEntity dataEntity : data) {
+                for (TaDataEntity.DataObjectDTO.DataDTO dataEntity : data) {
                     String distinctId = dataEntity.getDistinctId();
                     String time = dataEntity.getTime();
                     String eventName = dataEntity.getEventName();

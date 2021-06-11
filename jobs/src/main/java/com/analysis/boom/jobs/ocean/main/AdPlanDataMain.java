@@ -1,8 +1,14 @@
 package com.analysis.boom.jobs.ocean.main;
 
+import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.utils.JdbcUtils;
+import com.analysis.boom.jobs.ocean.dao.AdPlanConfDao;
+import com.analysis.boom.jobs.ocean.dao.AdPlanDataDao;
 import com.analysis.boom.jobs.ocean.dao.AdvertiserDao;
+import com.analysis.boom.jobs.ocean.entity.AdPlanConfEntity;
+import com.analysis.boom.jobs.ocean.entity.AdPlanDataEntity;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
+import com.analysis.boom.jobs.ocean.utils.OceanSourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,115 +18,60 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 巨量广告数据拉取:ocean_ad_plan_conf
+ * 巨量广告数据拉取 :ocean_ad_plan_data
  */
 public class AdPlanDataMain {
     private final static Logger logger = LoggerFactory.getLogger(AdPlanDataMain.class);
+    private static String uri = "2/report/ad/get/";
 
     public static void main(String[] args) throws Exception {
-        // ocean_ad_plan_conf   广告计划配置
-        // ocean_ad_plan_data   广告计划数据
-        String dataMode = args[0];
         //  获取广告Id 数据
         Connection boomConnection = JdbcUtils.getBoomConnection();
-        List<AdvertiserEntity> list = AdvertiserDao.getTtPlatformTokenAdvertiserIdData(boomConnection);
-
-        //  遍历广告Id,获取对应数据
-        for (int i = 0; i < list.size(); i++) {
-            AdvertiserEntity s = list.get(i);
-            logger.info("AdvertiserEntity : {} ", s.toString());
-            int total_page = 2;
-            int current_page = 1;
-            do {
-                String uri = "";
-                String[] fields;
-                int page = current_page;
-                Map<String, Object> map = null;
-                if (dataMode.equals("ocean_ad_plan_conf")) {
-                    // ocean_ad_plan_conf   广告计划配置
-                    uri = "2/ad/get/";
-                    fields = new String[]{"id", "name", "budget", "budget_mode", "status", "opt_status", "open_url", "modify_time", "start_time", "end_time", "bid", "advertiser_id", "pricing", "flow_control_mode", "download_url", "quick_app_url", "schedule_type", "app_type", "cpa_bid", "cpa_skip_first_phrase", "external_url", "package", "campaign_id", "ad_modify_time", "ad_create_time", "audit_reject_reason", "retargeting_type", "retargeting_tags", "convert_id", "interest_tags", "hide_if_converted", "external_actions", "device_type", "auto_extend_enabled", "auto_extend_targets", "dpa_lbs", "dpa_city", "dpa_province", "dpa_recommend_type", "roi_goal", "subscribe_url", "form_id", "form_index", "app_desc", "app_thumbnails", "feed_delivery_search", "intelligent_flow_switch"}; //查询字段集合
-                    String[] finalFields = fields;
-                    map = new HashMap() {
-                        {
-                            put("advertiser_id", s.getAdvertiserId());
-                            put("page", page);
-                            put("page_size", 1000);
-//                            put("filtering", new HashMap() {
-//                                {
-//                                    put("ad_create_time", "2021-06-07");
-//                                }
-//                            });
-                            put("fields", finalFields);
-                        }
-                    };
-                } else if (dataMode.equals("ocean_ad_plan_data")) {
-                    // ocean_ad_plan_data   广告计划数据
-                    uri = "2/report/ad/get/";
-                    map = new HashMap() {
-                        {
-                            put("advertiser_id", s.getAdvertiserId());
-                            put("page", page);
-                            put("page_size", 1000);
-                            put("start_date", "2021-06-01");
-                            put("end_date", "2021-06-07");
-                            put("group_by", new String[]{"STAT_GROUP_BY_FIELD_ID", "STAT_GROUP_BY_FIELD_STAT_TIME"});
-                            put("fields", null);
-                        }
-                    };
-                } else if (dataMode.equals("ocean_ad_creative_conf")) {
-                    // ocean_ad_creative_conf   广告创意配置
-                    uri = "2/creative/get/";
-                    map = new HashMap() {
-                        {
-                            put("advertiser_id", s.getAdvertiserId());
-                            put("page", page);
-                            put("page_size", 1000);
-                            put("'group_by'", new String[]{"STAT_GROUP_BY_FIELD_ID", "STAT_GROUP_BY_FIELD_STAT_TIME"});
-                            put("fields", null);
-//                            put("filtering", new HashMap() {
-//                                {
-//                                    put("creative_modify_time", "2021-06-07");
-//                                }
-//                            });
-                        }
-                    };
-                } else if (dataMode.equals("ocean_ad_creative_data")) {
-                    // ocean_ad_creative_data   广告创意数据
-                    uri = "2/report/creative/get/";
-                    map = new HashMap() {
-                        {
-                            put("advertiser_id", s.getAdvertiserId());
-                            put("page", page);
-                            put("page_size", 1000);
-                            put("start_date", "2021-05-10");
-                            put("end_date", "2021-06-07");
-                            put("group_by", new String[]{"STAT_GROUP_BY_FIELD_ID", "STAT_GROUP_BY_FIELD_STAT_TIME"});
-                            put("fields", null);
-                        }
-                    };
-                }
-//                JSONObject object = OceanSourceUtils.getDataFromOcean(s.getAccessToken(), uri, map, current_page);
-//                JSONObject data = object.getJSONObject("data");
-//                if (data != null) {
-//                    JSONArray listData = data.getJSONArray("list");
-//                    JSONObject page_info = data.getJSONObject("page_info");
-//                    total_page = page_info.getInteger("total_page");
-//                    logger.info("page_info : {} ", page_info);
-//                    if (dataMode.equals("ocean_ad_plan_conf")) {
-//                       // JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告计划配置表_" + s.getAdvertiserId() + ".csv");
-//                    } else if (dataMode.equals("ocean_ad_plan_data")) {
-//                       // JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告计划数据表_" + s.getAdvertiserId() + ".csv");
-//                    } else if (dataMode.equals("ocean_ad_creative_conf")) {
-//                       // JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告创意配置表_" + s.getAdvertiserId() + ".csv");
-//                    } else if (dataMode.equals("ocean_ad_creative_data")) {
-//                      //  JsonUtils.jsonToCsvAndSave(listData.toJSONString(), "广告创意数据表_" + s.getAdvertiserId() + ".csv");
-//                    }
-//                    current_page = page_info.getInteger("page") + 1;
-//                }
-                current_page = current_page + 1;
-            } while (current_page <= total_page);
-        }
+        List<AdvertiserEntity> adList = AdvertiserDao.getTtPlatformTokenAdvertiserIdData(boomConnection);
         JdbcUtils.closeBoom();
+
+        Connection dtConnection = JdbcUtils.getDtConnection();
+        //  遍历广告Id,获取对应数据
+        for (int i = 0; i < adList.size(); i++) {
+            AdvertiserEntity s = adList.get(i);
+            logger.info("AdvertiserEntity : {} ", s.toString());
+            int totalPage = 2;
+            int currentPage = 1;
+            do {
+                int page = currentPage;
+                Map<String, Object> map = new HashMap() {
+                    {
+                        put("advertiser_id", s.getAdvertiserId());
+                        put("page", page);
+                        put("page_size", 1000);
+                        put("start_date", "2021-06-01");
+                        put("end_date", "2021-06-11");
+                        put("group_by", new String[]{"STAT_GROUP_BY_FIELD_ID", "STAT_GROUP_BY_FIELD_STAT_TIME"});
+                        put("fields", null);
+                    }
+                };
+                String str = OceanSourceUtils.getDataFromOcean(s.getAccessToken(), uri, map);
+                AdPlanDataEntity adPlanDataEntity = JSONObject.parseObject(str, AdPlanDataEntity.class);
+                Integer code = adPlanDataEntity.getCode();
+                if (code != 0) {
+                    continue;
+                }
+                AdPlanDataEntity.DataDTO data = adPlanDataEntity.getData();
+                if (data == null) {
+                    continue;
+                }
+                // 存入数据库
+                List<AdPlanDataEntity.DataDTO.ListDTO> list = data.getList();
+                for (int j = 0; j < list.size(); j++) {
+                    System.out.println(JSONObject.toJSONString(list.get(j)));
+                }
+                AdPlanDataDao.batch(dtConnection, list);
+
+                AdPlanDataEntity.DataDTO.PageInfoDTO pageInfo = data.getPageInfo();
+                currentPage = pageInfo.getPage() + 1;
+                totalPage = pageInfo.getTotalPage();
+            } while (currentPage <= totalPage);
+        }
+        JdbcUtils.closeDt();
     }
 }

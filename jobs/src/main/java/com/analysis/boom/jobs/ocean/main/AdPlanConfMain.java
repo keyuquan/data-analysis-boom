@@ -19,14 +19,16 @@ import java.util.Map;
  */
 public class AdPlanConfMain {
     private final static Logger logger = LoggerFactory.getLogger(AdPlanConfMain.class);
-
+    private static String uri = "2/ad/get/";
     public static void main(String[] args) throws Exception {
         //  获取数据库连接
         Connection boomConnection = JdbcUtils.getBoomConnection();
+        List<AdvertiserEntity> adList = AdvertiserDao.getTtPlatformTokenAdvertiserIdData(boomConnection);
+        JdbcUtils.closeBoom();
+
         Connection dtConnection = JdbcUtils.getDtConnection();
         //  获取广告Id 数据
-        List<AdvertiserEntity> adList = AdvertiserDao.getTtPlatformTokenAdvertiserIdData(boomConnection);
-        String uri = "2/ad/get/";
+
         //  遍历广告Id,获取对应数据
         for (int i = 0; i < adList.size(); i++) {
             AdvertiserEntity s = adList.get(i);
@@ -68,7 +70,6 @@ public class AdPlanConfMain {
                 totalPage = pageInfo.getTotalPage();
             } while (currentPage <= totalPage);
         }
-        JdbcUtils.closeBoom();
         JdbcUtils.closeDt();
     }
 }
