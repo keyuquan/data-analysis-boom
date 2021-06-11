@@ -12,6 +12,7 @@
         <module>source</module>
         <module>doris</module>
         <module>common</module>
+        <module>stream</module>
     </modules>
 
     <properties>
