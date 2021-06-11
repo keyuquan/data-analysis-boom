@@ -90,9 +90,9 @@ public class DorisDBUtils {
 
     public static void main(String[] args) throws SQLException {
         List<List> list = new ArrayList<List>();
-        for (int i = 500000; i < 500100; i++) {
+        for (int i = 0; i < 100; i++) {
             List l = new ArrayList();
-            l.add("2021-06-09");
+            l.add("2021-06-10");
             l.add(100 + i);
             l.add(1000 + i);
             l.add(100 + i);

@@ -16,6 +16,7 @@ public class Config {
     public static String ENV_ACTIVE;
     public static String DORIS_DRIVER;
     public static String DORIS_URL;
+    public static String DORIS_LOAD_URL;
     public static String DORIS_USER;
     public static String DORIS_PASSWORD;
 
@@ -31,6 +32,7 @@ public class Config {
 
     // kafka config
     public static String KAFKA_SERVERS;
+    public static String ZOOKEEPER_SERVERS;
 
     static {
         //指定要读取的配置文件
@@ -39,6 +41,7 @@ public class Config {
         ENV_ACTIVE = bundle.getString("env.active").trim();
         DORIS_DRIVER = bundle.getString("doris.driver").trim();
         DORIS_URL = bundle.getString("doris.url").trim();
+        DORIS_LOAD_URL= bundle.getString("doris.load.url").trim();
         DORIS_USER = bundle.getString("doris.user").trim();
         DORIS_PASSWORD = bundle.getString("doris.password").trim();
 
@@ -51,7 +54,7 @@ public class Config {
         PRESTO_PASSWORD = bundle.getString("presto.password").trim();
 
         KAFKA_SERVERS = bundle.getString("kafka.bootstrap.servers").trim();
-
+        ZOOKEEPER_SERVERS= bundle.getString("kafka.zookeeper.connect").trim();
         logger.info("----------  start  ------------- ");
         logger.info("----------  运行环境 : {}------------- ", ENV_ACTIVE);
     }
