@@ -17,7 +17,16 @@ public class AdPlanConfDao {
      */
     public static void batch(Connection conn, List<AdPlanConfEntity.DataDTO.ListDTO> list) throws SQLException {
         QueryRunner queryRunner = new QueryRunner();
-        String sql = "insert  into ocean_ad_plan_conf(ad_id,name,advertiser_id,campaign_id,status,ad_create_time,modify_time,ad_modify_time) values(?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE name=?,advertiser_id=?,campaign_id=?,status=?,ad_create_time=?,modify_time=?,ad_modify_time=? ";
+        String sql = "insert  into ocean_ad_plan_conf(ad_id,name,advertiser_id,campaign_id,status,ad_create_time,modify_time,ad_modify_time) " +
+                "values(?,?,?,?,?,?,?,?) " +
+                "ON DUPLICATE KEY UPDATE " +
+                "name=?," +
+                "advertiser_id=?," +
+                "campaign_id=?," +
+                "status=?," +
+                "ad_create_time=?," +
+                "modify_time=?," +
+                "ad_modify_time=? ";
         Object[][] arr = new Object[list.size()][15];
         for (int i = 0; i < list.size(); i++) {
             AdPlanConfEntity.DataDTO.ListDTO listDTO = list.get(i);

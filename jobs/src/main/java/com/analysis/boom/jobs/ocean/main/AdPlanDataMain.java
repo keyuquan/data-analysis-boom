@@ -61,11 +61,7 @@ public class AdPlanDataMain {
                     continue;
                 }
                 // 存入数据库
-                List<AdPlanDataEntity.DataDTO.ListDTO> list = data.getList();
-                for (int j = 0; j < list.size(); j++) {
-                    System.out.println(JSONObject.toJSONString(list.get(j)));
-                }
-                AdPlanDataDao.batch(dtConnection, list);
+                AdPlanDataDao.batch(dtConnection, data.getList());
 
                 AdPlanDataEntity.DataDTO.PageInfoDTO pageInfo = data.getPageInfo();
                 currentPage = pageInfo.getPage() + 1;
