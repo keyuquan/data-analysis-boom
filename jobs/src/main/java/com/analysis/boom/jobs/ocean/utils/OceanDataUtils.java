@@ -28,7 +28,7 @@ public class OceanDataUtils {
      *
      * @return
      */
-    public static String getDataFromOcean(String access_token, String uri,  Map<String, Object> data) {
+    public static String getDataFromOcean(String access_token, String uri, Map<String, Object> data) {
         // 构造请求
         HttpEntityEnclosingRequestBase httpEntity = new HttpEntityEnclosingRequestBase() {
             @Override
@@ -63,7 +63,9 @@ public class OceanDataUtils {
                 if (response != null) {
                     response.close();
                 }
-                client.close();
+                if (client != null) {
+                    client.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
