@@ -6,11 +6,10 @@ import com.analysis.boom.jobs.ocean.dao.AdPlanDataDao;
 import com.analysis.boom.jobs.ocean.dao.AdvertiserDao;
 import com.analysis.boom.jobs.ocean.entity.AdPlanDataEntity;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
-import com.analysis.boom.jobs.ocean.utils.OceanSourceUtils;
+import com.analysis.boom.jobs.ocean.utils.OceanDataUtils;
 import com.analysis.boom.jobs.utils.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -54,6 +53,7 @@ public class AdPlanDataMain {
      * @param dtConnection
      */
     public static void insertAdPlanDataToDT(AdvertiserEntity s, Connection dtConnection) {
+        logger.error(JSONObject.toJSONString(s));
         int totalPage = 2;
         int currentPage = 1;
         do {
@@ -69,7 +69,7 @@ public class AdPlanDataMain {
                     put("fields", null);
                 }
             };
-            String str = OceanSourceUtils.getDataFromOcean(s.getAccessToken(), uri, map);
+            String str = OceanDataUtils.getDataFromOcean(s.getAccessToken(), uri, map);
             AdPlanDataEntity adPlanDataEntity = JSONObject.parseObject(str, AdPlanDataEntity.class);
             Integer code = adPlanDataEntity.getCode();
             if (code != 0) {

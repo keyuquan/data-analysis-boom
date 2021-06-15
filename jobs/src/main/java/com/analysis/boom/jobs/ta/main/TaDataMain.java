@@ -1,16 +1,14 @@
-package com.analysis.boom.jobs.shushu.main;
+package com.analysis.boom.jobs.ta.main;
 
 import com.alibaba.fastjson.JSONObject;
-import com.analysis.boom.jobs.shushu.utils.PrestoUtils;
-
-
+import com.analysis.boom.jobs.ta.utils.PrestoUtils;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ShuSourceMain {
+public class TaDataMain {
 
     public static void main(String[] args) throws SQLException {
         Connection conn = PrestoUtils.getConnection();

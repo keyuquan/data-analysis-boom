@@ -6,11 +6,10 @@ import com.analysis.boom.jobs.ocean.dao.AdPlanConfDao;
 import com.analysis.boom.jobs.ocean.dao.AdvertiserDao;
 import com.analysis.boom.jobs.ocean.entity.AdPlanConfEntity;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
-import com.analysis.boom.jobs.ocean.utils.OceanSourceUtils;
+import com.analysis.boom.jobs.ocean.utils.OceanDataUtils;
 import com.analysis.boom.jobs.utils.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -54,7 +53,7 @@ public class AdPlanConfMain {
      * @param dtConnection
      */
     public static void insertAdPlanConfDataToDT(AdvertiserEntity s, Connection dtConnection) {
-        System.out.println(JSONObject.toJSONString(s));
+        logger.error(JSONObject.toJSONString(s));
         //  遍历广告Id,获取对应数据
         int totalPage = 2;
         int currentPage = 1;
@@ -74,7 +73,7 @@ public class AdPlanConfMain {
                     put("fields", fields);
                 }
             };
-            String str = OceanSourceUtils.getDataFromOcean(s.getAccessToken(), uri, map);
+            String str = OceanDataUtils.getDataFromOcean(s.getAccessToken(), uri, map);
             AdPlanConfEntity adPlanConfEntity = JSONObject.parseObject(str, AdPlanConfEntity.class);
             Integer code = adPlanConfEntity.getCode();
             if (code != 0) {

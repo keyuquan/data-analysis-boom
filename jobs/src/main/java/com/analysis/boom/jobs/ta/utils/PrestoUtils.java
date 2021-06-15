@@ -1,4 +1,4 @@
-package com.analysis.boom.jobs.shushu.utils;
+package com.analysis.boom.jobs.ta.utils;
 
 
 import com.analysis.boom.common.conf.Config;

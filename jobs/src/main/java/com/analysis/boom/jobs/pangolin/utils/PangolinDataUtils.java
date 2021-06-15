@@ -1,4 +1,4 @@
-package com.analysis.boom.jobs.ocean.utils;
+package com.analysis.boom.jobs.pangolin.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.client.ClientProtocolException;
@@ -18,9 +18,9 @@ import java.util.Map;
 /**
  * 巨量平台数据同步工具类
  */
-public class OceanSourceUtils {
+public class PangolinDataUtils {
 
-    public static String open_api_url_prefix = "https://ad.oceanengine.com/open_api/";
+    public static String open_api_url_prefix = "https://partner.oceanengine.com/union/media/open/api/report/app";
 
 
     /**
@@ -28,7 +28,7 @@ public class OceanSourceUtils {
      *
      * @return
      */
-    public static String getDataFromOcean(String access_token, String uri,  Map<String, Object> data) {
+    public static String getDataFromPangolin(String access_token, String uri,  Map<String, Object> data) {
         // 构造请求
         HttpEntityEnclosingRequestBase httpEntity = new HttpEntityEnclosingRequestBase() {
             @Override
