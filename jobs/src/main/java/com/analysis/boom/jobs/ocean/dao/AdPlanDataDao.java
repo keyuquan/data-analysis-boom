@@ -1,6 +1,5 @@
 package com.analysis.boom.jobs.ocean.dao;
 
-import com.analysis.boom.jobs.ocean.entity.AdPlanConfEntity;
 import com.analysis.boom.jobs.ocean.entity.AdPlanDataEntity;
 import org.apache.commons.dbutils.QueryRunner;
 
