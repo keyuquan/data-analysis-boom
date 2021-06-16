@@ -28,9 +28,9 @@ public class AdPlanDataMain {
     public static void main(String[] args) throws Exception {
         String startDate = DateUtils.getStartDay();
         String endDate = DateUtils.getEndDay();
-        if (args.length >= 1) {
+        if (args.length >= 2) {
             startDate = args[0];
-            endDate = args[2];
+            endDate = args[1];
         }
         logger.info("startDate {} ,endDate {}", startDate, endDate);
         //  获取广告主列表
@@ -47,7 +47,7 @@ public class AdPlanDataMain {
             pool.submit(new Runnable() {
                 @Override
                 public void run() {
-                    insertAdPlanDataToDT(s, finalStartDate, finalEndDate);
+                    getAdPlanData(s, finalStartDate, finalEndDate);
                 }
             });
         }
@@ -59,7 +59,7 @@ public class AdPlanDataMain {
      * @param startDate
      * @param endDate
      */
-    public static void insertAdPlanDataToDT(AdvertiserEntity s, String startDate, String endDate) {
+    public static void getAdPlanData(AdvertiserEntity s, String startDate, String endDate) {
         logger.error(JSONObject.toJSONString(s));
         int totalPage = 2;
         int currentPage = 1;

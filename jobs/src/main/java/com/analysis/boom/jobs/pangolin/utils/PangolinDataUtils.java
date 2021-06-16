@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 巨量平台数据同步工具类
+ * 穿山甲数据离线获取方法
  */
 public class PangolinDataUtils {
 

@@ -3,7 +3,9 @@ package com.analysis.boom.jobs.pangolin.utils;
 import java.security.MessageDigest;
 
 public class HashUtils {
-
+    public static String MD5(String srcStr){
+        return hash("MD5", srcStr);
+    }
     public static String sha1(String srcStr){
         return hash("SHA-1", srcStr);
     }

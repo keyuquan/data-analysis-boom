@@ -18,10 +18,9 @@ public class AppDataMain {
         String endDate = DateUtils.getEndDay();
         String appDataFromPangolin = PangolinDataUtils.getAppDataFromPangolin(startDate, endDate);
         AppDataEntity appDataEntity = JSONObject.parseObject(appDataFromPangolin, AppDataEntity.class);
-        Integer code = appDataEntity.getCode();
-        List<JSONObject> data = appDataEntity.getData();
-        if (code == 100 && data != null && data.size() > 0) {
-            FileUtils.appendJSONObjectListToFile("pangolin_app_data_" + endDate + ".txt", data);
+        List<JSONObject> list = appDataEntity.getData();
+        if (list != null && list.size() > 0) {
+            FileUtils.appendJSONObjectListToFile("pangolin_app_data_" + endDate + ".txt", list);
         }
     }
 }

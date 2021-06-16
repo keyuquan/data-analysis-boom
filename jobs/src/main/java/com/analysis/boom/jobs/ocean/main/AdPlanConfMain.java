@@ -28,9 +28,9 @@ public class AdPlanConfMain {
     public static void main(String[] args) throws Exception {
         String startDate = DateUtils.getStartDay();
         String endDate = DateUtils.getEndDay();
-        if (args.length >= 1) {
+        if (args.length >= 2) {
             startDate = args[0];
-            endDate = args[2];
+            endDate = args[1];
         }
         logger.info("startDate {} ,endDate {}", startDate, endDate);
         //  获取广告主列表
