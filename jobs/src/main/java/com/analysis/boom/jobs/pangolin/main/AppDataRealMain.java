@@ -30,9 +30,10 @@ public class AppDataRealMain {
         logger.info("startDate {} ,endDate {}", startDate, endDate);
         //  穿山甲用户数据
         Map<String, String> map = new HashMap();
-        map.put("30773", "375daf3527bb7b9f2516cdb9879c4fe9");
+        map.put("30773", "375daf3527bb7b9f2516cdb9879c4fe9");// 豹亮
+        map.put("41953", "2964b22953d124a005010d3a08fff3b6");// 海南迅游
         // 数据循环跑，每天跑一次
-        int days =  DateUtils.differentDays(startDate, endDate, "yyyy-MM-dd") + 1;
+        int days = DateUtils.differentDays(startDate, endDate, "yyyy-MM-dd") + 1;
         ExecutorService pool = ThreadPoolUtil.getScheduledThreadPool(10);
         for (int i = 0; i < days; i++) {
             String startOneDate = DateUtils.addDay(startDate, i);
