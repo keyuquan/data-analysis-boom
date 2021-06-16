@@ -24,13 +24,14 @@ import java.util.List;
 public class PangolinDataUtils {
 
     public static String report_user = "https://partner.oceanengine.com/union/media/open/api/report/user";
+    public static String report_app = "https://partner.oceanengine.com/union/media/open/api/report/app";
 
     /**
      * 获取广告计划配置
      *
      * @return
      */
-    public static String getDataFromPangolin() {
+    public static String getAppDataFromPangolin(String startDate, String endDate) {
         // 构造请求
         HttpEntityEnclosingRequestBase httpEntity = new HttpEntityEnclosingRequestBase() {
             @Override
@@ -41,15 +42,16 @@ public class PangolinDataUtils {
         CloseableHttpResponse response = null;
         CloseableHttpClient client = null;
         String time = new Date().getTime() + "";
+        String nonce = System.currentTimeMillis() + "";
         try {
             client = HttpClientBuilder.create().build();
-            URI uri = new URIBuilder(report_user)
+            URI uri = new URIBuilder(report_app)
                     .setParameter("user_id", "30773")
                     .setParameter("timestamp", time)
-                    .setParameter("nonce", "9999")
-                    .setParameter("sign", signatureGen(time, "9999"))
-                    .setParameter("start_date", "2021-06-14")
-                    .setParameter("end_date", "2021-06-14")
+                    .setParameter("nonce", nonce)
+                    .setParameter("sign", signatureGen(time, nonce))
+                    .setParameter("start_date", startDate)
+                    .setParameter("end_date", endDate)
                     .build();
             httpEntity.setURI(uri);
 
@@ -62,7 +64,6 @@ public class PangolinDataUtils {
                     result.append(line);
                 }
                 bufferedReader.close();
-                System.out.println();
                 return result.toString();
             }
         } catch (ClientProtocolException e) {
@@ -85,8 +86,7 @@ public class PangolinDataUtils {
     }
 
     public static String signatureGen(String timestamp, String nonce) {
-        List list = new ArrayList() {
-        };
+        List list = new ArrayList();
         list.add("375daf3527bb7b9f2516cdb9879c4fe9");
         list.add(timestamp);
         list.add(nonce);
@@ -96,7 +96,7 @@ public class PangolinDataUtils {
 
 
     public static void main(String[] args) {
-        System.out.println(getDataFromPangolin());
+        System.out.println(getAppDataFromPangolin("2021-06-01", "2021-06-16"));
     }
 
 }

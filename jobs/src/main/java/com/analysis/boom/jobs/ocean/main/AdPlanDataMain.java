@@ -1,8 +1,9 @@
 package com.analysis.boom.jobs.ocean.main;
 
 import com.alibaba.fastjson.JSONObject;
+import com.analysis.boom.common.utils.DateUtils;
+import com.analysis.boom.common.utils.FileUtils;
 import com.analysis.boom.common.utils.JdbcUtils;
-import com.analysis.boom.jobs.ocean.dao.AdPlanDataDao;
 import com.analysis.boom.jobs.ocean.dao.AdvertiserDao;
 import com.analysis.boom.jobs.ocean.entity.AdPlanDataEntity;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
@@ -10,8 +11,8 @@ import com.analysis.boom.jobs.ocean.utils.OceanDataUtils;
 import com.analysis.boom.jobs.utils.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,37 +23,43 @@ import java.util.concurrent.ExecutorService;
  */
 public class AdPlanDataMain {
     private final static Logger logger = LoggerFactory.getLogger(AdPlanDataMain.class);
-    private static String uri = "2/ad/get/";
+    private static String uri = "2/report/ad/get/";
 
     public static void main(String[] args) throws Exception {
+        String startDate = DateUtils.getStartDay();
+        String endDate = DateUtils.getEndDay();
+        if (args.length >= 1) {
+            startDate = args[0];
+            endDate = args[2];
+        }
+        logger.info("startDate {} ,endDate {}", startDate, endDate);
         //  获取广告主列表
         Connection boomConnection = JdbcUtils.getBoomConnection();
         List<AdvertiserEntity> adList = AdvertiserDao.getTtPlatformTokenAdvertiserIdData(boomConnection);
         JdbcUtils.closeBoom();
         // 遍历广告主列表,获取巨量数据,把数据存入DT
-        Connection dtConnection = JdbcUtils.getDtConnection();
         ExecutorService pool = ThreadPoolUtil.getScheduledThreadPool(10);
         logger.info(" adList.size() : {} ", adList.size());
         for (int i = 0; i < adList.size(); i++) {
             AdvertiserEntity s = adList.get(i);
+            String finalStartDate = startDate;
+            String finalEndDate = endDate;
             pool.submit(new Runnable() {
                 @Override
                 public void run() {
-                    insertAdPlanDataToDT(s, dtConnection);
+                    insertAdPlanDataToDT(s, finalStartDate, finalEndDate);
                 }
             });
         }
         ThreadPoolUtil.endThread(pool);
-        JdbcUtils.closeDt();
     }
 
     /**
-     * 广告计划数据存入MySQL
-     *
      * @param s
-     * @param dtConnection
+     * @param startDate
+     * @param endDate
      */
-    public static void insertAdPlanDataToDT(AdvertiserEntity s, Connection dtConnection) {
+    public static void insertAdPlanDataToDT(AdvertiserEntity s, String startDate, String endDate) {
         logger.error(JSONObject.toJSONString(s));
         int totalPage = 2;
         int currentPage = 1;
@@ -63,9 +70,10 @@ public class AdPlanDataMain {
                     put("advertiser_id", s.getAdvertiserId());
                     put("page", page);
                     put("page_size", 1000);
-                    put("start_date", "2021-06-11");
-                    put("end_date", "2021-06-11");
+                    put("start_date", startDate);
+                    put("end_date", endDate);
                     put("group_by", new String[]{"STAT_GROUP_BY_FIELD_ID", "STAT_GROUP_BY_FIELD_STAT_TIME"});
+                    put("time_granularity", "STAT_TIME_GRANULARITY_DAILY");
                     put("fields", null);
                 }
             };
@@ -79,11 +87,10 @@ public class AdPlanDataMain {
             if (data == null) {
                 continue;
             }
-            // 存入数据库
-            try {
-                AdPlanDataDao.batch(dtConnection, data.getList());
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            List<JSONObject> list = data.getList();
+            if (list != null && list.size() > 0) {
+                System.out.println("list.size()=" + list.size());
+                FileUtils.appendJSONObjectListToFile("ocean_ad_plan_data_day_ad_kpi.txt", list);
             }
             AdPlanDataEntity.DataDTO.PageInfoDTO pageInfo = data.getPageInfo();
             currentPage = pageInfo.getPage() + 1;

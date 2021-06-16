@@ -10,7 +10,6 @@ import java.sql.SQLException;
 
 public class JdbcUtils {
     private static Connection conn_boom = null;
-    private static Connection conn_dt = null;
     private static final Logger logger = LoggerFactory.getLogger(JdbcUtils.class);
     /**
      * 加载驱动
@@ -33,17 +32,7 @@ public class JdbcUtils {
         logger.info("获取mysql连接:" + Config.MYSQL_URL);
         return conn_boom;
     }
-    /**
-     * 获取 Connetion
-     *
-     * @return
-     * @throws SQLException
-     */
-    public static Connection getDtConnection() throws SQLException {
-        conn_dt = DriverManager.getConnection(Config.MYSQL_DT_URL, Config.USER_NAME, Config.PASS_WORD);
-        logger.info("获取mysql连接:" + Config.MYSQL_DT_URL);
-        return conn_dt;
-    }
+
 
     /**
      * 关闭 conn
@@ -59,17 +48,6 @@ public class JdbcUtils {
     }
 
 
-    /**
-     * 关闭 conn
-     */
-    public static void closeDt() {
-        if (conn_dt != null) {
-            try {
-                conn_dt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 
 }

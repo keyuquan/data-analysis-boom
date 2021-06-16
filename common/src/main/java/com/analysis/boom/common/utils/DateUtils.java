@@ -345,6 +345,15 @@ public class DateUtils {
      *
      * @return
      */
+    public static String getStartDay() {
+        return addSecond(getSysFullDate(), -3600 * 12, DateUtils.DATE_SHORT_FORMAT);
+    }
+
+    /**
+     * 获取数据开始时间
+     *
+     * @return
+     */
     public static String getTodayStartDate() {
         return getSysFullDate().substring(0, 10) + " 00:00:00";
     }
@@ -358,6 +367,14 @@ public class DateUtils {
         return addSecond(getSysFullDate(), -3600, DateUtils.DATE_MM_FORMAT).substring(0, 13) + ":59:59";
     }
 
+    /**
+     * 获取数据开始时间
+     *
+     * @return
+     */
+    public static String getEndDay() {
+        return addSecond(getSysFullDate(), 0, DateUtils.DATE_SHORT_FORMAT);
+    }
 
     /**
      * 获取数据结束时间
