@@ -55,6 +55,8 @@ public class AdPlanDataMain {
     }
 
     /**
+     * 获取广告报表数据
+     *
      * @param s
      * @param startDate
      * @param endDate

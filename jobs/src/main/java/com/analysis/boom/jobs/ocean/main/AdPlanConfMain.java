@@ -47,7 +47,7 @@ public class AdPlanConfMain {
             pool.submit(new Runnable() {
                 @Override
                 public void run() {
-                    insertAdPlanConfDataToDT(s, finalEndDate);
+                    getAdPlanConfData(s, finalEndDate);
                 }
             });
         }
@@ -56,11 +56,11 @@ public class AdPlanConfMain {
     }
 
     /**
-     * 广告计划配置存入mysql
+     * 获取广告配置数据
      *
      * @param s
      */
-    public static void insertAdPlanConfDataToDT(AdvertiserEntity s, String endDate) {
+    public static void getAdPlanConfData(AdvertiserEntity s, String endDate) {
         logger.error(JSONObject.toJSONString(s));
         //  遍历广告Id,获取对应数据
         int totalPage = 2;

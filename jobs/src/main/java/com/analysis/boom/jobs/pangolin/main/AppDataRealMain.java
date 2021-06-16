@@ -8,6 +8,7 @@ import com.analysis.boom.jobs.pangolin.utils.PangolinRealDataUtils;
 import com.analysis.boom.jobs.utils.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class AppDataRealMain {
     private final static Logger logger = LoggerFactory.getLogger(AppDataRealMain.class);
 
     public static void main(String[] args) throws Exception {
-        String startDate = DateUtils.getEndDay();
+        String startDate = DateUtils.getStartDay();
         String endDate = DateUtils.getEndDay();
         if (args.length >= 2) {
             startDate = args[0];
@@ -30,16 +31,22 @@ public class AppDataRealMain {
         //  穿山甲用户数据
         Map<String, String> map = new HashMap();
         map.put("30773", "375daf3527bb7b9f2516cdb9879c4fe9");
+        // 数据循环跑，每天跑一次
+        int days =  DateUtils.differentDays(startDate, endDate, "yyyy-MM-dd") + 1;
         ExecutorService pool = ThreadPoolUtil.getScheduledThreadPool(10);
-        for (String userId : map.keySet()) {
-            String finalStartDate = startDate;
-            String finalEndDate = endDate;
-            pool.submit(new Runnable() {
-                @Override
-                public void run() {
-                    getDayAppData(finalStartDate, finalEndDate, userId, userId, map.get(userId));
-                }
-            });
+        for (int i = 0; i < days; i++) {
+            String startOneDate = DateUtils.addDay(startDate, i);
+            String endOneDate = startOneDate;
+            logger.info("startOneDate {} ,endOneDate {}", startOneDate, endOneDate);
+            for (String userId : map.keySet()) {
+                pool.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        getDayAppData(startOneDate, endOneDate, userId, userId, map.get(userId));
+
+                    }
+                });
+            }
         }
         ThreadPoolUtil.endThread(pool);
     }
