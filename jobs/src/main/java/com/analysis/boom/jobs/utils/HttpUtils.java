@@ -139,7 +139,7 @@ public class HttpUtils {
      * @param url 请求路径
      * @param map 请求参数
      */
-    public static String doGetBody(String url, Map<String, Object> map, String accessToken) {
+    public static String doBodyGet(String url, Map<String, Object> map, String accessToken) {
         // 构造请求
         HttpEntityEnclosingRequestBase httpEntity = new HttpEntityEnclosingRequestBase() {
             @Override

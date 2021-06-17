@@ -40,7 +40,7 @@ public class AdPlanDataDao {
                 }
             };
             // 发送数据请求
-            String str = HttpUtils.doGetBody(ad_plan_data_uri, map, s.getAccessToken());
+            String str = HttpUtils.doBodyGet(ad_plan_data_uri, map, s.getAccessToken());
             // 解析数据
             AdPlanDataEntity adPlanDataEntity = JSONObject.parseObject(str, AdPlanDataEntity.class);
             Integer code = adPlanDataEntity.getCode();

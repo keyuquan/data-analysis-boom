@@ -36,7 +36,7 @@ public class AdPlanConfDao {
             map.put("filtering", filtering);
             map.put("fields", fields);
             // 发送数据请求
-            String str = HttpUtils.doGetBody(ad_plan_conf_uri, map, s.getAccessToken());
+            String str = HttpUtils.doBodyGet(ad_plan_conf_uri, map, s.getAccessToken());
             // 解析数据
             AdPlanConfEntity adPlanConfEntity = JSONObject.parseObject(str, AdPlanConfEntity.class);
             Integer code = adPlanConfEntity.getCode();
