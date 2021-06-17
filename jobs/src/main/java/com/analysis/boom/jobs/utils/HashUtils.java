@@ -1,4 +1,4 @@
-package com.analysis.boom.jobs.pangolin.utils;
+package com.analysis.boom.jobs.utils;
 
 import java.security.MessageDigest;
 
@@ -33,7 +33,6 @@ public class HashUtils {
     }
 
     public static void main(String[] args) {
-        //9a4a35c43d0bc175b7273004fc2c811be142f142
        System.out.println(sha1("dddd")); ;
     }
 }

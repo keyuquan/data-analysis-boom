@@ -44,7 +44,7 @@ public class FileUtils {
                 writer.newLine();
                 writer.flush();
             }
-            System.out.println("写入文件条数：" + list.size());
+            System.out.println("写入文件:" + fileName + " 数据条数：" + list.size());
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,7 +64,7 @@ public class FileUtils {
                 writer.newLine();
                 writer.flush();
             }
-            System.out.println("写入文件条数：" + list.size());
+            System.out.println("写入文件:" + fileName + " 数据条数：" + list.size());
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

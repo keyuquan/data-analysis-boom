@@ -1,4 +1,4 @@
-package com.analysis.boom.jobs.pangolin.entity;
+package com.analysis.boom.jobs.pangle.entity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
