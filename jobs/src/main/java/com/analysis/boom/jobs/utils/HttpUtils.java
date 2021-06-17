@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,7 +29,7 @@ public class HttpUtils {
      * @param url 请求路径
      * @param map 请求参数
      */
-    public static String doGet(String url, Map<String, String> map, String accessToken) {
+    public static String doGet(String url, Map<String, Object> map, String accessToken) {
         // 构造请求
         HttpEntityEnclosingRequestBase httpEntity = new HttpEntityEnclosingRequestBase() {
             @Override
@@ -47,7 +46,7 @@ public class HttpUtils {
             client = HttpClientBuilder.create().build();
             URIBuilder uriBuilder = new URIBuilder(url);
             for (String key : map.keySet()) {
-                uriBuilder.setParameter(key, map.get(key));
+                uriBuilder.setParameter(key, new JSONObject(map).getString(key));
             }
             httpEntity.setURI(uriBuilder.build());
             response = client.execute(httpEntity);
@@ -87,7 +86,7 @@ public class HttpUtils {
      * @param map
      * @return
      */
-    public static String doPost(String url, Map<String, String> map, String accessToken) {
+    public static String doPost(String url, Map<String, Object> map, String accessToken) {
         // 构造请求
         HttpEntityEnclosingRequestBase httpEntity = new HttpEntityEnclosingRequestBase() {
             @Override
@@ -155,7 +154,6 @@ public class HttpUtils {
         CloseableHttpClient client = null;
         try {
             client = HttpClientBuilder.create().build();
-
             httpEntity.setURI(URI.create(url));
             httpEntity.setEntity(new StringEntity(JSONObject.toJSONString(map), ContentType.APPLICATION_JSON));
             response = client.execute(httpEntity);

@@ -19,10 +19,10 @@ public class AppDataDao {
      * @return
      */
     public static void getDayAppData(String startDate, String endDate, String userId, String secureKey) {
-
+        // 整理参数
         String timestamp = new Date().getTime() + "";
         String nonce = System.currentTimeMillis() + "";
-        Map<String, String> map = new TreeMap();
+        Map<String, Object> map = new TreeMap();
         map.put("user_id", userId);
         map.put("timestamp", timestamp);
         map.put("nonce", nonce);
@@ -30,12 +30,14 @@ public class AppDataDao {
         map.put("end_date", endDate);
         map.put("user_id", userId);
         map.put("sign", signatureGen(secureKey, timestamp, nonce));
-
+        // 发送数据请求
         String str = HttpUtils.doGet(report_app, map, "");
+        // 解析数据
         AppDataEntity appDataEntity = JSONObject.parseObject(str, AppDataEntity.class);
+        // 数据存入文件
         List<JSONObject> list = appDataEntity.getData();
         if (list != null && list.size() > 0) {
-            FileUtils.appendJSONObjectListToFile("pangle_day_app_kpi_"+endDate+".txt", list);
+            FileUtils.appendJSONObjectListToFile("pangle_day_app_kpi_" + endDate + ".txt", list);
         }
 
 

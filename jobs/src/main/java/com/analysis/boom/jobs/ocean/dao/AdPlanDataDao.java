@@ -25,6 +25,7 @@ public class AdPlanDataDao {
         int totalPage = 2;
         int currentPage = 1;
         do {
+            // 整理参数
             int page = currentPage;
             Map<String, Object> map = new HashMap() {
                 {
@@ -38,7 +39,9 @@ public class AdPlanDataDao {
                     put("fields", null);
                 }
             };
+            // 发送数据请求
             String str = HttpUtils.doGetBody(ad_plan_data_uri, map, s.getAccessToken());
+            // 解析数据
             AdPlanDataEntity adPlanDataEntity = JSONObject.parseObject(str, AdPlanDataEntity.class);
             Integer code = adPlanDataEntity.getCode();
             if (code != 0) {
@@ -48,9 +51,9 @@ public class AdPlanDataDao {
             if (data == null) {
                 continue;
             }
+            // 数据存入文件
             List<JSONObject> list = data.getList();
             if (list != null && list.size() > 0) {
-                System.out.println("list.size()=" + list.size());
                 FileUtils.appendJSONObjectListToFile("ocean_ad_plan_data_day_ad_kpi_" + endDate + ".txt", list);
             }
             AdPlanDataEntity.DataDTO.PageInfoDTO pageInfo = data.getPageInfo();

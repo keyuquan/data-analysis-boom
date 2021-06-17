@@ -29,7 +29,7 @@ public class AppDataRealDao {
             String signType = "MD5";
             String version = "2.0";
             String timestamp = (new Date().getTime()) / 1000 + "";
-            Map<String, String> map = new TreeMap();
+            Map<String, Object> map = new TreeMap();
             map.put("start_date", startDate);
             map.put("end_date", endDate);
             map.put("dimensions", dimensions);
@@ -41,7 +41,7 @@ public class AppDataRealDao {
             map.put("role_id", roleId);
             map.put("version", version);
             // 对参数进行排序
-            Map<String, String> sortMap = sortMapByKey(map);
+            Map<String, Object> sortMap = sortMapByKey(map);
             sortMap.put("sign", signatureGen(sortMap, secureKey));
             // 发送数据请求
             String str = HttpUtils.doGet(report_real_app, sortMap, "");
@@ -58,7 +58,7 @@ public class AppDataRealDao {
         } while (hasNext == 1);
     }
 
-    public static String signatureGen(Map<String, String> sortMap, String secureKey) {
+    public static String signatureGen(Map<String, Object> sortMap, String secureKey) {
         String strSign = "";
         for (String key : sortMap.keySet()) {
             strSign = strSign + key + "=" + sortMap.get(key) + "&";
@@ -66,11 +66,11 @@ public class AppDataRealDao {
         return HashUtils.MD5(strSign.substring(0, strSign.length() - 1) + secureKey);
     }
 
-    public static Map<String, String> sortMapByKey(Map<String, String> map) {
+    public static Map<String, Object> sortMapByKey(Map<String, Object> map) {
         if (map == null || map.isEmpty()) {
             return null;
         }
-        Map<String, String> sortMap = new TreeMap<String, String>(
+        Map<String, Object> sortMap = new TreeMap<String, Object>(
                 new Comparator<String>() {
                     @Override
                     public int compare(String o1, String o2) {
