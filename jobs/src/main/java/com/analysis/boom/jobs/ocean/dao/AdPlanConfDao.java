@@ -47,6 +47,7 @@ public class AdPlanConfDao {
             if (data == null) {
                 continue;
             }
+
             // 数据存入文件
             List<JSONObject> list = data.getList();
             if (list != null && list.size() > 0) {
