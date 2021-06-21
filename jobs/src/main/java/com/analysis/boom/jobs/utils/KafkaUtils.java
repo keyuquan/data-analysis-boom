@@ -12,15 +12,16 @@ public class KafkaUtils {
      * 把数据发送到 kafka
      *
      * @param topic
-     * @param key
      * @param dataList
      */
-    public static void sendDataToKafka(String topic, String key, List<String> dataList) {
+    public static void sendDataToKafka(String topic, List<String> dataList) {
         Properties props = new Properties();
         props.put("bootstrap.servers", Config.KAFKA_SERVERS);
-        KafkaProducer<String, String> producer = new KafkaProducer<String, String>(props);
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        KafkaProducer<String, String> producer = new KafkaProducer<>(props);
         for (String str : dataList) {
-            producer.send(new ProducerRecord<String, String>(topic, key, str));
+            producer.send(new ProducerRecord<>(topic, str));
         }
         producer.close();
     }

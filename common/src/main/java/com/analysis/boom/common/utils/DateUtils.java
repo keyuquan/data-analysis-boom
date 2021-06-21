@@ -354,6 +354,15 @@ public class DateUtils {
      *
      * @return
      */
+    public static String getStartDay(Integer days) {
+        return addSecond(getSysFullDate(), -3600 * 24 * days, DateUtils.DATE_SHORT_FORMAT);
+    }
+
+    /**
+     * 获取数据开始时间
+     *
+     * @return
+     */
     public static String getTodayStartDate() {
         return getSysFullDate().substring(0, 10) + " 00:00:00";
     }
