@@ -26,9 +26,9 @@ object DwsTa {
          |,count(distinct if("$part_event" IN ( 'ad_show' ),"#distinct_id",null) )  ad_show_user_count --  广告用户数
          |,count(if("$part_event" IN ( 'ad_show' ),"#distinct_id",null) )  ad_show_count --  广告次数
          |,count(1)   --  活跃次数
-         |,ROUND(sum(if("$part_event" IN ( 'ad_show' ) ,ecpm,0.00))/if(sum(if("$part_event" IN ( 'ad_show' ) ,1,0))=0,1,sum(if("$part_event" IN ( 'ad_show' ),1,0))),2) ecpm
-         |,ROUND(sum(if("$part_event" IN ( 'ad_show' ) and "#is_first_day" ,ecpm,0.00))/if(sum(if("$part_event" IN ( 'ad_show' ) and  "#is_first_day" ,1,0))=0,1,sum(if("$part_event" IN ( 'ad_show' ) and  "#is_first_day" ,1,0))),2) add_ecpm
-         |,ROUND(sum(if("#is_first_day" and  "$part_event" IN ( 'ad_show' ),earnings,0.00) ),2)  earnings
+         |,ROUND(sum(if("$part_event" IN ( 'ad_show' ) ,ecpm,0))/if(sum(if("$part_event" IN ( 'ad_show' ) ,1,0))=0,1,sum(if("$part_event" IN ( 'ad_show' ),1,0))),2) ecpm
+         |,ROUND(sum(if("$part_event" IN ( 'ad_show' ) and "#is_first_day" ,ecpm,0))/if(sum(if("$part_event" IN ( 'ad_show' ) and  "#is_first_day" ,1,0))=0,1,sum(if("$part_event" IN ( 'ad_show' ) and  "#is_first_day" ,1,0))),2) add_ecpm
+         |,ROUND(sum(if("#is_first_day" and  "$part_event" IN ( 'ad_show' ),earnings,0) ),2)  earnings
          |from
          |ta.ta_event_5  where "$part_date" between  '$startDayRetain' AND '$endDay'
          |group by "$part_date", "#bundle_id"
