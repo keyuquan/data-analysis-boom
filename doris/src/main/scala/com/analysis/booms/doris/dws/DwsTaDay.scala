@@ -2,7 +2,7 @@ package com.analysis.booms.doris.dws
 
 import com.analysis.boom.common.utils.DorisDBUtils
 
-object DwsDay {
+object DwsTaDay {
   def runData(startDay: String, endDay: String): Unit = {
 
     val sql_dws_ta_day_pkg_kpi =
