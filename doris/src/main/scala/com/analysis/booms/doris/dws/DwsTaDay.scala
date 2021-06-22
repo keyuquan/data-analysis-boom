@@ -39,7 +39,7 @@ object DwsTaDay {
          |,ifnull(ltv_7,0)
          |,ifnull(ltv_15,0)
          |,ifnull(ltv_30,0)
-         |, now()
+         |,now() as  update_time
          |from
          |(
          |select data_date, pkg_code from dwm_ta_event_day_pkg_kpi  where  data_date between  '$startDay' AND '$endDay'

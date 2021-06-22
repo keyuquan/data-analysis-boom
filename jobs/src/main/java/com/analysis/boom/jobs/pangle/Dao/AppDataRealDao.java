@@ -1,6 +1,7 @@
 package com.analysis.boom.jobs.pangle.Dao;
 
 import com.alibaba.fastjson.JSONObject;
+import com.analysis.boom.common.utils.DateUtils;
 import com.analysis.boom.jobs.pangle.entity.AppDataRealEntity;
 import com.analysis.boom.jobs.utils.HashUtils;
 import com.analysis.boom.jobs.utils.HttpUtils;
@@ -50,6 +51,7 @@ public class AppDataRealDao {
             AppDataRealEntity appDataRealEntity = JSONObject.parseObject(str, AppDataRealEntity.class);
             AppDataRealEntity.DataDTO data = appDataRealEntity.getData();
             List<JSONObject> list = data.getReportList();
+            String updateTime = DateUtils.getSysFullDate();
             for (JSONObject obj : list) {
                 obj.put("api_req_cnt", obj.getOrDefault("api_req_cnt", 0));
                 obj.put("api_ret_cnt", obj.getOrDefault("api_ret_cnt", 0));
@@ -57,6 +59,7 @@ public class AppDataRealDao {
                 obj.put("api_clk_cnt", obj.getOrDefault("api_clk_cnt", 0));
                 obj.put("api_ecpm", obj.getOrDefault("api_ecpm", 0d));
                 obj.put("api_revenue", obj.getOrDefault("api_revenue", 0d));
+                obj.put("update_time", updateTime);
                 listAll.add(obj.toJSONString());
             }
             hasNext = appDataRealEntity.getData().getHasNext();

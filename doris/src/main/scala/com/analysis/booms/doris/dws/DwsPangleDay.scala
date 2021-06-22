@@ -11,7 +11,7 @@ object DwsPangleDay {
     val sql_dws_pangle_day_pkg_kpi=
       s"""
         |insert  into dws_pangle_day_pkg_kpi
-        |select  *  from (
+        |select  *,now()  update_time  from (
         |select  start_date, site_id, req_cnt, api_req_cnt, ret_cnt, api_ret_cnt, imp_cnt, api_imp_cnt, clk_cnt, api_clk_cnt, ecpm, api_ecpm, revenue, api_revenue
         |,sum(api_revenue) over( partition by site_id order by start_date  )  api_revenue_all
         |from  dwm_pangle_day_pkg_kpi

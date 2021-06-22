@@ -3,6 +3,7 @@ package com.analysis.boom.jobs.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.conf.Config;
+import com.analysis.boom.common.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,11 +80,13 @@ public class PrestoUtils {
         List<String> list = new ArrayList();
         ResultSetMetaData md = rs.getMetaData();
         int columnCount = md.getColumnCount();
+        String updateTime = DateUtils.getSysFullDate();
         while (rs.next()) {
             Map<String, Object> rowData = new HashMap();
             for (int i = 1; i <= columnCount; i++) {
                 rowData.put(md.getColumnName(i), rs.getObject(i));
             }
+            rowData.put("update_time", updateTime);
             System.out.println(JSONObject.toJSONString(rowData));
             list.add(JSONObject.toJSONString(rowData));
         }
