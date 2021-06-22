@@ -1,7 +1,6 @@
 package com.analysis.boom.jobs.pangle.Dao;
 
 import com.alibaba.fastjson.JSONObject;
-import com.analysis.boom.common.utils.FileUtils;
 import com.analysis.boom.jobs.pangle.entity.AppDataRealEntity;
 import com.analysis.boom.jobs.utils.HashUtils;
 import com.analysis.boom.jobs.utils.HttpUtils;
@@ -20,7 +19,9 @@ public class AppDataRealDao {
      * @param roleId
      * @param secureKey
      */
-    public static void getDayAppData(String startDate, String endDate, String userId, String roleId, String secureKey) {
+    public static List<String> getDayAppData(String startDate, String endDate, String userId, String roleId, String secureKey) {
+
+        List<String> listAll = new ArrayList<>();
         int hasNext = 1;
         int offset = 0;
         do {
@@ -49,13 +50,20 @@ public class AppDataRealDao {
             AppDataRealEntity appDataRealEntity = JSONObject.parseObject(str, AppDataRealEntity.class);
             AppDataRealEntity.DataDTO data = appDataRealEntity.getData();
             List<JSONObject> list = data.getReportList();
-            // 数据存入文件
-            if (list != null && list.size() > 0) {
-                FileUtils.appendJSONObjectListToFile("pangle_real_day_app_kpi_"+endDate+".txt", list);
+            for (JSONObject obj : list) {
+                obj.put("api_req_cnt", obj.getOrDefault("api_req_cnt", 0));
+                obj.put("api_ret_cnt", obj.getOrDefault("api_ret_cnt", 0));
+                obj.put("api_imp_cnt", obj.getOrDefault("api_imp_cnt", 0));
+                obj.put("api_clk_cnt", obj.getOrDefault("api_clk_cnt", 0));
+                obj.put("api_ecpm", obj.getOrDefault("api_ecpm", 0d));
+                obj.put("api_revenue", obj.getOrDefault("api_revenue", 0d));
+                listAll.add(obj.toJSONString());
             }
             hasNext = appDataRealEntity.getData().getHasNext();
             offset = offset + 500;
         } while (hasNext == 1);
+
+        return listAll;
     }
 
     public static String signatureGen(Map<String, Object> sortMap, String secureKey) {

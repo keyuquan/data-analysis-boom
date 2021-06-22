@@ -42,12 +42,12 @@ object DwsDay {
          |, now()
          |from
          |(
-         |select data_date, pkg_code from dws_ta_event_day_pkg_kpi  where  data_date between  '$startDay' AND '$endDay'
+         |select data_date, pkg_code from dwm_ta_event_day_pkg_kpi  where  data_date between  '$startDay' AND '$endDay'
          |union
-         |select data_date, pkg_code from dws_ta_event_day_pkg_retain   where  data_date between  '$startDay' AND '$endDay'
+         |select data_date, pkg_code from dwm_ta_event_day_pkg_retain   where  data_date between  '$startDay' AND '$endDay'
          |)  t
-         |left join  (select * from dws_ta_event_day_pkg_kpi  where  data_date between  '$startDay' AND '$endDay' ) t1 on  t1.data_date=t.data_date and t1.pkg_code=t.pkg_code
-         |left join  (select * from dws_ta_event_day_pkg_retain  where  data_date between  '$startDay' AND '$endDay' ) t2 on  t2.data_date=t.data_date and t2.pkg_code=t.pkg_code
+         |left join  (select * from dwm_ta_event_day_pkg_kpi  where  data_date between  '$startDay' AND '$endDay' ) t1 on  t1.data_date=t.data_date and t1.pkg_code=t.pkg_code
+         |left join  (select * from dwm_ta_event_day_pkg_retain  where  data_date between  '$startDay' AND '$endDay' ) t2 on  t2.data_date=t.data_date and t2.pkg_code=t.pkg_code
          |""".stripMargin
 
     val conn = DorisDBUtils.getConnection;

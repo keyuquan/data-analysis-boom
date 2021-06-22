@@ -2,11 +2,13 @@ package com.analysis.boom.jobs.pangle.main;
 
 import com.analysis.boom.common.utils.DateUtils;
 import com.analysis.boom.jobs.pangle.Dao.AppDataRealDao;
+import com.analysis.boom.jobs.utils.KafkaUtils;
 import com.analysis.boom.jobs.utils.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
@@ -17,7 +19,7 @@ public class AppDataRealMain {
     private final static Logger logger = LoggerFactory.getLogger(AppDataRealMain.class);
 
     public static void main(String[] args) throws Exception {
-        String startDate = DateUtils.getStartDay(1);
+        String startDate = DateUtils.getStartDay(5);
         String endDate = DateUtils.getEndDay();
         if (args.length >= 2) {
             startDate = args[0];
@@ -39,8 +41,8 @@ public class AppDataRealMain {
                 pool.submit(new Runnable() {
                     @Override
                     public void run() {
-                        AppDataRealDao.getDayAppData(startOneDate, endOneDate, userId, userId, map.get(userId));
-
+                        List<String> list = AppDataRealDao.getDayAppData(startOneDate, endOneDate, userId, userId, map.get(userId));
+                        KafkaUtils.sendDataToKafka("boom_dwm_pangle_day_pkg_kpi",list);
                     }
                 });
             }

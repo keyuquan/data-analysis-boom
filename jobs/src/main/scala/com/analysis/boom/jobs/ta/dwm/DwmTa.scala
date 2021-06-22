@@ -65,7 +65,7 @@ object DwmTa {
          |join  (select    distinct  "$part_date" ,"#bundle_id" ,"#distinct_id" from  ta.ta_event_5  where    "$part_date" between  '$startDayRetain' AND '$endDay' and "#is_first_day"=true   ) t_u
          |on  t_u."#bundle_id" =t_a."#bundle_id" and  t_u."#distinct_id" =t_a."#distinct_id"
          |group  by  t_u."$part_date" , t_u."#bundle_id" ,date_diff('day',cast(t_u."$part_date" as date),cast(t_a."$part_date" as date))
-         |) where  retain_day >=0
+         |) where  retain_day >=0  and  "#bundle_id"  is not null
          |group  by  "$part_date","#bundle_id"
          |""".stripMargin
 
