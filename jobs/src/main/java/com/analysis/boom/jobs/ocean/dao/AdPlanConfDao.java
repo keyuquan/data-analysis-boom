@@ -1,11 +1,11 @@
 package com.analysis.boom.jobs.ocean.dao;
 
 import com.alibaba.fastjson.JSONObject;
-import com.analysis.boom.common.utils.FileUtils;
 import com.analysis.boom.jobs.ocean.entity.AdPlanConfEntity;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
 import com.analysis.boom.jobs.utils.HttpUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +18,14 @@ public class AdPlanConfDao {
      *
      * @param s
      */
-    public static void getAdPlanConfData(AdvertiserEntity s, String runDate) {
+    public static List<String> getAdPlanConfData(AdvertiserEntity s, String runDate) {
+        List<String> listAll = new ArrayList<>();
         //  遍历广告Id,获取对应数据
         int totalPage = 2;
         int currentPage = 1;
         do {
-            // 整理参数
-            String[] fields = new String[]{"id", "name", "budget", "budget_mode", "status", "opt_status", "open_url", "modify_time", "start_time", "end_time", "bid", "advertiser_id", "pricing", "flow_control_mode", "download_url", "quick_app_url", "schedule_type", "app_type", "cpa_bid", "cpa_skip_first_phrase", "external_url", "package", "campaign_id", "ad_modify_time", "ad_create_time", "audit_reject_reason", "retargeting_type", "retargeting_tags", "convert_id", "interest_tags", "hide_if_converted", "external_actions", "device_type", "auto_extend_enabled", "auto_extend_targets", "dpa_lbs", "dpa_city", "dpa_province", "dpa_recommend_type", "roi_goal", "subscribe_url", "form_id", "form_index", "app_desc", "app_thumbnails", "feed_delivery_search", "intelligent_flow_switch"};
+            // 整理参数 //
+            String[] fields = new String[]{"advertiser_id", "ad_id", "campaign_id", "name", "package", "app_type", "download_type", "download_url", "download_mode", "modify_time", "ad_create_time", "ad_modify_time"};
             int page = currentPage;
             Map<String, Object> map = new HashMap();
             map.put("advertiser_id", s.getAdvertiserId());
@@ -47,16 +48,15 @@ public class AdPlanConfDao {
             if (data == null) {
                 continue;
             }
-
-            // 数据存入文件
             List<JSONObject> list = data.getList();
-            if (list != null && list.size() > 0) {
-                FileUtils.appendJSONObjectListToFile("ocean_ad_plan_conf_" + runDate + ".txt", list);
+            for (JSONObject obj : list) {
+                listAll.add(obj.toJSONString());
             }
             AdPlanConfEntity.DataDTO.PageInfoDTO pageInfo = data.getPageInfo();
             currentPage = pageInfo.getPage() + 1;
             totalPage = pageInfo.getTotalPage();
         } while (currentPage <= totalPage);
+        return listAll;
     }
 
 }

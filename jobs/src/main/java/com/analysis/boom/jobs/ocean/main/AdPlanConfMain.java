@@ -5,6 +5,7 @@ import com.analysis.boom.common.utils.JdbcUtils;
 import com.analysis.boom.jobs.ocean.dao.AdPlanConfDao;
 import com.analysis.boom.jobs.ocean.dao.AdvertiserDao;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
+import com.analysis.boom.jobs.utils.KafkaUtils;
 import com.analysis.boom.jobs.utils.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,9 @@ import java.util.concurrent.ExecutorService;
  */
 public class AdPlanConfMain {
     private final static Logger logger = LoggerFactory.getLogger(AdPlanConfMain.class);
+
     public static void main(String[] args) throws Exception {
-        String startDate = DateUtils.getStartDay();
+        String startDate = DateUtils.getStartDay(500);
         String endDate = DateUtils.getEndDay();
         if (args.length >= 2) {
             startDate = args[0];
@@ -31,16 +33,21 @@ public class AdPlanConfMain {
         List<AdvertiserEntity> adList = AdvertiserDao.getTtPlatformTokenAdvertiserIdData(boomConnection);
         JdbcUtils.closeBoom();
         // 遍历广告主列表,获取巨量数据,把数据存入
-        ExecutorService pool = ThreadPoolUtil.getScheduledThreadPool(10);
-        for (int i = 0; i < adList.size(); i++) {
-            AdvertiserEntity s = adList.get(i);
-            String finalEndDate = endDate;
-            pool.submit(new Runnable() {
-                @Override
-                public void run() {
-                    AdPlanConfDao.getAdPlanConfData(s, finalEndDate);
-                }
-            });
+        ExecutorService pool = ThreadPoolUtil.getScheduledThreadPool(3);
+        int days = DateUtils.differentDays(startDate, endDate, "yyyy-MM-dd") + 1;
+        for (int j = 0; j < days; j++) {
+            String startOneDate = DateUtils.addDay(startDate, j);
+            String endOneDate = startOneDate;
+            for (int i = 0; i < adList.size(); i++) {
+                AdvertiserEntity s = adList.get(i);
+                pool.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<String> list = AdPlanConfDao.getAdPlanConfData(s, endOneDate);
+                        //  KafkaUtils.sendDataToKafka("boom_ods_ocean_ad_plan_conf", list);
+                    }
+                });
+            }
         }
         ThreadPoolUtil.endThread(pool);
 
