@@ -1,4 +1,4 @@
-package com.analysis.boom.jobs.ta.dws
+package com.analysis.boom.jobs.ta.dwm
 
 import com.analysis.boom.common.utils.DateUtils
 import com.analysis.boom.jobs.utils.{KafkaUtils, PrestoUtils}
@@ -6,13 +6,13 @@ import com.analysis.boom.jobs.utils.{KafkaUtils, PrestoUtils}
 /**
  * ta 数据 dws 层统计
  */
-object DwsTa {
+object DwmTa {
   def runData(startDay: String, endDay: String): Unit = {
     val part_date = "$part_date";
     val part_event = "$part_event";
 
     val startDayRetain = DateUtils.addDay(startDay, -31);
-    val sql_dws_ta_event_day_pkg_kpi =
+    val sql_dwm_ta_event_day_pkg_kpi =
       s"""
          |select
          |"$part_date"   data_date -- 统计日期
@@ -33,7 +33,7 @@ object DwsTa {
          |ta.ta_event_5  where "$part_date" between  '$startDayRetain' AND '$endDay'
          |group by "$part_date", "#bundle_id"
          |""".stripMargin
-    val sql_dws_ta_event_day_pkg_retain =
+    val sql_dwm_ta_event_day_pkg_retain =
       s"""
          |select
          |"$part_date"   data_date -- 统计日期
@@ -70,10 +70,10 @@ object DwsTa {
          |""".stripMargin
 
     val conn = PrestoUtils.getConnection;
-    val listKpi = PrestoUtils.query(conn, "sql_dws_ta_event_day_pkg_kpi", sql_dws_ta_event_day_pkg_kpi)
-    KafkaUtils.sendDataToKafka("boom_dws_ta_event_day_pkg_kpi", listKpi);
-    val listRetain = PrestoUtils.query(conn, "sql_dws_ta_event_day_pkg_retain", sql_dws_ta_event_day_pkg_retain)
-    KafkaUtils.sendDataToKafka("boom_dws_ta_event_day_pkg_retain", listRetain);
+    val listKpi = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_kpi", sql_dwm_ta_event_day_pkg_kpi)
+    KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_kpi", listKpi);
+    val listRetain = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_retain", sql_dwm_ta_event_day_pkg_retain)
+    KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_retain", listRetain);
   }
 
   def main(args: Array[String]): Unit = {

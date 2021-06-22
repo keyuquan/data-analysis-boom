@@ -1,13 +1,13 @@
-package com.analysis.booms.doris.app
+package com.analysis.booms.doris.dws
 
 import com.analysis.boom.common.utils.DorisDBUtils
 
-object AppDay {
+object DwsDay {
   def runData(startDay: String, endDay: String): Unit = {
 
-    val sql_app_day_pkg_kpi =
+    val sql_dws_ta_day_pkg_kpi =
       s"""
-         |insert into app_day_pkg_kpi
+         |insert into dws_ta_day_pkg_kpi
          |select t.data_date, t.pkg_code,
          |ifnull(add_user_count,0)
          |,ifnull(add_count,0)
@@ -52,7 +52,7 @@ object AppDay {
 
     val conn = DorisDBUtils.getConnection;
     DorisDBUtils.execute(conn, "use doris_boom", "use doris_boom");
-    DorisDBUtils.execute(conn, "sql_app_day_pkg_kpi", sql_app_day_pkg_kpi);
+    DorisDBUtils.execute(conn, "sql_dws_ta_day_pkg_kpi", sql_dws_ta_day_pkg_kpi);
     DorisDBUtils.close();
   }
 
