@@ -6,13 +6,11 @@ import com.analysis.boom.jobs.ocean.dao.AdPlanDataDao;
 import com.analysis.boom.jobs.ocean.dao.AdvertiserDao;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
 import com.analysis.boom.jobs.utils.KafkaUtils;
-import com.analysis.boom.jobs.utils.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 /**
  * 巨量广告数据拉取 :ocean_ad_plan_data
@@ -38,15 +36,12 @@ public class AdPlanDataMain {
             AdvertiserEntity s = adList.get(i);
             String finalStartDate = startDate;
             String finalEndDate = endDate;
-            logger.info("Advertiser {} ,startDate {},endDate {}", s.getAdvertiserId(), finalStartDate,finalEndDate);
+            logger.info("Advertiser {} ,startDate {},endDate {}", s.getAdvertiserId(), finalStartDate, finalEndDate);
 
             List<String> list = AdPlanDataDao.getAdPlanData(s, finalStartDate, finalEndDate);
             logger.info("list size {}", list.size());
             KafkaUtils.sendDataToKafka("boom_dwm_ocean_day_ad_plan_kpi", list);
 
-            List<String> listInventory = AdPlanDataDao.getAdPlanInventoryData(s, finalStartDate, finalEndDate);
-            logger.info("listInventory size {}", listInventory.size());
-            KafkaUtils.sendDataToKafka("boom_dwm_ocean_day_ad_plan_inventory_kpi", listInventory);
 
         }
         KafkaUtils.close();

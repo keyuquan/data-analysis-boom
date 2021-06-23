@@ -6,13 +6,11 @@ import com.analysis.boom.jobs.ocean.dao.AdPlanConfDao;
 import com.analysis.boom.jobs.ocean.dao.AdvertiserDao;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
 import com.analysis.boom.jobs.utils.KafkaUtils;
-import com.analysis.boom.jobs.utils.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 /**
  * 巨量广告数据拉取 :ocean_ad_plan_data
