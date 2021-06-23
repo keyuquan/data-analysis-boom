@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class AppDataMain {
     private final static Logger logger = LoggerFactory.getLogger(AppDataMain.class);
+
     public static void main(String[] args) throws Exception {
         String startDate = DateUtils.getStartDay();
         String endDate = DateUtils.getEndDay();
@@ -29,21 +30,14 @@ public class AppDataMain {
         map.put("41953", "2964b22953d124a005010d3a08fff3b6");// 海南迅游
         // 数据循环跑，每天跑一次
         int days = DateUtils.differentDays(startDate, endDate, "yyyy-MM-dd") + 1;
-        ExecutorService pool = ThreadPoolUtil.getScheduledThreadPool(10);
+
         for (int i = 0; i < days; i++) {
             String startOneDate = DateUtils.addDay(startDate, i);
             String endOneDate = startOneDate;
             logger.info("startOneDate {} ,endOneDate {}", startOneDate, endOneDate);
             for (String userId : map.keySet()) {
-                pool.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        AppDataDao.getDayAppData(startOneDate, endOneDate, userId, map.get(userId));
-
-                    }
-                });
+                AppDataDao.getDayAppData(startOneDate, endOneDate, userId, map.get(userId));
             }
         }
-        ThreadPoolUtil.endThread(pool);
     }
 }

@@ -34,26 +34,21 @@ public class AdPlanDataMain {
         List<AdvertiserEntity> adList = AdvertiserDao.getTtPlatformTokenAdvertiserIdData(boomConnection);
         JdbcUtils.closeBoom();
         // 遍历广告主列表,获取巨量数据,把数据存入DT
-        ExecutorService pool = ThreadPoolUtil.getScheduledThreadPool(3);
         for (int i = 0; i < adList.size(); i++) {
             AdvertiserEntity s = adList.get(i);
             String finalStartDate = startDate;
             String finalEndDate = endDate;
-            pool.submit(new Runnable() {
-                @Override
-                public void run() {
-                    logger.info("Advertiser {} ,endDate {}", s.getAdvertiserId(), finalEndDate);
-                    List<String> list = AdPlanDataDao.getAdPlanData(s, finalStartDate, finalEndDate);
-                    logger.info("list size {}", list.size());
-                    KafkaUtils.sendDataToKafka("boom_dwm_ocean_day_ad_plan_kpi", list);
+            logger.info("Advertiser {} ,startDate {},endDate {}", s.getAdvertiserId(), finalStartDate,finalEndDate);
 
-                    List<String> listInventory = AdPlanDataDao.getAdPlanInventoryData(s, finalStartDate, finalEndDate);
-                    logger.info("listInventory size {}", listInventory.size());
-                    KafkaUtils.sendDataToKafka("boom_dwm_ocean_day_ad_plan_inventory_kpi", listInventory);
-                }
-            });
+            List<String> list = AdPlanDataDao.getAdPlanData(s, finalStartDate, finalEndDate);
+            logger.info("list size {}", list.size());
+            KafkaUtils.sendDataToKafka("boom_dwm_ocean_day_ad_plan_kpi", list);
+
+            List<String> listInventory = AdPlanDataDao.getAdPlanInventoryData(s, finalStartDate, finalEndDate);
+            logger.info("listInventory size {}", listInventory.size());
+            KafkaUtils.sendDataToKafka("boom_dwm_ocean_day_ad_plan_inventory_kpi", listInventory);
+
         }
-        ThreadPoolUtil.endThread(pool);
         KafkaUtils.close();
     }
 

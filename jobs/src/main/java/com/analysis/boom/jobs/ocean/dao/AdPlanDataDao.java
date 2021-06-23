@@ -33,7 +33,7 @@ public class AdPlanDataDao {
         do {
             // 整理参数
             int page = currentPage;
-            String[] fields = new String[]{ "cost", "show", "avg_show_cost", "click", "avg_click_cost", "ctr", "convert", "convert_cost", "convert_rate", "deep_convert", "deep_convert_cost", "deep_convert_rate", "attribution_convert", "attribution_convert_cost", "attribution_deep_convert", "attribution_deep_convert_cost", "download_start", "download_start_cost", "download_start_rate", "download_finish", "download_finish_cost", "download_finish_rate", "click_install", "install_finish", "install_finish_cost", "install_finish_rate", "active", "active_cost", "active_rate", "register", "active_register_cost", "active_register_rate"};
+            String[] fields = new String[]{"cost", "show", "avg_show_cost", "click", "avg_click_cost", "ctr", "convert", "convert_cost", "convert_rate", "deep_convert", "deep_convert_cost", "deep_convert_rate", "attribution_convert", "attribution_convert_cost", "attribution_deep_convert", "attribution_deep_convert_cost", "download_start", "download_start_cost", "download_start_rate", "download_finish", "download_finish_cost", "download_finish_rate", "click_install", "install_finish", "install_finish_cost", "install_finish_rate", "active", "active_cost", "active_rate", "register", "active_register_cost", "active_register_rate"};
             Map<String, Object> map = new HashMap() {
                 {
                     put("advertiser_id", s.getAdvertiserId());
@@ -65,7 +65,7 @@ public class AdPlanDataDao {
             for (JSONObject obj : list) {
                 obj.put("stat_datetime", obj.getOrDefault("stat_datetime", "1970-01-01 00:00:00").toString().substring(0, 10));
                 obj.put("update_time", updateTime);
-                System.out.println(obj.toJSONString());
+                // System.out.println(obj.toJSONString());
                 listAll.add(obj.toJSONString());
             }
             AdPlanDataEntity.DataDTO.PageInfoDTO pageInfo = data.getPageInfo();
@@ -89,7 +89,7 @@ public class AdPlanDataDao {
         do {
             // 整理参数
             int page = currentPage;
-            String[] fields = new String[]{ "cost", "show", "avg_show_cost", "click", "avg_click_cost", "ctr", "convert", "convert_cost", "convert_rate", "deep_convert", "deep_convert_cost", "deep_convert_rate", "attribution_convert", "attribution_convert_cost", "attribution_deep_convert", "attribution_deep_convert_cost", "download_start", "download_start_cost", "download_start_rate", "download_finish", "download_finish_cost", "download_finish_rate", "click_install", "install_finish", "install_finish_cost", "install_finish_rate", "active", "active_cost", "active_rate", "register", "active_register_cost", "active_register_rate"};
+            String[] fields = new String[]{"cost", "show", "avg_show_cost", "click", "avg_click_cost", "ctr", "convert", "convert_cost", "convert_rate", "deep_convert", "deep_convert_cost", "deep_convert_rate", "attribution_convert", "attribution_convert_cost", "attribution_deep_convert", "attribution_deep_convert_cost", "download_start", "download_start_cost", "download_start_rate", "download_finish", "download_finish_cost", "download_finish_rate", "click_install", "install_finish", "install_finish_cost", "install_finish_rate", "active", "active_cost", "active_rate", "register", "active_register_cost", "active_register_rate"};
             Map<String, Object> map = new HashMap() {
                 {
                     put("advertiser_id", s.getAdvertiserId());
@@ -99,7 +99,7 @@ public class AdPlanDataDao {
                     put("end_date", endDate);
                     put("group_by", new String[]{"STAT_GROUP_BY_FIELD_ID", "STAT_GROUP_BY_FIELD_STAT_TIME", "STAT_GROUP_BY_INVENTORY"});
                     put("time_granularity", "STAT_TIME_GRANULARITY_DAILY");
-                    put("fields", null);
+                    put("fields", fields);
                 }
             };
             // 发送数据请求
@@ -121,7 +121,7 @@ public class AdPlanDataDao {
             for (JSONObject obj : list) {
                 obj.put("stat_datetime", obj.getOrDefault("stat_datetime", "1970-01-01 00:00:00").toString().substring(0, 10));
                 obj.put("update_time", updateTime);
-                System.out.println(obj.toJSONString());
+                // System.out.println(obj.toJSONString());
                 listAll.add(obj.toJSONString());
             }
             AdPlanDataEntity.DataDTO.PageInfoDTO pageInfo = data.getPageInfo();

@@ -1,7 +1,7 @@
 package com.analysis.booms.doris.main
 
 import com.analysis.boom.common.utils.DateUtils
-import com.analysis.booms.doris.dws.{DwsPangleDay, DwsTaDay}
+import com.analysis.booms.doris.dws.{DwsOceanDay, DwsPangleDay, DwsTaDay}
 
 object DwsMain {
   def main(args: Array[String]): Unit = {
@@ -13,5 +13,6 @@ object DwsMain {
     }
     DwsTaDay.runData(startDay, endDay)
     DwsPangleDay.runData(startDay, endDay)
+    DwsOceanDay.runData(startDay, endDay)
   }
 }
