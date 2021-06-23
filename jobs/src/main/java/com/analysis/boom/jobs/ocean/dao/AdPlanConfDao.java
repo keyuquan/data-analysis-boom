@@ -28,7 +28,7 @@ public class AdPlanConfDao {
         int totalPage = 2;
         int currentPage = 1;
         do {
-            // 整理参数 //
+            // 整理参数
             String[] fields = new String[]{"advertiser_id", "ad_id", "campaign_id", "name", "package", "app_type", "download_type", "download_url", "download_mode", "inventory_type", "modify_time", "ad_create_time", "ad_modify_time"};
             int page = currentPage;
             Map<String, Object> map = new HashMap();
@@ -36,7 +36,7 @@ public class AdPlanConfDao {
             map.put("page", page);
             map.put("page_size", 1000);
             HashMap filtering = new HashMap() {{
-                put("ad_modify_time", runDate);
+                put("ad_modify_time", null);
             }};
             map.put("filtering", filtering);
             map.put("fields", fields);
@@ -57,6 +57,7 @@ public class AdPlanConfDao {
             String updateTime = DateUtils.getSysFullDate();
             for (JSONObject obj : list) {
                 obj.put("update_time", updateTime);
+                obj.put("inventory_type", obj.getOrDefault("inventory_type", "").toString().replaceAll("\"", "").replaceAll("\\[", "").replaceAll("]", ""));
                 listAll.add(obj.toJSONString());
             }
             AdPlanConfEntity.DataDTO.PageInfoDTO pageInfo = data.getPageInfo();

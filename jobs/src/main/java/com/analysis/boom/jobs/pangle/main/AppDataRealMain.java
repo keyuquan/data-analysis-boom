@@ -42,7 +42,7 @@ public class AppDataRealMain {
                     @Override
                     public void run() {
                         List<String> list = AppDataRealDao.getDayAppData(startOneDate, endOneDate, userId, userId, map.get(userId));
-                        KafkaUtils.sendDataToKafka("boom_dwm_pangle_day_pkg_kpi",list);
+                        KafkaUtils.sendDataToKafka("boom_dwm_pangle_day_site_kpi",list);
                     }
                 });
             }
