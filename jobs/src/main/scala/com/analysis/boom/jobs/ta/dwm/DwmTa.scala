@@ -74,6 +74,7 @@ object DwmTa {
     KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_kpi", listKpi);
     val listRetain = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_retain", sql_dwm_ta_event_day_pkg_retain)
     KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_retain", listRetain);
+    KafkaUtils.close()
   }
 
   def main(args: Array[String]): Unit = {

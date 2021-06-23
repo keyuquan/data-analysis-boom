@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.utils.DateUtils;
 import com.analysis.boom.jobs.ocean.entity.AdPlanConfEntity;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
-import com.analysis.boom.jobs.ocean.main.AdPlanConfMain;
 import com.analysis.boom.jobs.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ public class AdPlanConfDao {
             map.put("page", page);
             map.put("page_size", 1000);
             HashMap filtering = new HashMap() {{
-                put("ad_create_time", runDate);
+                put("ad_modify_time", runDate);
             }};
             map.put("filtering", filtering);
             map.put("fields", fields);
@@ -48,7 +47,7 @@ public class AdPlanConfDao {
             Integer code = adPlanConfEntity.getCode();
             if (code != 0) {
                 logger.info("code {},message {}", code, adPlanConfEntity.getMessage());
-                continue;
+                break;
             }
             AdPlanConfEntity.DataDTO data = adPlanConfEntity.getData();
             if (data == null) {

@@ -2,14 +2,19 @@ package com.analysis.boom.jobs.pangle.Dao;
 
 import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.utils.DateUtils;
+import com.analysis.boom.jobs.ocean.dao.AdPlanConfDao;
 import com.analysis.boom.jobs.pangle.entity.AppDataRealEntity;
 import com.analysis.boom.jobs.utils.HashUtils;
 import com.analysis.boom.jobs.utils.HttpUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class AppDataRealDao {
     public static String report_real_app = "https://www.pangle.cn/union_pangle/open/api/mediation/get_daily_income_report_data";
+
+    private final static Logger logger = LoggerFactory.getLogger(AdPlanConfDao.class);
 
     /**
      * 获取每天的app数据
@@ -49,6 +54,11 @@ public class AppDataRealDao {
             String str = HttpUtils.doGet(report_real_app, sortMap, "");
             // 解析数据
             AppDataRealEntity appDataRealEntity = JSONObject.parseObject(str, AppDataRealEntity.class);
+            String code = appDataRealEntity.getCode();
+            if (code.equals("100")) {
+                logger.info("code {},message {}", code, appDataRealEntity.getMessage());
+                break;
+            }
             AppDataRealEntity.DataDTO data = appDataRealEntity.getData();
             List<JSONObject> list = data.getReportList();
             String updateTime = DateUtils.getSysFullDate();

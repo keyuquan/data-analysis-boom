@@ -53,6 +53,7 @@ public class AdPlanConfMain {
             }
         }
         ThreadPoolUtil.endThread(pool);
+        KafkaUtils.close();
 
     }
 

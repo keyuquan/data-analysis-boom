@@ -1,6 +1,5 @@
 package com.analysis.boom.jobs.utils;
 
-import com.analysis.boom.common.conf.Config;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
@@ -8,24 +7,35 @@ import java.util.List;
 import java.util.Properties;
 
 public class KafkaUtils {
-    /**
-     * 把数据发送到 kafka
-     *
-     * @param topic
-     * @param dataList
-     */
+
+    private static KafkaProducer<String, String> instance = null;
+    public static KafkaProducer<String, String> getInstance() {
+        if (null == instance) {
+            synchronized (KafkaProducer.class) {
+                if (null == instance) {
+                    Properties props = new Properties();
+                    props.put("bootstrap.servers", "ta1:9092,ta2:9092,ta3:9092");
+                    props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+                    props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+                    instance = new KafkaProducer<>(props);
+                }
+
+            }
+        }
+        return instance;
+    }
+
     public static void sendDataToKafka(String topic, List<String> dataList) {
         if (dataList != null && dataList.size() > 0) {
-            Properties props = new Properties();
-            props.put("bootstrap.servers", Config.KAFKA_SERVERS);
-            props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-            props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-            KafkaProducer<String, String> producer = new KafkaProducer<>(props);
+            instance = getInstance();
             for (String str : dataList) {
-                producer.send(new ProducerRecord<>(topic, str));
+                instance.send(new ProducerRecord<>(topic, str));
             }
-            producer.close();
+        }
+    }
+    public static void close() {
+        if (instance != null) {
+            instance.close();
         }
     }
 }
-
