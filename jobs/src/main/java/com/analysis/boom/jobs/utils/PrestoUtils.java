@@ -87,7 +87,7 @@ public class PrestoUtils {
                 rowData.put(md.getColumnName(i), rs.getObject(i));
             }
             rowData.put("update_time", updateTime);
-            System.out.println(JSONObject.toJSONString(rowData));
+           // System.out.println(JSONObject.toJSONString(rowData));
             list.add(JSONObject.toJSONString(rowData));
         }
         rs.close();

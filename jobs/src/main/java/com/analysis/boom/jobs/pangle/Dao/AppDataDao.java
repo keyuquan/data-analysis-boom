@@ -25,7 +25,7 @@ public class AppDataDao {
      * @param roleId
      * @param secureKey
      */
-    public static List<String> getDayAppData(String startDate, String endDate, String userId, String roleId, String secureKey) {
+    public static List<String> getDaySiteData(String startDate, String endDate, String userId, String roleId, String secureKey) {
 
         List<String> listAll = new ArrayList<>();
         int hasNext = 1;

@@ -2,7 +2,7 @@ package com.analysis.boom.jobs.ocean.main;
 
 import com.analysis.boom.common.utils.DateUtils;
 import com.analysis.boom.common.utils.JdbcUtils;
-import com.analysis.boom.jobs.ocean.dao.AdPlanConfDao;
+import com.analysis.boom.jobs.ocean.dao.AdPlanDataDao;
 import com.analysis.boom.jobs.ocean.dao.AdvertiserDao;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
 import com.analysis.boom.jobs.utils.KafkaUtils;
@@ -15,12 +15,12 @@ import java.util.List;
 /**
  * 巨量广告数据拉取 :ocean_ad_plan_data
  */
-public class AdPlanConfMain {
-    private final static Logger logger = LoggerFactory.getLogger(AdPlanConfMain.class);
+public class DwmOceanMain {
+    private final static Logger logger = LoggerFactory.getLogger(DwmOceanMain.class);
+    private static String uri = "2/report/ad/get/";
 
     public static void main(String[] args) throws Exception {
-
-        String startDate = DateUtils.getStartDay(0);
+        String startDate = DateUtils.getStartDay();
         String endDate = DateUtils.getEndDay();
         if (args.length >= 2) {
             startDate = args[0];
@@ -31,21 +31,21 @@ public class AdPlanConfMain {
         Connection boomConnection = JdbcUtils.getBoomConnection();
         List<AdvertiserEntity> adList = AdvertiserDao.getTtPlatformTokenAdvertiserIdData(boomConnection);
         JdbcUtils.closeBoom();
-        // 遍历广告主列表,获取巨量数据,把数据存入
-        int days = DateUtils.differentDays(startDate, endDate, "yyyy-MM-dd") + 1;
-        for (int j = 0; j < days; j++) {
-            String startOneDate = DateUtils.addDay(startDate, j);
-            String endOneDate = startOneDate;
-            for (int i = 0; i < adList.size(); i++) {
-                AdvertiserEntity s = adList.get(i);
-                logger.info("Advertiser {} ,endDate {}", s.getAdvertiserId(), endOneDate);
-                List<String> list = AdPlanConfDao.getAdPlanConfData(s, endOneDate);
-                logger.info("conf size {}", list.size());
-                KafkaUtils.sendDataToKafka("boom_ods_ocean_ad_plan_conf", list);
-            }
+        // 遍历广告主列表,获取巨量数据,把数据存入DT
+        for (int i = 0; i < adList.size(); i++) {
+            AdvertiserEntity s = adList.get(i);
+            String finalStartDate = startDate;
+            String finalEndDate = endDate;
+            logger.info("Advertiser {} ,startDate {},endDate {}", s.getAdvertiserId(), finalStartDate, finalEndDate);
+
+            List<String> list = AdPlanDataDao.getDayAdPlanData(s, finalStartDate, finalEndDate);
+            logger.info("list size {}", list.size());
+            KafkaUtils.sendDataToKafka("boom_dwm_ocean_day_ad_plan_kpi", list);
+
+
         }
         KafkaUtils.close();
-
     }
+
 
 }

@@ -25,7 +25,7 @@ public class AdPlanDataDao {
      * @param startDate
      * @param endDate
      */
-    public static List<String> getAdPlanData(AdvertiserEntity s, String startDate, String endDate) {
+    public static List<String> getDayAdPlanData(AdvertiserEntity s, String startDate, String endDate) {
         List<String> listAll = new ArrayList<>();
         int totalPage = 2;
         int currentPage = 1;
@@ -82,7 +82,7 @@ public class AdPlanDataDao {
      * @param startDate
      * @param endDate
      */
-    public static List<String> getAdPlanInventoryData(AdvertiserEntity s, String startDate, String endDate) {
+    public static List<String> getDayAdPlanInventoryData(AdvertiserEntity s, String startDate, String endDate) {
         List<String> listAll = new ArrayList<>();
         int totalPage = 2;
         int currentPage = 1;
