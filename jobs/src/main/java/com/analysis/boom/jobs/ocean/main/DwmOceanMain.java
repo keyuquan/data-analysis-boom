@@ -20,7 +20,7 @@ public class DwmOceanMain {
     private static String uri = "2/report/ad/get/";
 
     public static void main(String[] args) throws Exception {
-        String startDate = DateUtils.getStartDay();
+        String startDate = DateUtils.getStartDay(1);
         String endDate = DateUtils.getEndDay();
         if (args.length >= 2) {
             startDate = args[0];
