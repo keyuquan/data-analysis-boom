@@ -5,7 +5,7 @@ import com.analysis.booms.doris.dws.{DwsOceanDay, DwsPangleDay, DwsTaDay}
 
 object DwsMain {
   def main(args: Array[String]): Unit = {
-    var startDay = DateUtils.getStartDay(10)
+    var startDay = DateUtils.getStartDay(31)
     var endDay = DateUtils.getEndDay()
     if (args.length >= 2) {
       startDay = args(0)

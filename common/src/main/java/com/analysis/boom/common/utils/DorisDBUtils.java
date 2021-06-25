@@ -28,7 +28,7 @@ public class DorisDBUtils {
 
 
     public static List<String> queryTaProjectId(Connection conn) throws SQLException {
-        String sql = "select distinct  ta_project_id from  doris_boom.app_pkg_conf  where  ta_project_id is not null";
+        String sql = "select distinct  ta_project_id from  doris_boom.app_pkg_conf  where  ta_project_id is not null and ta_project_id<>'' ";
         logger.info(sql);
         long start = System.currentTimeMillis();
         Statement stmt = conn.createStatement();

@@ -1,9 +1,10 @@
 package com.analysis.booms.doris.dws
 
-import com.analysis.boom.common.utils.DorisDBUtils
+import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils}
 
 object DwsTaDay {
   def runData(startDay: String, endDay: String): Unit = {
+
     val sql_dws_ta_day_pkg_plan_kpi =
       s"""
          |insert  into dws_ta_day_pkg_plan_kpi
@@ -62,9 +63,32 @@ object DwsTaDay {
          |)  t_k  on  t1.data_date=t_k.data_date and t1.pkg_code=t_k.pkg_code and t1.plan_id=t_k.plan_id
          |left join
          |(
-         |  select  data_date, pkg_code, plan_id,
-         |  retain_1, retain_2, retain_3, retain_4, retain_5, retain_6, retain_7, retain_15, retain_30, ltv_0, ltv_1, ltv_2, ltv_3, ltv_4, ltv_5, ltv_6, ltv_7, ltv_15, ltv_30, update_time
-         |  from dwm_ta_event_day_pkg_plan_retain  where  data_date between  '$startDay' AND '$endDay'
+         |select
+         |data_date
+         |,pkg_code
+         |,plan_id
+         |,max(if(retain_day=1,retain_count,0))  retain_1
+         |,max(if(retain_day=2,retain_count,0))  retain_2
+         |,max(if(retain_day=3,retain_count,0))  retain_3
+         |,max(if(retain_day=4,retain_count,0))  retain_4
+         |,max(if(retain_day=5,retain_count,0))  retain_5
+         |,max(if(retain_day=6,retain_count,0))  retain_6
+         |,max(if(retain_day=7,retain_count,0))  retain_7
+         |,max(if(retain_day=15,retain_count,0))  retain_15
+         |,max(if(retain_day=30,retain_count,0))  retain_30
+         |,sum(if(retain_day<=0,coalesce(earnings,0),0))  ltv_0
+         |,sum(if(retain_day<=1,coalesce(earnings,0),0))  ltv_1
+         |,ROUND(sum(if(retain_day<=2,coalesce(earnings,0),0)),2)  ltv_2
+         |,ROUND(sum(if(retain_day<=3,coalesce(earnings,0),0)),2)  ltv_3
+         |,ROUND(sum(if(retain_day<=4,coalesce(earnings,0),0)),2)  ltv_4
+         |,ROUND(sum(if(retain_day<=5,coalesce(earnings,0),0)),2)  ltv_5
+         |,ROUND(sum(if(retain_day<=6,coalesce(earnings,0),0)),2)  ltv_6
+         |,ROUND(sum(if(retain_day<=7,coalesce(earnings,0),0)),2)  ltv_7
+         |,ROUND(sum(if(retain_day<=15,coalesce(earnings,0),0)),2)  ltv_15
+         |,ROUND(sum(if(retain_day<=30,coalesce(earnings,0),0)),2)  ltv_30
+         |from
+         |dwm_ta_event_day_pkg_plan_retain  where  data_date between  '$startDay' AND '$endDay'
+         |group  by  data_date,pkg_code,plan_id
          |)  t_r  on  t1.data_date=t_r.data_date and t1.pkg_code=t_r.pkg_code and t1.plan_id=t_r.plan_id
          |""".stripMargin
 
@@ -176,7 +200,33 @@ object DwsTaDay {
          |select data_date, pkg_code from dws_ta_day_pkg_plan_kpi   where  data_date between  '$startDay' AND '$endDay'
          |)  t
          |left join  (select *,sum(earnings) over( partition by pkg_code order by data_date  )   earnings_all from dwm_ta_event_day_pkg_kpi  ) t1 on  t1.data_date=t.data_date and t1.pkg_code=t.pkg_code
-         |left join  (select * from dwm_ta_event_day_pkg_retain  where  data_date between  '$startDay' AND '$endDay' ) t2 on  t2.data_date=t.data_date and t2.pkg_code=t.pkg_code
+         |left join
+         |(select
+         |data_date
+         |,pkg_code
+         |,max(if(retain_day=1,retain_count,0))  retain_1
+         |,max(if(retain_day=2,retain_count,0))  retain_2
+         |,max(if(retain_day=3,retain_count,0))  retain_3
+         |,max(if(retain_day=4,retain_count,0))  retain_4
+         |,max(if(retain_day=5,retain_count,0))  retain_5
+         |,max(if(retain_day=6,retain_count,0))  retain_6
+         |,max(if(retain_day=7,retain_count,0))  retain_7
+         |,max(if(retain_day=15,retain_count,0))  retain_15
+         |,max(if(retain_day=30,retain_count,0))  retain_30
+         |,sum(if(retain_day<=0,coalesce(earnings,0),0))  ltv_0
+         |,sum(if(retain_day<=1,coalesce(earnings,0),0))  ltv_1
+         |,ROUND(sum(if(retain_day<=2,coalesce(earnings,0),0)),2)  ltv_2
+         |,ROUND(sum(if(retain_day<=3,coalesce(earnings,0),0)),2)  ltv_3
+         |,ROUND(sum(if(retain_day<=4,coalesce(earnings,0),0)),2)  ltv_4
+         |,ROUND(sum(if(retain_day<=5,coalesce(earnings,0),0)),2)  ltv_5
+         |,ROUND(sum(if(retain_day<=6,coalesce(earnings,0),0)),2)  ltv_6
+         |,ROUND(sum(if(retain_day<=7,coalesce(earnings,0),0)),2)  ltv_7
+         |,ROUND(sum(if(retain_day<=15,coalesce(earnings,0),0)),2)  ltv_15
+         |,ROUND(sum(if(retain_day<=30,coalesce(earnings,0),0)),2)  ltv_30
+         |from
+         |dwm_ta_event_day_pkg_retain  where   data_date  between  '$startDay' AND '$endDay'
+         |group  by data_date,pkg_code
+         |) t2 on  t2.data_date=t.data_date and t2.pkg_code=t.pkg_code
          |left  join
          |(
          |select
