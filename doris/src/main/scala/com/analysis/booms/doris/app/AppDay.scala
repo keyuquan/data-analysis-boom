@@ -117,6 +117,7 @@ object AppDay {
          |,ifnull(api_ecpm,0)
          |,ifnull(revenue,0)
          |,ifnull(api_revenue,0)
+         |,ifnull(api_revenue_all,0)
          |,ifnull(show_count,0)
          |,ifnull(cost ,0)
          |,ifnull(active ,0)

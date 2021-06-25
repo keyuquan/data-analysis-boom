@@ -1,12 +1,15 @@
 package com.analysis.boom.common.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.conf.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DorisDBUtils {
     private static Connection conn = null;
@@ -22,6 +25,26 @@ public class DorisDBUtils {
             e.printStackTrace();
         }
     }
+
+
+    public static List<String> queryTaProjectId(Connection conn) throws SQLException {
+        String sql = "select distinct  ta_project_id from  doris_boom.app_pkg_conf  where  ta_project_id is not null";
+        logger.info(sql);
+        long start = System.currentTimeMillis();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        List<String> list = new ArrayList();
+        ResultSetMetaData md = rs.getMetaData();
+        while (rs.next()) {
+            list.add(rs.getString("ta_project_id"));
+        }
+        rs.close();
+        stmt.close();
+        long end = System.currentTimeMillis();
+        logger.info("queryTaProjectId 执行耗时(毫秒):" + (end - start));
+        return list;
+    }
+
 
     /**
      * 获取 Connetion

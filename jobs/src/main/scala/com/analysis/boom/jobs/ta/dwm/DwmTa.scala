@@ -1,7 +1,9 @@
 package com.analysis.boom.jobs.ta.dwm
 
-import com.analysis.boom.common.utils.DateUtils
+import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils}
 import com.analysis.boom.jobs.utils.{KafkaUtils, PrestoUtils}
+
+import java.util
 
 /**
  * ta 数据 dws 层统计
@@ -64,7 +66,7 @@ object DwmTa {
          |(
          |select   t_u."$part_date" , t_u."#bundle_id"  ,date_diff('day',cast(t_u."$part_date" as date),cast(t_a."$part_date" as date)) retain_day,count(distinct  t_a."#user_id") retain_count,sum(earnings)  earnings
          |from
-         |(select      "$part_date" ,"#bundle_id" ,"#user_id" ,sum(if("$part_event" IN ( 'ad_show' ),coalesce(earnings,0) ,0)) earnings from  ta.ta_event_5  where    "$part_date" between  '$startDay' AND '$endDay' group by  "$part_date" ,"#bundle_id" ,"#user_id" ) t_a
+         |(select      "$part_date" ,"#bundle_id" ,"#user_id" ,sum(if("$part_event" IN ( 'ad_show' ),coalesce(earnings,0) ,0)) earnings from  ta.ta_event_5  where    "$part_date" between  '$startDayRetain' AND '$endDay' group by  "$part_date" ,"#bundle_id" ,"#user_id" ) t_a
          |join  (select    distinct  "$part_date" ,"#bundle_id" ,"#user_id" from  ta.ta_event_5  where    "$part_date" between  '$startDayRetain' AND '$endDay' and "#is_first_day"=true   ) t_u
          |on  t_u."#bundle_id" =t_a."#bundle_id" and  t_u."#user_id" =t_a."#user_id"
          |group  by  t_u."$part_date" , t_u."#bundle_id" ,date_diff('day',cast(t_u."$part_date" as date),cast(t_a."$part_date" as date))
@@ -126,7 +128,7 @@ object DwmTa {
          |(
          |select   t_u."$part_date" , t_u."#bundle_id"  ,t_u_2.ry_planid,date_diff('day',cast(t_u."$part_date" as date),cast(t_a."$part_date" as date)) retain_day,count(distinct  t_a."#user_id") retain_count,sum(earnings)  earnings
          |from
-         |(select      "$part_date" ,"#bundle_id" ,"#user_id" ,sum(if("$part_event" IN ( 'ad_show' ),coalesce(earnings,0) ,0)) earnings from  ta.ta_event_5  where    "$part_date" between  '$startDay' AND '$endDay' group by  "$part_date" ,"#bundle_id" ,"#user_id" ) t_a
+         |(select      "$part_date" ,"#bundle_id" ,"#user_id" ,sum(if("$part_event" IN ( 'ad_show' ),coalesce(earnings,0) ,0)) earnings from  ta.ta_event_5  where    "$part_date" between  '$startDayRetain' AND '$endDay' group by  "$part_date" ,"#bundle_id" ,"#user_id" ) t_a
          |join  (
          |select    distinct  "$part_date" ,"#bundle_id" ,"#user_id" from  ta.ta_event_5  where    "$part_date" between  '$startDayRetain' AND '$endDay' and "#is_first_day"=true   
          |) t_u on  t_u."#bundle_id" =t_a."#bundle_id" and  t_u."#user_id" =t_a."#user_id"
@@ -137,14 +139,19 @@ object DwmTa {
          |""".stripMargin
 
     val conn = PrestoUtils.getConnection
-    val listKpi = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_kpi", sql_dwm_ta_event_day_pkg_kpi)
-    KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_kpi", listKpi)
-    val listRetain = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_retain", sql_dwm_ta_event_day_pkg_retain)
-    KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_retain", listRetain)
-    val listPlanKpi = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_plan_kpi", sql_dwm_ta_event_day_pkg_plan_kpi)
-    KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_plan_kpi", listPlanKpi)
-    val listPlanRetain = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_plan_retain", sql_dwm_ta_event_day_pkg_plan_retain)
-    KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_plan_retain", listPlanRetain)
+
+    val connDorisDB = DorisDBUtils.getConnection;
+    val list: util.List[String] = DorisDBUtils.queryTaProjectId(connDorisDB);
+    list.forEach(taProjectId => {
+      val listKpi = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_kpi", sql_dwm_ta_event_day_pkg_kpi.replaceAll("ta_event_5","ta_event_"+taProjectId))
+      KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_kpi", listKpi)
+      val listRetain = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_retain", sql_dwm_ta_event_day_pkg_retain.replaceAll("ta_event_5","ta_event_"+taProjectId))
+      KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_retain", listRetain)
+      val listPlanKpi = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_plan_kpi", sql_dwm_ta_event_day_pkg_plan_kpi.replaceAll("ta_event_5","ta_event_"+taProjectId).replaceAll("v_user_5","v_user_"+taProjectId))
+      KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_plan_kpi", listPlanKpi)
+      val listPlanRetain = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_plan_retain", sql_dwm_ta_event_day_pkg_plan_retain.replaceAll("ta_event_5","ta_event_"+taProjectId).replaceAll("v_user_5","v_user_"+taProjectId))
+      KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_plan_retain", listPlanRetain)
+    })
     KafkaUtils.close()
   }
 
