@@ -19,39 +19,39 @@ object DwmTa {
          |select
          |"$part_date"   data_date -- 统计日期
          |,"#bundle_id"  pkg_code  --  包名
-         |,count(distinct if("#is_first_day" ,"#user_id",null) )  add_user_count --  新增用户数
-         |,count(if("#is_first_day" ,"#user_id",null) )  add_count --  新增次数
+         |,count(distinct if(t.event_date=u.active_date ,"#user_id",null) )  add_user_count --  新增用户数
+         |,count(if(t.event_date=u.active_date ,"#user_id",null) )  add_count --  新增次数
          |,count(distinct "#user_id")  active_user_count --  活跃用户数
          |,count("#user_id")  active_count --  活跃次数
-         |,count(distinct if("#is_first_day" and  "$part_event" IN ( 'ad_show' ),"#user_id",null) )  add_ad_show_user_count --  新增广告用户数
-         |,count(if("#is_first_day" and  "$part_event" IN ( 'ad_show' ),"#user_id",null) )  add_ad_show_count --  新增广告次数
+         |,count(distinct if(t.event_date=u.active_date and  "$part_event" IN ( 'ad_show' ),"#user_id",null) )  add_ad_show_user_count --  新增广告用户数
+         |,count(if(t.event_date=u.active_date and  "$part_event" IN ( 'ad_show' ),"#user_id",null) )  add_ad_show_count --  新增广告次数
          |,count(distinct if("$part_event" IN ( 'ad_show' ),"#user_id",null) )  ad_show_user_count --  广告用户数
          |,count(if("$part_event" IN ( 'ad_show' ),"#user_id",null) )  ad_show_count --  广告次数
          |,count(1)   --  活跃次数
          |,ROUND(sum(if("$part_event" IN ( 'ad_show' ) ,ecpm,0))/if(sum(if("$part_event" IN ( 'ad_show' ) ,1,0))=0,1,sum(if("$part_event" IN ( 'ad_show' ),1,0))),2) ecpm
-         |,ROUND(sum(if("$part_event" IN ( 'ad_show' ) and "#is_first_day" ,ecpm,0))/if(sum(if("$part_event" IN ( 'ad_show' ) and  "#is_first_day" ,1,0))=0,1,sum(if("$part_event" IN ( 'ad_show' ) and  "#is_first_day" ,1,0))),2) add_ecpm
-         |,ROUND(sum(if("#is_first_day" and  "$part_event" IN ( 'ad_show' ),earnings,0) ),2)  earnings
+         |,ROUND(sum(if("$part_event" IN ( 'ad_show' ) and t.event_date=u.active_date ,ecpm,0))/if(sum(if("$part_event" IN ( 'ad_show' ) and  t.event_date=u.active_date ,1,0))=0,1,sum(if("$part_event" IN ( 'ad_show' ) and  t.event_date=u.active_date ,1,0))),2) add_ecpm
+         |,ROUND(sum(if(t.event_date=u.active_date and  "$part_event" IN ( 'ad_show' ),earnings,0) ),2)  earnings
          |from
-         |ta.ta_event_5  where "$part_date" between  '$startDay' AND '$endDay'
+         |(select *, date("#event_time") event_date from  ta.v_event_5  where "$part_date" between  '$startDay' AND '$endDay')  t
+         |left join  (select "#user_id" as   user_id ,date("#active_time")  active_date   from   ta.v_user_5) u  on  t."#user_id"=u.user_id
          |group by "$part_date", "#bundle_id"
          |""".stripMargin
 
     val sql_dwm_ta_event_day_pkg_retain =
       s"""
          |select
-         |"$part_date"   data_date -- 统计日期
+         |active_date   data_date -- 统计日期
          |,"#bundle_id"  pkg_code  --  包名
          |,retain_day --  留存日期
          |,retain_count --  留存人数
          |,earnings --  ltv金额
          |from
          |(
-         |select   t_u."$part_date" , t_u."#bundle_id"  ,date_diff('day',cast(t_u."$part_date" as date),cast(t_a."$part_date" as date)) retain_day,count(distinct  t_a."#user_id") retain_count,sum(earnings)  earnings
+         |select   u.active_date , t."#bundle_id"  ,date_diff('day',active_date,event_date) retain_day,count(distinct  t."#user_id") retain_count,sum(earnings)  earnings
          |from
-         |(select      "$part_date" ,"#bundle_id" ,"#user_id" ,sum(if("$part_event" IN ( 'ad_show' ),coalesce(earnings,0) ,0)) earnings from  ta.ta_event_5  where    "$part_date" between  '$startDay' AND '$endDay' group by  "$part_date" ,"#bundle_id" ,"#user_id" ) t_a
-         |join  (select    distinct  "$part_date" ,"#bundle_id" ,"#user_id" from  ta.ta_event_5  where    "$part_date" between  '$startDayRetain' AND '$endDay' and "#is_first_day"=true   ) t_u
-         |on  t_u."#bundle_id" =t_a."#bundle_id" and  t_u."#user_id" =t_a."#user_id"
-         |group  by  t_u."$part_date" , t_u."#bundle_id" ,date_diff('day',cast(t_u."$part_date" as date),cast(t_a."$part_date" as date))
+         |(select      "$part_date" ,"#bundle_id" ,"#user_id" , date("#event_time") event_date,sum(if("$part_event" IN ( 'ad_show' ),coalesce(earnings,0) ,0)) earnings from  ta.v_event_5  where    "$part_date" between  '$startDay' AND '$endDay' group by  "$part_date" ,"#bundle_id" ,"#user_id" , date("#event_time") ) t
+         |join  (select    distinct  "#user_id" as   user_id,date("#active_time")  active_date   from  ta.v_user_5 ) u on  u.user_id =t."#user_id"
+         |group  by  u.active_date, t."#bundle_id" ,date_diff('day',active_date,event_date)
          |) where  retain_day >=0  and  "#bundle_id"  is not null
          |""".stripMargin
 
@@ -61,50 +61,46 @@ object DwmTa {
          |select
          |"$part_date"   data_date -- 统计日期
          |,"#bundle_id"  pkg_code  --  包名
-         |,t_u.ry_planid plan_id   -- 计划ID
-         |,count(distinct if("#is_first_day" ,t."#user_id",null) )  add_user_count --  新增用户数
-         |,count(if("#is_first_day" ,t."#user_id",null) )  add_count --  新增次数
+         |,u.ry_planid plan_id   -- 计划ID
+         |,count(distinct if(t.event_date=u.active_date ,t."#user_id",null) )  add_user_count --  新增用户数
+         |,count(if(t.event_date=u.active_date ,t."#user_id",null) )  add_count --  新增次数
          |,count(distinct t."#user_id")  active_user_count --  活跃用户数
          |,count(t."#user_id")  active_count --  活跃次数
-         |,count(distinct if("#is_first_day" and  "$part_event" IN ( 'ad_show' ),t."#user_id",null) )  add_ad_show_user_count --  新增广告用户数
-         |,count(if("#is_first_day" and  "$part_event" IN ( 'ad_show' ),t."#user_id",null) )  add_ad_show_count --  新增广告次数
+         |,count(distinct if(t.event_date=u.active_date and  "$part_event" IN ( 'ad_show' ),t."#user_id",null) )  add_ad_show_user_count --  新增广告用户数
+         |,count(if(t.event_date=u.active_date and  "$part_event" IN ( 'ad_show' ),t."#user_id",null) )  add_ad_show_count --  新增广告次数
          |,count(distinct if("$part_event" IN ( 'ad_show' ),t."#user_id",null) )  ad_show_user_count --  广告用户数
          |,count(if("$part_event" IN ( 'ad_show' ),t."#user_id",null) )  ad_show_count --  广告次数
          |,count(1)   --  活跃次数
          |,ROUND(sum(if("$part_event" IN ( 'ad_show' ) ,ecpm,0))/if(sum(if("$part_event" IN ( 'ad_show' ) ,1,0))=0,1,sum(if("$part_event" IN ( 'ad_show' ),1,0))),2) ecpm
-         |,ROUND(sum(if("$part_event" IN ( 'ad_show' ) and "#is_first_day" ,ecpm,0))/if(sum(if("$part_event" IN ( 'ad_show' ) and  "#is_first_day" ,1,0))=0,1,sum(if("$part_event" IN ( 'ad_show' ) and  "#is_first_day" ,1,0))),2) add_ecpm
-         |,ROUND(sum(if("#is_first_day" and  "$part_event" IN ( 'ad_show' ),earnings,0) ),2)  earnings
+         |,ROUND(sum(if("$part_event" IN ( 'ad_show' ) and t.event_date=u.active_date ,ecpm,0))/if(sum(if("$part_event" IN ( 'ad_show' ) and  t.event_date=u.active_date ,1,0))=0,1,sum(if("$part_event" IN ( 'ad_show' ) and  t.event_date=u.active_date ,1,0))),2) add_ecpm
+         |,ROUND(sum(if(t.event_date=u.active_date and  "$part_event" IN ( 'ad_show' ),earnings,0) ),2)  earnings
          |from
-         |(select *  from  ta.ta_event_5   where "$part_date" between  '$startDay' AND '$endDay') t
-         |join  (select distinct ry_planid,"#user_id" from  ta.v_user_5 where ry_planid is  not  null  ) t_u  on  t."#user_id"=t_u."#user_id"
-         |group by "$part_date", "#bundle_id", t_u.ry_planid
+         |(select *, date("#event_time") event_date  from  ta.v_event_5   where "$part_date" between  '$startDay' AND '$endDay') t
+         |left  join  (select distinct ry_planid,"#user_id" user_id,date("#active_time")  active_date from  ta.v_user_5 where ry_planid is  not  null  ) u  on  t."#user_id"=u.user_id
+         |group by "$part_date", "#bundle_id", u.ry_planid
          |""".stripMargin
 
     val sql_dwm_ta_event_day_pkg_plan_retain =
       s"""
          |select
-         |"$part_date"   data_date -- 统计日期
+         |active_date   data_date -- 统计日期
          |,"#bundle_id"  pkg_code  --  包名
-         |,ry_planid  plan_id -- 计划ID
+         |,ry_planid   --  计划名
          |,retain_day --  留存日期
          |,retain_count --  留存人数
          |,earnings --  ltv金额
          |from
          |(
-         |select   t_u."$part_date" , t_u."#bundle_id"  ,t_u_2.ry_planid,date_diff('day',cast(t_u."$part_date" as date),cast(t_a."$part_date" as date)) retain_day,count(distinct  t_a."#user_id") retain_count,sum(earnings)  earnings
+         |select   u.active_date , t."#bundle_id"  ,u.ry_planid ,date_diff('day',active_date,event_date) retain_day,count(distinct  t."#user_id") retain_count,sum(earnings)  earnings
          |from
-         |(select      "$part_date" ,"#bundle_id" ,"#user_id" ,sum(if("$part_event" IN ( 'ad_show' ),coalesce(earnings,0) ,0)) earnings from  ta.ta_event_5  where    "$part_date" between  '$startDay' AND '$endDay' group by  "$part_date" ,"#bundle_id" ,"#user_id" ) t_a
-         |join  (
-         |select    distinct  "$part_date" ,"#bundle_id" ,"#user_id" from  ta.ta_event_5  where    "$part_date" between  '$startDayRetain' AND '$endDay' and "#is_first_day"=true
-         |) t_u on  t_u."#bundle_id" =t_a."#bundle_id" and  t_u."#user_id" =t_a."#user_id"
-         |join  (select distinct ry_planid,"#user_id" from  ta.v_user_5 where ry_planid is  not  null  ) t_u_2  on  t_a."#user_id"=t_u_2."#user_id"
-         |group  by  t_u."$part_date" , t_u."#bundle_id" ,t_u_2.ry_planid ,date_diff('day',cast(t_u."$part_date" as date),cast(t_a."$part_date" as date))
+         |(select      "$part_date" ,"#bundle_id" ,"#user_id" , date("#event_time") event_date,sum(if("$part_event" IN ( 'ad_show' ),coalesce(earnings,0) ,0)) earnings from  ta.v_event_5  where    "$part_date" between  '$startDay' AND '$endDay' group by  "$part_date" ,"#bundle_id" ,"#user_id" , date("#event_time") ) t
+         |join  (select  "#user_id" as   user_id,ry_planid,date("#active_time")  active_date   from  ta.v_user_5 ) u on  u.user_id =t."#user_id"
+         |group  by  u.active_date, t."#bundle_id" ,u.ry_planid ,date_diff('day',active_date,event_date)
          |) where  retain_day >=0  and  "#bundle_id"  is not null
          |""".stripMargin
 
     val conn = PrestoUtils.getConnection
 
-    val connDorisDB = DorisDBUtils.getConnection;
     val listKpi = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_kpi", sql_dwm_ta_event_day_pkg_kpi)
     KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_kpi", listKpi)
     val listRetain = PrestoUtils.query(conn, "sql_dwm_ta_event_day_pkg_retain", sql_dwm_ta_event_day_pkg_retain)
