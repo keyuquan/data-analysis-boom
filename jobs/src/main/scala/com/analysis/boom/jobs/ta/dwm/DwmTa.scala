@@ -27,9 +27,9 @@ object DwmTa {
          |,count(distinct if(part_event IN ('ad_show'),t.user_id,null) )  ad_show_user_count --  广告用户数
          |,count(if(part_event IN ('ad_show'),t.user_id,null) )  ad_show_count --  广告次数
          |,count(1)   --  活跃次数
-         |,ROUND(sum(if(part_event IN ('ad_show') ,ecpm,0))/if(sum(if(part_event IN ('ad_show') ,1,0))=0,1,sum(if(part_event IN ('ad_show'),1,0))),4) ecpm
-         |,ROUND(sum(if(part_event IN ('ad_show') and t.event_date=u.active_date ,ecpm,0))/if(sum(if(part_event IN ('ad_show') and  t.event_date=u.active_date ,1,0))=0,1,sum(if(part_event IN ('ad_show') and  t.event_date=u.active_date ,1,0))),4) add_ecpm
-         |,ROUND(sum(if(t.event_date=u.active_date and  part_event IN ('ad_show'),earnings,0) ),4)  earnings
+         |,ROUND(sum(if(part_event IN ('ad_show') and ecpm>0 ,ecpm,0))/if(sum(if(part_event IN ('ad_show')  and ecpm>0,1,0))=0,1,sum(if(part_event IN ('ad_show') and ecpm>0,1,0))),4) ecpm
+         |,ROUND(sum(if(part_event IN ('ad_show') and ecpm>0 and t.event_date=u.active_date ,ecpm,0))/if(sum(if(part_event IN ('ad_show')  and ecpm>0 and  t.event_date=u.active_date ,1,0))=0,1,sum(if(part_event IN ('ad_show')  and ecpm>0 and  t.event_date=u.active_date ,1,0))),4) add_ecpm
+         |,ROUND(sum(if(part_event IN ('ad_show'),earnings,0) ),4)  earnings
          |from
          |(select "$part_date" part_date,"$part_event" part_event,"#bundle_id" bundle_id, "#user_id" user_id,"#event_time" event_time, date("#event_time") event_date,try_cast((try("earnings")) as double) earnings,try_cast((try("ecpm")) as double) ecpm from  ta.v_event_5  where "$part_date" between  '$startDay' AND '$endDay')  t
          |left join  (select "#user_id" as   user_id ,date("#active_time")  active_date   from   ta.v_user_5) u  on  t.user_id=u.user_id
@@ -70,9 +70,9 @@ object DwmTa {
          |,count(distinct if(part_event IN ('ad_show'),t.user_id,null) )  ad_show_user_count --  广告用户数
          |,count(if(part_event IN ('ad_show'),t.user_id,null) )  ad_show_count --  广告次数
          |,count(1)   --  活跃次数
-         |,ROUND(sum(if(part_event IN ('ad_show') ,ecpm,0))/if(sum(if(part_event IN ('ad_show') ,1,0))=0,1,sum(if(part_event IN ('ad_show'),1,0))),4) ecpm
-         |,ROUND(sum(if(part_event IN ('ad_show') and t.event_date=u.active_date ,ecpm,0))/if(sum(if(part_event IN ('ad_show') and  t.event_date=u.active_date ,1,0))=0,1,sum(if(part_event IN ('ad_show') and  t.event_date=u.active_date ,1,0))),4) add_ecpm
-         |,ROUND(sum(if(t.event_date=u.active_date and  part_event IN ('ad_show'),earnings,0) ),4)  earnings
+         |,ROUND(sum(if(part_event IN ('ad_show')  and ecpm>0,ecpm,0))/if(sum(if(part_event IN ('ad_show')  and ecpm>0,1,0))=0,1,sum(if(part_event IN ('ad_show') and ecpm>0,1,0))),4) ecpm
+         |,ROUND(sum(if(part_event IN ('ad_show')  and ecpm>0 and t.event_date=u.active_date ,ecpm,0))/if(sum(if(part_event IN ('ad_show')  and ecpm>0 and  t.event_date=u.active_date ,1,0))=0,1,sum(if(part_event IN ('ad_show')  and ecpm>0 and  t.event_date=u.active_date ,1,0))),4) add_ecpm
+         |,ROUND(sum(if(part_event IN ('ad_show'),earnings,0) ),4)  earnings
          |from
          |(select "$part_date" part_date,"$part_event" part_event,"#bundle_id" bundle_id, "#user_id" user_id,"#event_time" event_time, date("#event_time") event_date,try_cast((try("earnings")) as double) earnings,try_cast((try("ecpm")) as double) ecpm from  ta.v_event_5  where "$part_date" between  '$startDay' AND '$endDay')  t
          |left join  (select "#user_id" as   user_id ,date("#active_time")  active_date,ry_planid   from   ta.v_user_5) u  on  t.user_id=u.user_id
@@ -114,7 +114,6 @@ object DwmTa {
         KafkaUtils.sendDataToKafka("boom_dwm_ta_event_day_pkg_plan_retain", listPlanRetain)
       }
     })
-
     KafkaUtils.close()
   }
 

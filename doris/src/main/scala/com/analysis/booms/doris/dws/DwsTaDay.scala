@@ -1,6 +1,6 @@
 package com.analysis.booms.doris.dws
 
-import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils}
+import com.analysis.boom.common.utils.DorisDBUtils
 
 object DwsTaDay {
   def runData(startDay: String, endDay: String): Unit = {
@@ -76,16 +76,16 @@ object DwsTaDay {
          |,max(if(retain_day=7,retain_count,0))  retain_7
          |,max(if(retain_day=15,retain_count,0))  retain_15
          |,max(if(retain_day=30,retain_count,0))  retain_30
-         |,sum(if(retain_day<=0,coalesce(earnings,0),0))  ltv_0
-         |,sum(if(retain_day<=1,coalesce(earnings,0),0))  ltv_1
-         |,ROUND(sum(if(retain_day<=2,coalesce(earnings,0),0)),2)  ltv_2
-         |,ROUND(sum(if(retain_day<=3,coalesce(earnings,0),0)),2)  ltv_3
-         |,ROUND(sum(if(retain_day<=4,coalesce(earnings,0),0)),2)  ltv_4
-         |,ROUND(sum(if(retain_day<=5,coalesce(earnings,0),0)),2)  ltv_5
-         |,ROUND(sum(if(retain_day<=6,coalesce(earnings,0),0)),2)  ltv_6
-         |,ROUND(sum(if(retain_day<=7,coalesce(earnings,0),0)),2)  ltv_7
-         |,ROUND(sum(if(retain_day<=15,coalesce(earnings,0),0)),2)  ltv_15
-         |,ROUND(sum(if(retain_day<=30,coalesce(earnings,0),0)),2)  ltv_30
+         |,if(datediff(now(), data_date)>=0, sum(if(retain_day<=0,coalesce(earnings,0),0)),0)  ltv_0
+         |,if(datediff(now(), data_date)>=1, sum(if(retain_day<=1,coalesce(earnings,0),0)),0)  ltv_1
+         |,if(datediff(now(), data_date)>=2, sum(if(retain_day<=2,coalesce(earnings,0),0)),0)  ltv_2
+         |,if(datediff(now(), data_date)>=3, sum(if(retain_day<=3,coalesce(earnings,0),0)),0)  ltv_3
+         |,if(datediff(now(), data_date)>=4, sum(if(retain_day<=4,coalesce(earnings,0),0)),0)  ltv_4
+         |,if(datediff(now(), data_date)>=5, sum(if(retain_day<=5,coalesce(earnings,0),0)),0)  ltv_5
+         |,if(datediff(now(), data_date)>=6, sum(if(retain_day<=6,coalesce(earnings,0),0)),0)  ltv_6
+         |,if(datediff(now(), data_date)>=7, sum(if(retain_day<=7,coalesce(earnings,0),0)),0)  ltv_7
+         |,if(datediff(now(), data_date)>=15, sum(if(retain_day<=15,coalesce(earnings,0),0)),0)  ltv_15
+         |,if(datediff(now(), data_date)>=30, sum(if(retain_day<=30,coalesce(earnings,0),0)),0)  ltv_30
          |from
          |dwm_ta_event_day_pkg_plan_retain  where  data_date between  '$startDay' AND '$endDay'
          |group  by  data_date,pkg_code,plan_id
@@ -213,16 +213,16 @@ object DwsTaDay {
          |,max(if(retain_day=7,retain_count,0))  retain_7
          |,max(if(retain_day=15,retain_count,0))  retain_15
          |,max(if(retain_day=30,retain_count,0))  retain_30
-         |,sum(if(retain_day<=0,coalesce(earnings,0),0))  ltv_0
-         |,sum(if(retain_day<=1,coalesce(earnings,0),0))  ltv_1
-         |,ROUND(sum(if(retain_day<=2,coalesce(earnings,0),0)),2)  ltv_2
-         |,ROUND(sum(if(retain_day<=3,coalesce(earnings,0),0)),2)  ltv_3
-         |,ROUND(sum(if(retain_day<=4,coalesce(earnings,0),0)),2)  ltv_4
-         |,ROUND(sum(if(retain_day<=5,coalesce(earnings,0),0)),2)  ltv_5
-         |,ROUND(sum(if(retain_day<=6,coalesce(earnings,0),0)),2)  ltv_6
-         |,ROUND(sum(if(retain_day<=7,coalesce(earnings,0),0)),2)  ltv_7
-         |,ROUND(sum(if(retain_day<=15,coalesce(earnings,0),0)),2)  ltv_15
-         |,ROUND(sum(if(retain_day<=30,coalesce(earnings,0),0)),2)  ltv_30
+         |,if(datediff(now(), data_date)>=0,sum(if(retain_day<=0,coalesce(earnings,0),0)),0)  ltv_0
+         |,if(datediff(now(), data_date)>=1,sum(if(retain_day<=1,coalesce(earnings,0),0)),0)  ltv_1
+         |,if(datediff(now(), data_date)>=2,sum(if(retain_day<=2,coalesce(earnings,0),0)),0)  ltv_2
+         |,if(datediff(now(), data_date)>=3,sum(if(retain_day<=3,coalesce(earnings,0),0)),0)  ltv_3
+         |,if(datediff(now(), data_date)>=4,sum(if(retain_day<=4,coalesce(earnings,0),0)),0)  ltv_4
+         |,if(datediff(now(), data_date)>=5,sum(if(retain_day<=5,coalesce(earnings,0),0)),0)  ltv_5
+         |,if(datediff(now(), data_date)>=6,sum(if(retain_day<=6,coalesce(earnings,0),0)),0)  ltv_6
+         |,if(datediff(now(), data_date)>=7,sum(if(retain_day<=7,coalesce(earnings,0),0)),0)  ltv_7
+         |,if(datediff(now(), data_date)>=15,sum(if(retain_day<=15,coalesce(earnings,0),0)),0)  ltv_15
+         |,if(datediff(now(), data_date)>=30,sum(if(retain_day<=30,coalesce(earnings,0),0)),0)  ltv_30
          |from
          |dwm_ta_event_day_pkg_retain  where   data_date  between  '$startDay' AND '$endDay'
          |group  by data_date,pkg_code
