@@ -50,7 +50,7 @@ object DwmTa {
          |select   u.active_date , t."#bundle_id"  ,date_diff('day',active_date,event_date) retain_day,count(distinct  t."#user_id") retain_count,sum(earnings)  earnings
          |from
          |(select      "$part_date" ,"#bundle_id" ,"#user_id" , date("#event_time") event_date,sum(if("$part_event" IN ( 'ad_show' ),coalesce(earnings,0) ,0)) earnings from  ta.v_event_5  where    "$part_date" between  '$startDay' AND '$endDay' group by  "$part_date" ,"#bundle_id" ,"#user_id" , date("#event_time") ) t
-         |join  (select    distinct  "#user_id" as   user_id,date("#active_time")  active_date   from  ta.v_user_5 ) u on  u.user_id =t."#user_id"
+         |join  (select     "#user_id" as   user_id,date("#active_time")  active_date   from  ta.v_user_5 ) u on  u.user_id =t."#user_id"
          |group  by  u.active_date, t."#bundle_id" ,date_diff('day',active_date,event_date)
          |) where  retain_day >=0  and  "#bundle_id"  is not null
          |""".stripMargin
@@ -76,7 +76,7 @@ object DwmTa {
          |,ROUND(sum(if(t.event_date=u.active_date and  "$part_event" IN ( 'ad_show' ),earnings,0) ),2)  earnings
          |from
          |(select *, date("#event_time") event_date  from  ta.v_event_5   where "$part_date" between  '$startDay' AND '$endDay') t
-         |left  join  (select distinct ry_planid,"#user_id" user_id,date("#active_time")  active_date from  ta.v_user_5 where ry_planid is  not  null  ) u  on  t."#user_id"=u.user_id
+         |left  join  (select  ry_planid,"#user_id" user_id,date("#active_time")  active_date from  ta.v_user_5 where ry_planid is  not  null  ) u  on  t."#user_id"=u.user_id
          |group by "$part_date", "#bundle_id", u.ry_planid
          |""".stripMargin
 
