@@ -2,16 +2,18 @@ package com.analysis.boom.common.utils;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 将读取到的数据库内容写到Excel模板表中，供下载需要
@@ -20,7 +22,7 @@ public class ExcelFileUtils {
 
     private static final Logger LOGGER = Logger.getLogger(ExcelFileUtils.class.getName());
 
-    public static boolean writerExcelFile(String path, String sheetName, String style, List<String> list) {
+    public static boolean writerExcelFile(String path, String sheetName, String style, List<String> list) throws IOException {
         Workbook workbook;
         if ("XLS".equals(style.toUpperCase())) {
             workbook = new HSSFWorkbook();
@@ -47,8 +49,9 @@ public class ExcelFileUtils {
                 Cell cell = row.createCell(j);
                 String s = split[j];
                 if (validateNumber(s)) {
-                    cell.setCellType(CellType.NUMERIC);
-                    cell.setCellValue(Double.valueOf(s));
+                    cell.setCellValue(new BigDecimal(s).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+                } else if (s.contains("%")) {
+                    cell.setCellValue(new BigDecimal(s.replace("%", "")).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()+ "%") ;
                 } else {
                     cell.setCellValue(s);
                 }
@@ -62,9 +65,9 @@ public class ExcelFileUtils {
         File file = new File(path);
         // 如果文件存在,则删除已有的文件,重新创建一份新的
         if (file.exists()) {
-            file.deleteOnExit();
-            file = new File(path);
+            file.delete();
         }
+        file.createNewFile();
         OutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(file);
@@ -83,6 +86,7 @@ public class ExcelFileUtils {
         }
         return isCorrect;
     }
+
     /**
      * 判断是否是整数或者是小数
      *
