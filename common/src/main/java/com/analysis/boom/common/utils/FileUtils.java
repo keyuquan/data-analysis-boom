@@ -2,10 +2,7 @@ package com.analysis.boom.common.utils;
 
 import com.alibaba.fastjson.JSONObject;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -31,6 +28,26 @@ public class FileUtils {
         }
     }
 
+
+    public static void appendListToNewFile(String fileName, List<String> list) {
+        try {
+            File file = new File(fileName);
+            if (file.exists()) {
+                file.delete();
+            }
+            file.createNewFile();
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
+            for (String str : list) {
+                bw.append(str);
+                bw.newLine();
+                bw.flush();
+            }
+            System.out.println("写入文件:" + fileName + " 数据条数：" + list.size());
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void appendListToFile(String fileName, List<String> list) {
         try {

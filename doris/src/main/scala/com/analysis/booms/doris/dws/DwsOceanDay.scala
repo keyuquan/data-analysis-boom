@@ -13,36 +13,28 @@ object DwsOceanDay {
          |,package pkg_code
          |,sum(`show`) show_count
          |,sum(cost)   cost
-         |,sum(active) active
-         |,sum(active_cost) active_cost
+         |,sum(active)  active
          |,sum(if(classify=1,`show`,0)) ttzx_show_count
          |,sum(if(classify=1,cost,0)) ttzx_cost
          |,sum(if(classify=1,active,0)) ttzx_active
-         |,sum(if(classify=1,active_cost,0)) ttzx_active_cost
          |,sum(if(classify=2,`show`,0)) pangle_show_count
          |,sum(if(classify=2,cost,0)) pangle_cost
          |,sum(if(classify=2,active,0)) pangle_active
-         |,sum(if(classify=2,active_cost,0)) pangle_active_cost
          |,sum(if(classify=3,`show`,0)) site_show_count
          |,sum(if(classify=3,cost,0)) site_cost
          |,sum(if(classify=3,active,0)) site_active
-         |,sum(if(classify=3,active_cost,0))site_active_cost
          |,sum(show_all) show_all_count
          |,sum(cost_all)   cost_all
-         |,sum(active_all) active_all
-         |,sum(active_cost_all) active_cost_all
+         |,sum(active_all)  active_all
          |,sum(if(classify=1,show_all,0)) ttzx_show_all_count
          |,sum(if(classify=1,cost_all,0)) ttzx_cost_all
          |,sum(if(classify=1,active_all,0)) ttzx_active_all
-         |,sum(if(classify=1,active_cost_all,0)) ttzx_active_cost_all
          |,sum(if(classify=2,show_all,0)) pangle_show_all_count
          |,sum(if(classify=2,cost_all,0)) pangle_cost_all
          |,sum(if(classify=2,active_all,0)) pangle_active_all
-         |,sum(if(classify=2,active_cost_all,0)) pangle_active_cost_all
          |,sum(if(classify=3,show_all,0)) site_show_all_count
          |,sum(if(classify=3,cost_all,0)) site_cost_all
          |,sum(if(classify=3,active_all,0)) site_active_all
-         |,sum(if(classify=3,active_cost_all,0))site_active_cost_all
          |,now() update_time
          |from
          |(
@@ -54,11 +46,9 @@ object DwsOceanDay {
          |    ,`show`
          |    ,cost
          |    ,active
-         |    ,active_cost
          |    ,sum(t.`show`) over( partition by package,ad_id,classify order by stat_datetime  )  show_all
          |    ,sum(t.cost) over( partition by   package,ad_id,classify order by stat_datetime  )  cost_all
          |    ,sum(t.active) over( partition by  package,ad_id,classify  order by stat_datetime  )  active_all
-         |    ,sum(t.active_cost) over( partition by package,ad_id,classify  order by stat_datetime  )  active_cost_all
          |    from
          |    (
          |       select
@@ -72,7 +62,6 @@ object DwsOceanDay {
          |       ,t.`show`
          |       ,t.cost
          |       ,t.active
-         |       ,t.active_cost
          |       from
          |       dwm_ocean_day_ad_plan_kpi t
          |       join ods_ocean_ad_plan_conf t_f on  t.ad_id=t_f.ad_id

@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DorisDBUtils {
     private static Connection conn = null;
@@ -24,18 +26,21 @@ public class DorisDBUtils {
     }
 
 
-    public static List<String> queryAppPkgConf(Connection conn) throws SQLException {
-        String sql = "select distinct  ta_project_id,is_earnings_ecpm,is_thingio_data from  doris_boom.app_pkg_conf  where  ta_project_id is not null and ta_project_id<>''  order  by cast(ta_project_id as  int)   ";
+    public static List<Map<String, String>> queryMap(Connection conn,String sql) throws SQLException {
+
         logger.info(sql);
         long start = System.currentTimeMillis();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
-        List<String> list = new ArrayList();
+        List<Map<String, String>> list = new ArrayList();
+        ResultSetMetaData metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
         while (rs.next()) {
-            String taProjectId = rs.getString("ta_project_id");
-            String isEarningsEcpm = rs.getString("is_earnings_ecpm");
-            String isThingioData = rs.getString("is_thingio_data");
-            list.add(taProjectId + "_" + isEarningsEcpm + "_" + isThingioData);
+            Map<String, String> map = new HashMap<>();
+            for (int i = 0; i < columnCount; i++) {
+                map.put(metaData.getColumnLabel(i + 1), rs.getString(i + 1));
+            }
+            list.add(map);
         }
         rs.close();
         stmt.close();
@@ -44,6 +49,40 @@ public class DorisDBUtils {
         return list;
     }
 
+    /**
+     * 查询数据，为写入 csv 做准备
+     *
+     * @param conn
+     * @param sql
+     * @return
+     * @throws SQLException
+     */
+    public static List<String> query(Connection conn, String sql) throws SQLException {
+        logger.info(sql);
+        long start = System.currentTimeMillis();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        ResultSetMetaData metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        List<String> list = new ArrayList();
+        String head = "";
+        for (int i = 0; i < columnCount; i++) {
+            head = head + metaData.getColumnLabel(i + 1) + ",";
+        }
+        list.add(head);
+        while (rs.next()) {
+            String s = "";
+            for (int i = 0; i < columnCount; i++) {
+                s = s + rs.getString(i + 1) + ",";
+            }
+            list.add(s);
+        }
+        rs.close();
+        stmt.close();
+        long end = System.currentTimeMillis();
+        logger.info("queryTaProjectId 执行耗时(毫秒):" + (end - start));
+        return list;
+    }
 
     /**
      * 获取 Connetion
