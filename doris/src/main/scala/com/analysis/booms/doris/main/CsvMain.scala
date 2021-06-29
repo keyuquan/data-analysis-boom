@@ -1,6 +1,6 @@
 package com.analysis.booms.doris.main
 
-import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils, FileUtils}
+import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils, ExcelFileUtils, FileUtils}
 
 object CsvMain {
   def main(args: Array[String]): Unit = {
@@ -16,11 +16,12 @@ object CsvMain {
            |SELECT  *  from  doris_boom.v_app_day_pkg_kpi
            |where   日期 BETWEEN '$startDay' and   '$endDay'
            |and  包名='$pkg_code'
-           |ORDER BY 包名 desc, 日期
+           |ORDER BY 包名 desc, 日期 limit 10
            |""".stripMargin
       val list = DorisDBUtils.query(conn, sql)
-      val fileName = "日报_" + pkg_name + "_" + endDay + ".csv"
-      FileUtils.appendListToNewFile(fileName, list)
+      val fileName = "日报_" + pkg_name + "_" + endDay + ".xls"
+      ExcelFileUtils.writerExcelFile(fileName,pkg_name, "XLS",list) ;
+
     })
   }
 }

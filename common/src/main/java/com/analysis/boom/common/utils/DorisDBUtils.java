@@ -164,6 +164,11 @@ public class DorisDBUtils {
         executeBatch(connection, sql, list);
         close();
     }
-
+    public boolean isNum(String msg){
+        if(java.lang.Character.isDigit(msg.charAt(0))){
+            return true;
+        }
+        return false;
+    }
 }
 
