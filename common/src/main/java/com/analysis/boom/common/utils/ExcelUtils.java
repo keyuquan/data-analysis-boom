@@ -18,9 +18,9 @@ import java.util.List;
 /**
  * 将读取到的数据库内容写到Excel模板表中，供下载需要
  */
-public class ExcelFileUtils {
+public class ExcelUtils {
 
-    private static final Logger LOGGER = Logger.getLogger(ExcelFileUtils.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ExcelUtils.class.getName());
 
     public static boolean writerExcelFile(String path, String sheetName, String style, List<String> list) throws IOException {
         Workbook workbook;
@@ -36,7 +36,7 @@ public class ExcelFileUtils {
         // 生成样式
         Row row = sheet.createRow(0);
         String titles = list.get(0);
-        String[] titlessplit = titles.split(",");
+        String[] titlessplit = titles.split("//");
         for (int i = 0; i < titlessplit.length; i++) {
             Cell cell = row.createCell(i);
             cell.setCellValue(titlessplit[i]);
@@ -44,7 +44,7 @@ public class ExcelFileUtils {
         List<String> listData = list.subList(1, list.size());
         for (int i = 0; i < listData.size(); i++) {
             row = sheet.createRow(i + 1);
-            String[] split = listData.get(i).split(",");
+            String[] split = listData.get(i).split("//");
             for (int j = 0; j < split.length; j++) {
                 Cell cell = row.createCell(j);
                 String s = split[j];

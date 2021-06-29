@@ -67,13 +67,13 @@ public class DorisDBUtils {
         List<String> list = new ArrayList();
         String head = "";
         for (int i = 0; i < columnCount; i++) {
-            head = head + metaData.getColumnLabel(i + 1) + ",";
+            head = head + metaData.getColumnLabel(i + 1) + "//";
         }
         list.add(head);
         while (rs.next()) {
             String s = "";
             for (int i = 0; i < columnCount; i++) {
-                s = s + rs.getString(i + 1) + ",";
+                s = s + rs.getString(i + 1) + "//";
             }
             list.add(s);
         }

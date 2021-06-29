@@ -1,6 +1,6 @@
 package com.analysis.booms.doris.main
 
-import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils, ExcelFileUtils, FileUtils}
+import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils, ExcelUtils, FileUtils}
 
 object CsvMain {
   def main(args: Array[String]): Unit = {
@@ -81,7 +81,7 @@ object CsvMain {
            |""".stripMargin
       val list = DorisDBUtils.query(conn, sql)
       val fileName = "日报_" + pkg_name + "_" + endDay + ".xls"
-      ExcelFileUtils.writerExcelFile(fileName, pkg_name, "XLS", list);
+      ExcelUtils.writerExcelFile(fileName, pkg_name, "XLS", list);
 
     })
   }
