@@ -14,7 +14,8 @@ object DwsTaDay {
          |, t1.plan_id
          |,CASE WHEN find_in_set('INVENTORY_UNIVERSAL', t_f.inventory_type)>0 THEN  1
          |  WHEN find_in_set('UNION_BOUTIQUE_GAME', t_f.inventory_type)>0 or find_in_set('INVENTORY_UNION_SLOT', t_f.inventory_type)>0 or find_in_set('INVENTORY_UNION_SPLASH_SLOT', t_f.inventory_type)>0  THEN 2
-         |  ELSE 3  END classify
+         |  WHEN  t_f.inventory_type is not  null   THEN 3
+         |  ELSE 4  END classify
          |,ifnull(add_user_count,0)
          |,ifnull(add_count,0)
          |,ifnull(active_user_count,0)

@@ -46,23 +46,37 @@ object DwsOceanDay {
          |,now() update_time
          |from
          |(
-         |   select
-         |   t.stat_datetime
-         |   ,t_f.package
-         |   ,t.ad_id
-         |   ,t_i.classify
-         |   ,t.`show`
-         |   ,t.cost
-         |   ,t.active
-         |   ,t.active_cost
-         |   ,sum(t.`show`) over( partition by  t_f.package,t.ad_id,t_i.classify order by stat_datetime  )  show_all
-         |   ,sum(t.cost) over( partition by  t_f.package,t.ad_id,t_i.classify order by stat_datetime  )  cost_all
-         |   ,sum(t.active) over( partition by  t_f.package,t.ad_id,t_i.classify order by stat_datetime  )  active_all
-         |   ,sum(t.active_cost) over( partition by t_f.package,t.ad_id,t_i.classify order by stat_datetime  )  active_cost_all
-         |   from
-         |   dwm_ocean_day_ad_plan_inventory_kpi t
-         |   join app_inventory_conf t_i  on  t.inventory=t_i.inventory
-         |   join ods_ocean_ad_plan_conf t_f on  t.ad_id=t_f.ad_id
+         |    select
+         |    stat_datetime
+         |    ,package
+         |    ,ad_id
+         |    ,classify
+         |    ,`show`
+         |    ,cost
+         |    ,active
+         |    ,active_cost
+         |    ,sum(t.`show`) over( partition by package,ad_id,classify order by stat_datetime  )  show_all
+         |    ,sum(t.cost) over( partition by   package,ad_id,classify order by stat_datetime  )  cost_all
+         |    ,sum(t.active) over( partition by  package,ad_id,classify  order by stat_datetime  )  active_all
+         |    ,sum(t.active_cost) over( partition by package,ad_id,classify  order by stat_datetime  )  active_cost_all
+         |    from
+         |    (
+         |       select
+         |       t.stat_datetime
+         |       ,t_f.package
+         |       ,t.ad_id
+         |       ,CASE WHEN find_in_set('INVENTORY_UNIVERSAL', t_f.inventory_type)>0 THEN  1
+         |       WHEN find_in_set('UNION_BOUTIQUE_GAME', t_f.inventory_type)>0 or find_in_set('INVENTORY_UNION_SLOT', t_f.inventory_type)>0 or find_in_set('INVENTORY_UNION_SPLASH_SLOT', t_f.inventory_type)>0  THEN 2
+         |       WHEN  t_f.inventory_type is not  null   THEN 3
+         |       ELSE 4  END classify
+         |       ,t.`show`
+         |       ,t.cost
+         |       ,t.active
+         |       ,t.active_cost
+         |       from
+         |       dwm_ocean_day_ad_plan_kpi t
+         |       join ods_ocean_ad_plan_conf t_f on  t.ad_id=t_f.ad_id
+         |    )  t
          |) t
          |where  stat_datetime between  '$startDay' AND '$endDay'
          |group  by  stat_datetime,package

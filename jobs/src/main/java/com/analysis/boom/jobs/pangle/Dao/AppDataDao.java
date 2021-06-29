@@ -25,14 +25,14 @@ public class AppDataDao {
      * @param roleId
      * @param secureKey
      */
-    public static List<String> getDaySiteData(String startDate, String endDate, String userId, String roleId, String secureKey) {
+    public static List<String> getDaySiteAdUnitData(String startDate, String endDate, String userId, String roleId, String secureKey) {
 
         List<String> listAll = new ArrayList<>();
         int hasNext = 1;
         int offset = 0;
         do {
             // 整理参数
-            String dimensions = "date,site_id";
+            String dimensions = "date,site_id,ad_unit_id";
             String signType = "MD5";
             String version = "2.0";
             String timestamp = (new Date().getTime()) / 1000 + "";

@@ -1,15 +1,12 @@
 package com.analysis.boom.common.utils;
 
-import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.conf.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DorisDBUtils {
     private static Connection conn = null;
@@ -27,16 +24,18 @@ public class DorisDBUtils {
     }
 
 
-    public static List<String> queryTaProjectId(Connection conn) throws SQLException {
-        String sql = "select distinct  ta_project_id from  doris_boom.app_pkg_conf  where  ta_project_id is not null and ta_project_id<>'' order  by cast(ta_project_id as  int)  ";
+    public static List<String> queryAppPkgConf(Connection conn) throws SQLException {
+        String sql = "select distinct  ta_project_id,is_earnings_ecpm,is_thingio_data from  doris_boom.app_pkg_conf  where  ta_project_id is not null and ta_project_id<>''  order  by cast(ta_project_id as  int)   ";
         logger.info(sql);
         long start = System.currentTimeMillis();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
         List<String> list = new ArrayList();
-        ResultSetMetaData md = rs.getMetaData();
         while (rs.next()) {
-            list.add(rs.getString("ta_project_id"));
+            String taProjectId = rs.getString("ta_project_id");
+            String isEarningsEcpm = rs.getString("is_earnings_ecpm");
+            String isThingioData = rs.getString("is_thingio_data");
+            list.add(taProjectId + "_" + isEarningsEcpm + "_" + isThingioData);
         }
         rs.close();
         stmt.close();

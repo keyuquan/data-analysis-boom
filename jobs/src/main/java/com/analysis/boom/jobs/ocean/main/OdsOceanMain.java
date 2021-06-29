@@ -33,16 +33,12 @@ public class OdsOceanMain {
         JdbcUtils.closeBoom();
         // 遍历广告主列表,获取巨量数据,把数据存入
         int days = DateUtils.differentDays(startDate, endDate, "yyyy-MM-dd") + 1;
-        for (int j = 0; j < days; j++) {
-            String startOneDate = DateUtils.addDay(startDate, j);
-            String endOneDate = startOneDate;
-            for (int i = 0; i < adList.size(); i++) {
-                AdvertiserEntity s = adList.get(i);
-                logger.info("Advertiser {} ,endDate {}", s.getAdvertiserId(), endOneDate);
-                List<String> list = AdPlanConfDao.getAdPlanConfData(s, endOneDate);
-                logger.info("conf size {}", list.size());
-                KafkaUtils.sendDataToKafka("boom_ods_ocean_ad_plan_conf", list);
-            }
+        for (int i = 0; i < adList.size(); i++) {
+            AdvertiserEntity s = adList.get(i);
+            logger.info("Advertiser {} ,endDate {}", s.getAdvertiserId(), endDate);
+            List<String> list = AdPlanConfDao.getAdPlanConfData(s, endDate);
+            logger.info("conf size {}", list.size());
+            KafkaUtils.sendDataToKafka("boom_ods_ocean_ad_plan_conf", list);
         }
         KafkaUtils.close();
 

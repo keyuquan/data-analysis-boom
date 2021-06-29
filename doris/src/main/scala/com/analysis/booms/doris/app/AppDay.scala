@@ -157,13 +157,13 @@ object AppDay {
          |  (
          |  select  data_date from  dws_ta_day_pkg_kpi where  data_date  between  '$startDay' AND '$endDay'
          |  union
-         |  select  data_date from  dws_pangle_day_site_kpi  where  data_date  between  '$startDay' AND '$endDay'
+         |  select  data_date from  dws_pangle_day_pkg_kpi  where  data_date  between  '$startDay' AND '$endDay'
          |  union
          |  select  data_date from  dws_ocean_day_pkg_kpi where  data_date  between  '$startDay' AND '$endDay'
          |  ) t_d, app_pkg_conf  t_c
          |)  t
          |left  join  (select  *  from dws_ta_day_pkg_kpi where  data_date  between  '$startDay' AND '$endDay') t_ta on   t.data_date=t_ta.data_date and  t.pkg_code=t_ta.pkg_code
-         |left  join  (select  *  from dws_pangle_day_site_kpi where  data_date  between  '$startDay' AND '$endDay') t_pangle on   t.data_date=t_pangle.data_date and  t.pangle_app_id=t_pangle.site_id
+         |left  join  (select  *  from dws_pangle_day_pkg_kpi where  data_date  between  '$startDay' AND '$endDay') t_pangle on   t.data_date=t_pangle.data_date and  t.pkg_code=t_pangle.pkg_code
          |left  join  (select  *  from dws_ocean_day_pkg_kpi where   data_date  between  '$startDay' AND '$endDay') t_ocean on   t.data_date=t_ocean.data_date and  t.pkg_code=t_ocean.pkg_code
          |""".stripMargin
 

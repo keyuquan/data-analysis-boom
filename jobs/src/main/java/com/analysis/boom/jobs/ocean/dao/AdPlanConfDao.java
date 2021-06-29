@@ -37,6 +37,7 @@ public class AdPlanConfDao {
             map.put("page_size", 1000);
             HashMap filtering = new HashMap() {{
                 put("ad_modify_time", runDate);
+                put("status", "AD_STATUS_ALL");
             }};
             map.put("filtering", filtering);
             map.put("fields", fields);
