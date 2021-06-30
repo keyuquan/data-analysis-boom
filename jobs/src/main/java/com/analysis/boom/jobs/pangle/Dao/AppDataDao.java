@@ -13,7 +13,6 @@ import java.util.*;
 
 public class AppDataDao {
     public static String report_real_app = "https://www.pangle.cn/union_pangle/open/api/mediation/get_daily_income_report_data";
-
     private final static Logger logger = LoggerFactory.getLogger(AdPlanConfDao.class);
 
     /**
@@ -22,10 +21,10 @@ public class AppDataDao {
      * @param startDate
      * @param endDate
      * @param userId
-     * @param roleId
+     * @param userId
      * @param secureKey
      */
-    public static List<String> getDaySiteAdUnitData(String startDate, String endDate, String userId, String roleId, String secureKey) {
+    public static List<String> getDaySiteAdUnitData(String startDate, String endDate, String userId, String subjectId, String secureKey) {
 
         List<String> listAll = new ArrayList<>();
         int hasNext = 1;
@@ -45,7 +44,7 @@ public class AppDataDao {
             map.put("sign_type", signType);
             map.put("timestamp", timestamp);
             map.put("user_id", userId);
-            map.put("role_id", roleId);
+            map.put("role_id", userId);
             map.put("version", version);
             // 对参数进行排序
             Map<String, Object> sortMap = sortMapByKey(map);
@@ -63,6 +62,7 @@ public class AppDataDao {
             List<JSONObject> list = data.getReportList();
             String updateTime = DateUtils.getSysFullDate();
             for (JSONObject obj : list) {
+                obj.put("subject_id", subjectId);
                 obj.put("api_req_cnt", obj.getOrDefault("api_req_cnt", 0));
                 obj.put("api_ret_cnt", obj.getOrDefault("api_ret_cnt", 0));
                 obj.put("api_imp_cnt", obj.getOrDefault("api_imp_cnt", 0));

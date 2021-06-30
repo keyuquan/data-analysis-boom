@@ -47,7 +47,7 @@ object DwsPangleDay {
          |,sum(api_revenue) api_revenue
          |from
          |dwm_pangle_day_site_ad_unit_kpi  t
-         |join  app_pkg_conf  t_c on   t.site_id=t_c.pangle_app_id
+         |join  app_pkg_conf  t_c on   t.subject_id=t_c.pangle_subject_id and t.site_id=t_c.pangle_app_id
          |where  find_in_set(t.ad_unit_id,concat(t_c.pangle_ad_unit_id,','))>0
          |group  by  t.start_date,t_c.pkg_code
          |) t
