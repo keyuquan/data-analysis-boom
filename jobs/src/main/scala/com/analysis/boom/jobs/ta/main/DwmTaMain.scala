@@ -5,7 +5,7 @@ import com.analysis.boom.jobs.ta.dwm.DwmTa
 
 object DwmTaMain {
   def main(args: Array[String]): Unit = {
-    var startDay = DateUtils.getStartDay(-4)
+    var startDay = DateUtils.getStartDay(-10)
     var endDay = DateUtils.getEndDay()
     if (args.length >= 2) {
       startDay = args(0)

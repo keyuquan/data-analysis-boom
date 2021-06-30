@@ -20,7 +20,7 @@ public class OdsOceanMain {
 
     public static void main(String[] args) throws Exception {
 
-        String startDate = DateUtils.getStartDay(-1);
+        String startDate = DateUtils.getStartDay(-2);
         String endDate = DateUtils.getEndDay();
         if (args.length >= 2) {
             startDate = args[0];
