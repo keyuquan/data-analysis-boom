@@ -88,19 +88,20 @@ object ReportMain {
            |ORDER BY pkg_code desc, data_date
            |""".stripMargin
       val list: util.List[String] = DorisDBUtils.query(conn, sql)
-      val fileName = "运营日报_" + pkgName + "_" + endDay + ".xls"
       val mapData: Map[String, util.List[String]] = new util.HashMap[String, util.List[String]]
       mapData.put(pkgName, list)
       mapDataAll.put(pkgName, list)
 
+      val fileName = "运营日报_" + pkgName + "_" + endDay + ".xls"
       ExcelUtils.writerExcelFile(path + fileName, mapData);
       val emails = pkgOperator.split(",")
       emails.foreach(email => {
         EmailUtils.sendEmail(email, "运营日报:" + endDay, "运营日报:" + pkgName, path + fileName, fileName)
       })
     })
-    val fileName = "运营日报_全部游戏_" + endDay + ".xls"
+
     val pkgName = "全部游戏'"
+    val fileName = "运营日报_" + pkgName + "_" + endDay + ".xls"
     ExcelUtils.writerExcelFile(path + fileName, mapDataAll)
 
     EmailUtils.sendEmail("hulk@boomgames.top", "运营日报:" + endDay, "运营日报:" + pkgName, path + fileName, fileName)
