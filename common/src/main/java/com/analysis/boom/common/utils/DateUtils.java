@@ -355,7 +355,7 @@ public class DateUtils {
      * @return
      */
     public static String getStartDay(Integer days) {
-        return addSecond(getSysFullDate(), -3600 * 24 * days, DateUtils.DATE_SHORT_FORMAT);
+        return addSecond(getSysFullDate(), 3600 * 24 * days, DateUtils.DATE_SHORT_FORMAT);
     }
 
     /**
