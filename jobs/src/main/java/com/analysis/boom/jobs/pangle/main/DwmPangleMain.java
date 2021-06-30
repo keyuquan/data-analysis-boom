@@ -27,7 +27,7 @@ public class DwmPangleMain {
         //  穿山甲用户数据
         Map<String, String> map = new HashMap();
         map.put("30773", "375daf3527bb7b9f2516cdb9879c4fe9");// 豹亮
-        map.put("41953", "2964b22953d124a005010d3a08fff3b6");// 海南迅游
+        map.put("73232", "e54e305cc41359d4cf8311518e4fdd84");// 海南迅游
         // 数据循环跑，每天跑一次
         for (String userId : map.keySet()) {
             List<String> list = AppDataDao.getDaySiteAdUnitData(startDate, endDate, userId, userId, map.get(userId));

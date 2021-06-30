@@ -36,10 +36,10 @@ public class ExcelUtils {
         // 生成样式
         Row row = sheet.createRow(0);
         String titles = list.get(0);
-        String[] titlessplit = titles.split("//");
-        for (int i = 0; i < titlessplit.length; i++) {
+        String[] titlesSplit = titles.split("//");
+        for (int i = 0; i < titlesSplit.length; i++) {
             Cell cell = row.createCell(i);
-            cell.setCellValue(titlessplit[i]);
+            cell.setCellValue(titlesSplit[i]);
         }
         List<String> listData = list.subList(1, list.size());
         for (int i = 0; i < listData.size(); i++) {
