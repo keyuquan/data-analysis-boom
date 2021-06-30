@@ -1,7 +1,6 @@
 package com.analysis.boom.jobs.ocean.dao;
 
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 

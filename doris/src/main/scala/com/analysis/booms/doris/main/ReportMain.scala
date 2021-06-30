@@ -88,7 +88,7 @@ object ReportMain {
 
       val emails = pkgOperator.split(",")
       emails.foreach(email => {
-        EmailUtils.sendEmail("hulk@boomgames.top", "运营日报_" + endDay, "每日运营日报发送", path + fileName, fileName)
+        EmailUtils.sendEmail(email, "运营日报_" + endDay, "每日运营日报发送-" + pkgName, path + fileName, fileName)
       })
 
     })

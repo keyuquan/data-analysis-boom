@@ -23,7 +23,7 @@ public class EmailUtils {
             OhMyEmail.subject(theme)
                     .from("18818406784@163.com")
                     .to(toEmail)
-                    .html("<h1 font=red>" + context + "</h1>")
+                    .html(context)
                     .attach(new File(filePath), fileName)
                     .send();
         } catch (SendMailException e) {
