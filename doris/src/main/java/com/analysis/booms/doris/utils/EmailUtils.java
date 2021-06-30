@@ -1,4 +1,4 @@
-package com.analysis.boom.common.utils;
+package com.analysis.booms.doris.utils;
 
 import io.github.biezhi.ome.OhMyEmail;
 import io.github.biezhi.ome.SendMailException;

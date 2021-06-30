@@ -1,8 +1,9 @@
 package com.analysis.booms.doris.main
 
-import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils, EmailUtils, ExcelUtils, FileUtils}
+import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils}
+import com.analysis.booms.doris.utils.{EmailUtils, ExcelUtils}
 
-object CsvMain {
+object ReportMain {
   def main(args: Array[String]): Unit = {
     val startDay = DateUtils.getStartDay(15)
     val endDay = DateUtils.getEndDay()
@@ -69,10 +70,10 @@ object CsvMain {
            |,site_active '站内激活用户数'
            |,round(site_ltv_0 ,2) '站内首日ROI-首日回收'
            |,ifnull(round(site_ltv_0 /site_cost,2),0) '站内首日ROI'
-           |,cost '总消耗'
+           |,cost_all '总消耗'
            |,active '激活数'
            |,round(ltv_0,2)  '首日ROI-首日回收'
-           |,cost '首日ROI-总消耗'
+           |,cost '首日ROI-消耗'
            |,ifnull(round(ltv_0 /cost,2),0) '首日ROI'
            |from
            |doris_boom.app_day_pkg_kpi
@@ -81,14 +82,13 @@ object CsvMain {
            |ORDER BY pkg_code desc, data_date
            |""".stripMargin
       val list = DorisDBUtils.query(conn, sql)
+      val path = "./report_data/"
       val fileName = "日报_" + pkgName + "_" + endDay + ".xls"
-      ExcelUtils.writerExcelFile(fileName, pkgName, "XLS", list);
+      ExcelUtils.writerExcelFile(path + fileName, pkgName, "XLS", list);
 
       val emails = pkgOperator.split(",")
       emails.foreach(email => {
-        if ("xiaoxiao@boomgames.top".equals(email)) {
-          EmailUtils.sendEmail(email, "运营日报_" + endDay, "每日运营日报发送", "./" + fileName, fileName)
-        }
+        EmailUtils.sendEmail("hulk@boomgames.top", "运营日报_" + endDay, "每日运营日报发送", path + fileName, fileName)
       })
 
     })
