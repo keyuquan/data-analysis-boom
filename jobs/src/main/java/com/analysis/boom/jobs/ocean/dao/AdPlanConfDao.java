@@ -29,7 +29,7 @@ public class AdPlanConfDao {
         int currentPage = 1;
         do {
             // 整理参数
-            String[] fields = new String[]{"advertiser_id", "ad_id", "campaign_id", "name", "package", "app_type", "download_type", "download_url", "download_mode", "inventory_type", "modify_time", "ad_create_time", "ad_modify_time"};
+            String[] fields = new String[]{"advertiser_id", "ad_id", "campaign_id", "name", "package",  "app_type","status", "download_type", "download_url", "download_mode", "inventory_type", "modify_time", "ad_create_time", "ad_modify_time"};
             int page = currentPage;
             Map<String, Object> map = new HashMap();
             map.put("advertiser_id", s.getAdvertiserId());
