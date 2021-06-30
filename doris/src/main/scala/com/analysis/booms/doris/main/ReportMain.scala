@@ -3,12 +3,18 @@ package com.analysis.booms.doris.main
 import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils}
 import com.analysis.booms.doris.utils.{EmailUtils, ExcelUtils}
 
+import java.util
+import java.util.Map
+
 object ReportMain {
   def main(args: Array[String]): Unit = {
     val startDay = DateUtils.getStartDay(-15)
     val endDay = DateUtils.getStartDay(-1)
     val conn = DorisDBUtils.getConnection
     val listConf = DorisDBUtils.queryMap(conn, "select pkg_code,pkg_name,pkg_operator  from  doris_boom.app_pkg_conf   order  by cast(ta_project_id as  int)")
+    val mapDataAll: Map[String, util.List[String]] = new util.HashMap[String, util.List[String]]
+    val path = "./report_data/"
+
     listConf.forEach(map => {
       val pkgCode = map.get("pkg_code")
       val pkgName = map.get("pkg_name")
@@ -81,16 +87,24 @@ object ReportMain {
            |and  pkg_code='$pkgCode'
            |ORDER BY pkg_code desc, data_date
            |""".stripMargin
-      val list = DorisDBUtils.query(conn, sql)
-      val path = "./report_data/"
-      val fileName = pkgName + "_" + endDay + ".xls"
-      ExcelUtils.writerExcelFile(path + fileName, pkgName, "XLS", list);
+      val list: util.List[String] = DorisDBUtils.query(conn, sql)
+      val fileName = "运营日报_" + pkgName + "_" + endDay + ".xls"
+      val mapData: Map[String, util.List[String]] = new util.HashMap[String, util.List[String]]
+      mapData.put(pkgName, list)
+      mapDataAll.put(pkgName, list)
 
+      ExcelUtils.writerExcelFile(path + fileName, mapData);
       val emails = pkgOperator.split(",")
       emails.foreach(email => {
         EmailUtils.sendEmail(email, "运营日报:" + endDay, "运营日报:" + pkgName, path + fileName, fileName)
       })
-
     })
+    val fileName = "运营日报_全部游戏_" + endDay + ".xls"
+    val pkgName = "全部游戏'"
+    ExcelUtils.writerExcelFile(path + fileName, mapDataAll)
+
+    EmailUtils.sendEmail("hulk@boomgames.top", "运营日报:" + endDay, "运营日报:" + pkgName, path + fileName, fileName)
+    EmailUtils.sendEmail("huasheng@boomgames.top", "运营日报:" + endDay, "运营日报:" + pkgName, path + fileName, fileName)
+
   }
 }

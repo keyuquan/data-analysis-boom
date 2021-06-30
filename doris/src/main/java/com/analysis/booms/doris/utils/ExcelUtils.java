@@ -13,7 +13,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 将读取到的数据库内容写到Excel模板表中，供下载需要
@@ -22,45 +24,39 @@ public class ExcelUtils {
 
     private static final Logger LOGGER = Logger.getLogger(ExcelUtils.class.getName());
 
-    public static boolean writerExcelFile(String path, String sheetName, String style, List<String> list) throws IOException {
-        Workbook workbook;
-        if ("XLS".equals(style)) {
-            workbook = new HSSFWorkbook();
-        } else {
-            workbook = new XSSFWorkbook();
-        }
-        // 生成一个表格
-        Sheet sheet = workbook.createSheet(sheetName);
-        // 设置表格默认列宽度为15个字节
-        sheet.setDefaultColumnWidth((short) 15);
-        // 生成样式
-        Row row = sheet.createRow(0);
-        String titles = list.get(0);
-        String[] titlesSplit = titles.split("//");
-        for (int i = 0; i < titlesSplit.length; i++) {
-            Cell cell = row.createCell(i);
-            cell.setCellValue(titlesSplit[i]);
-        }
-        List<String> listData = list.subList(1, list.size());
-        for (int i = 0; i < listData.size(); i++) {
-            row = sheet.createRow(i + 1);
-            String[] split = listData.get(i).split("//");
-            for (int j = 0; j < split.length; j++) {
-                Cell cell = row.createCell(j);
-                String s = split[j];
-                if (validateNumber(s)) {
-                    cell.setCellValue(new BigDecimal(s).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
-                } else if (s.contains("%")) {
-                    cell.setCellValue(new BigDecimal(s.replace("%", "")).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()+ "%") ;
-                } else {
-                    cell.setCellValue(s);
-                }
+    public static boolean writerExcelFile(String path, Map<String, List<String>> map) throws IOException {
 
+
+        Workbook workbook = new HSSFWorkbook();
+        for (String sheetName : map.keySet()) {
+            List<String> list = map.get(sheetName);
+            // 生成一个表格
+            Sheet sheet = workbook.createSheet(sheetName);
+            Row row = sheet.createRow(0);
+            String titles = list.get(0);
+            String[] titlesSplit = titles.split("//");
+            for (int i = 0; i < titlesSplit.length; i++) {
+                Cell cell = row.createCell(i);
+                cell.setCellValue(titlesSplit[i]);
+            }
+            List<String> listData = list.subList(1, list.size());
+            for (int i = 0; i < listData.size(); i++) {
+                row = sheet.createRow(i + 1);
+                String[] split = listData.get(i).split("//");
+                for (int j = 0; j < split.length; j++) {
+                    Cell cell = row.createCell(j);
+                    String s = split[j];
+                    if (validateNumber(s)) {
+                        cell.setCellValue(new BigDecimal(s).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+                    } else if (s.contains("%")) {
+                        cell.setCellValue(new BigDecimal(s.replace("%", "")).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%");
+                    } else {
+                        cell.setCellValue(s);
+                    }
+
+                }
             }
         }
-        /*
-         * 写入到文件中
-         */
         boolean isCorrect = false;
         File file = new File(path);
         // 如果文件存在,则删除已有的文件,重新创建一份新的
@@ -93,7 +89,6 @@ public class ExcelUtils {
      * @param str
      * @return true：是，false不是
      */
-
     private static boolean validateNumber(String str) {
         if (str == null || str.isEmpty()) {
             return false;
