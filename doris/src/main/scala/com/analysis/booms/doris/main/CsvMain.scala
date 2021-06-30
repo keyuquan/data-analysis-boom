@@ -1,16 +1,17 @@
 package com.analysis.booms.doris.main
 
-import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils, ExcelUtils, FileUtils}
+import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils, EmailUtils, ExcelUtils, FileUtils}
 
 object CsvMain {
   def main(args: Array[String]): Unit = {
-    val startDay = DateUtils.getStartDay(10)
+    val startDay = DateUtils.getStartDay(15)
     val endDay = DateUtils.getEndDay()
     val conn = DorisDBUtils.getConnection
-    val listConf = DorisDBUtils.queryMap(conn, "select pkg_code,pkg_name  from  doris_boom.app_pkg_conf ")
+    val listConf = DorisDBUtils.queryMap(conn, "select pkg_code,pkg_name,pkg_name,pkg_operator  from  doris_boom.app_pkg_conf ")
     listConf.forEach(map => {
-      val pkg_code = map.get("pkg_code")
-      val pkg_name = map.get("pkg_name")
+      val pkgCode = map.get("pkg_code")
+      val pkgName = map.get("pkg_name")
+      val pkgOperator = map.get("pkg_operator")
       val sql =
         s"""
            |select
@@ -76,12 +77,19 @@ object CsvMain {
            |from
            |doris_boom.app_day_pkg_kpi
            |where   data_date BETWEEN '$startDay' and   '$endDay'
-           |and  pkg_code='$pkg_code'
+           |and  pkg_code='$pkgCode'
            |ORDER BY pkg_code desc, data_date
            |""".stripMargin
       val list = DorisDBUtils.query(conn, sql)
-      val fileName = "日报_" + pkg_name + "_" + endDay + ".xls"
-      ExcelUtils.writerExcelFile(fileName, pkg_name, "XLS", list);
+      val fileName = "日报_" + pkgName + "_" + endDay + ".xls"
+      ExcelUtils.writerExcelFile(fileName, pkgName, "XLS", list);
+
+      val emails = pkgOperator.split(",")
+      emails.foreach(email => {
+        if ("xiaoxiao@boomgames.top".equals(email)) {
+          EmailUtils.sendEmail(email, "运营日报_" + endDay, "每日运营日报发送", "./" + fileName, fileName)
+        }
+      })
 
     })
   }

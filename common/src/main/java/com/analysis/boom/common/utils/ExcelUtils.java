@@ -24,7 +24,7 @@ public class ExcelUtils {
 
     public static boolean writerExcelFile(String path, String sheetName, String style, List<String> list) throws IOException {
         Workbook workbook;
-        if ("XLS".equals(style.toUpperCase())) {
+        if ("XLS".equals(style)) {
             workbook = new HSSFWorkbook();
         } else {
             workbook = new XSSFWorkbook();
