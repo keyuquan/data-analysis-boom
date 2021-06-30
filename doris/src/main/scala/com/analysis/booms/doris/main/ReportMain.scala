@@ -5,8 +5,8 @@ import com.analysis.booms.doris.utils.{EmailUtils, ExcelUtils}
 
 object ReportMain {
   def main(args: Array[String]): Unit = {
-    val startDay = DateUtils.getStartDay(15)
-    val endDay = DateUtils.getEndDay()
+    val startDay = DateUtils.getStartDay(-15)
+    val endDay = DateUtils.getStartDay(-1)
     val conn = DorisDBUtils.getConnection
     val listConf = DorisDBUtils.queryMap(conn, "select pkg_code,pkg_name,pkg_name,pkg_operator  from  doris_boom.app_pkg_conf ")
     listConf.forEach(map => {
@@ -83,12 +83,12 @@ object ReportMain {
            |""".stripMargin
       val list = DorisDBUtils.query(conn, sql)
       val path = "./report_data/"
-      val fileName = "日报_" + pkgName + "_" + endDay + ".xls"
+      val fileName = pkgName + "_" + endDay + ".xls"
       ExcelUtils.writerExcelFile(path + fileName, pkgName, "XLS", list);
 
       val emails = pkgOperator.split(",")
       emails.foreach(email => {
-        EmailUtils.sendEmail(email, "运营日报_" + endDay, "每日运营日报发送-" + pkgName, path + fileName, fileName)
+        EmailUtils.sendEmail(email, "运营日报:" + endDay, "运营日报:" + pkgName, path + fileName, fileName)
       })
 
     })

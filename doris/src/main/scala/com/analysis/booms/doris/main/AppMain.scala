@@ -5,7 +5,7 @@ import com.analysis.booms.doris.app.AppDay
 
 object AppMain {
   def main(args: Array[String]): Unit = {
-    var startDay = DateUtils.getStartDay(41)
+    var startDay = DateUtils.getStartDay(-41)
     var endDay = DateUtils.getEndDay()
     if (args.length >= 2) {
       startDay = args(0)
