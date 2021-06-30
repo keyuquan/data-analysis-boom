@@ -8,7 +8,7 @@ object ReportMain {
     val startDay = DateUtils.getStartDay(-15)
     val endDay = DateUtils.getStartDay(-1)
     val conn = DorisDBUtils.getConnection
-    val listConf = DorisDBUtils.queryMap(conn, "select pkg_code,pkg_name,pkg_name,pkg_operator  from  doris_boom.app_pkg_conf ")
+    val listConf = DorisDBUtils.queryMap(conn, "select pkg_code,pkg_name,pkg_operator  from  doris_boom.app_pkg_conf   order  by cast(ta_project_id as  int)")
     listConf.forEach(map => {
       val pkgCode = map.get("pkg_code")
       val pkgName = map.get("pkg_name")
