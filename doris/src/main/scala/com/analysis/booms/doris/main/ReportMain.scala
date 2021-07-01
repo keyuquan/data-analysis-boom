@@ -100,7 +100,7 @@ object ReportMain {
       })
     })
 
-    val pkgName = "全部游戏'"
+    val pkgName = "全部游戏"
     val fileName = "运营日报_" + pkgName + "_" + endDay + ".xls"
     ExcelUtils.writerExcelFile(path + fileName, mapDataAll)
 

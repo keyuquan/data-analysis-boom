@@ -17,7 +17,7 @@ public class DwmPangleMain {
     private final static Logger logger = LoggerFactory.getLogger(DwmPangleMain.class);
 
     public static void main(String[] args) {
-        String startDate = DateUtils.getStartDay(-5);
+        String startDate = DateUtils.getStartDay(-29);
         String endDate = DateUtils.getEndDay();
         if (args.length >= 2) {
             startDate = args[0];
