@@ -1,7 +1,7 @@
 package com.analysis.booms.doris.main
 
 import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils}
-import com.analysis.booms.doris.utils.{EmailUtils, ExcelUtils}
+import com.analysis.booms.doris.utils.ExcelUtils
 
 import java.util
 import java.util.Map
@@ -94,18 +94,10 @@ object ReportMain {
 
       val fileName = "运营日报_" + pkgName + "_" + endDay + ".xls"
       ExcelUtils.writerExcelFile(path + fileName, mapData);
-      val emails = pkgOperator.split(",")
-      emails.foreach(email => {
-        EmailUtils.sendEmail(email, "运营日报:" + endDay, "运营日报:" + pkgName, path + fileName, fileName)
-      })
-    })
 
+    })
     val pkgName = "全部游戏"
     val fileName = "运营日报_" + pkgName + "_" + endDay + ".xls"
     ExcelUtils.writerExcelFile(path + fileName, mapDataAll)
-
-    EmailUtils.sendEmail("hulk@boomgames.top", "运营日报:" + endDay, "运营日报:" + pkgName, path + fileName, fileName)
-    EmailUtils.sendEmail("huasheng@boomgames.top", "运营日报:" + endDay, "运营日报:" + pkgName, path + fileName, fileName)
-
   }
 }
