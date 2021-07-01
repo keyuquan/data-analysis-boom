@@ -63,6 +63,8 @@ public class AppDataDao {
             String updateTime = DateUtils.getSysFullDate();
             for (JSONObject obj : list) {
                 obj.put("subject_id", subjectId);
+                obj.put("ecpm", obj.getOrDefault("ecpm", 0));
+                obj.put("api_ecpm", obj.getOrDefault("api_ecpm", 0));
                 obj.put("api_req_cnt", obj.getOrDefault("api_req_cnt", 0));
                 obj.put("api_ret_cnt", obj.getOrDefault("api_ret_cnt", 0));
                 obj.put("api_imp_cnt", obj.getOrDefault("api_imp_cnt", 0));
