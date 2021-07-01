@@ -8,7 +8,7 @@ import java.util.Map
 
 object ReportMain {
   def main(args: Array[String]): Unit = {
-    val startDay = DateUtils.getStartDay(-15)
+    val startDay = DateUtils.getStartDay(-40)
     val endDay = DateUtils.getStartDay(-1)
     val conn = DorisDBUtils.getConnection
     val listConf = DorisDBUtils.queryMap(conn, "select pkg_code,pkg_name,pkg_operator  from  doris_boom.app_pkg_conf   order  by cast(ta_project_id as  int)")
