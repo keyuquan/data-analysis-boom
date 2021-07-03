@@ -44,8 +44,7 @@ public class AdPlanDataDao {
             map.put("time_granularity", "STAT_TIME_GRANULARITY_DAILY");
             map.put("fields", fields);
             HashMap filtering = new HashMap() {{
-                //   put("status", "AD_STATUS_ALL");
-                put("ad_ids", new String[]{"1699994552770616"});
+                put("status", "AD_STATUS_ALL");
             }};
             map.put("filtering", filtering);
             // 发送数据请求
