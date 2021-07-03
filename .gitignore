@@ -25,3 +25,4 @@
 /nbdist/
 /.nb-gradle/
 /metastore_db/
+/report_data/

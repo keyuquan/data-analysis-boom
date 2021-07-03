@@ -18,7 +18,6 @@ object ReportMain {
     listConf.forEach(map => {
       val pkgCode = map.get("pkg_code")
       val pkgName = map.get("pkg_name")
-      val pkgOperator = map.get("pkg_operator")
       val sql =
         s"""
            |select
@@ -46,10 +45,8 @@ object ReportMain {
            |,api_imp_cnt as  '穿山甲广告次数'
            |,round(api_ecpm,1)  as  '穿山甲ecpm'
            |,ifnull(round(add_ecpm,2),0)  '数数新用户ecpm'
-           |,api_revenue '活跃arpu-收入'
-           |,active_user_count '活跃arpu-活跃人数'
            |,ifnull(round(api_revenue/active_user_count,2),0)  '活跃arpu'
-           |,ifnull(round(ltv_0 /add_user_count,2),0)  'arpu'
+           |,ifnull(round(ltv_0 /add_user_count,2),0)  '新用户arpu'
            |,ifnull(round(ltv_1 /add_user_count,2),0)  '1日ltv'
            |,ifnull(round(ltv_2 /add_user_count,2),0)  '2日ltv'
            |,ifnull(round(ltv_3 /add_user_count,2),0)  '3日ltv'
@@ -59,28 +56,19 @@ object ReportMain {
            |,ifnull(round(ltv_7 /add_user_count,2),0)  '7日ltv'
            |,ifnull(round(ltv_15 /add_user_count,2),0)  '15日ltv'
            |,ifnull(round(ltv_30 /add_user_count,2),0)  '30日ltv'
-           |,api_revenue '边际ROI-当日回收'
-           |,cost '边际ROI-当日消耗'
-           |,ifnull(round(api_revenue/cost,2),0)   '边际ROI'
-           |,api_revenue_all '累计ROI-累计回收'
-           |,cost_all '累计ROI-累计消耗'
-           |,ifnull(round(api_revenue_all /cost_all,2),0)   '累计ROI'
+           |,concat(ifnull(round(api_revenue * 100/cost,2),0),'%')   '边际ROI'
+           |,concat(ifnull(round(api_revenue_all * 100/cost_all,2),0),'%')   '累计ROI'
            |,pangle_cost '穿山甲消耗'
            |,ifnull(round(pangle_cost/pangle_active,2),0)  '穿山甲CPA'
            |,pangle_active '穿山甲激活用户数'
-           |,pangle_ltv_0 '穿山甲首日ROI-首日回收'
-           |,pangle_cost '穿山甲首日ROI-消耗'
-           |,ifnull(round(pangle_ltv_0 /pangle_cost,2),0) '穿山甲首日ROI'
+           |,concat(ifnull(round(pangle_ltv_0 * 100 /pangle_cost,2),0),'%') '穿山甲首日ROI'
            |,site_cost '站内消耗'
            |,ifnull(round(site_cost/site_active,2),0) '站内CPA'
            |,site_active '站内激活用户数'
-           |,round(site_ltv_0 ,2) '站内首日ROI-首日回收'
-           |,ifnull(round(site_ltv_0 /site_cost,2),0) '站内首日ROI'
+           |,concat(ifnull(round(site_ltv_0 * 100 /site_cost,2),0),'%') '站内首日ROI'
            |,cost_all '总消耗'
            |,active '激活数'
-           |,round(ltv_0,2)  '首日ROI-首日回收'
-           |,cost '首日ROI-消耗'
-           |,ifnull(round(ltv_0 /cost,2),0) '首日ROI'
+           |,concat(ifnull(round(ltv_0 * 100 /cost,2),0),'%') '首日ROI'
            |from
            |doris_boom.app_day_pkg_kpi
            |where   data_date BETWEEN '$startDay' and   '$endDay'
@@ -91,10 +79,8 @@ object ReportMain {
       val mapData: Map[String, util.List[String]] = new util.HashMap[String, util.List[String]]
       mapData.put(pkgName, list)
       mapDataAll.put(pkgName, list)
-
       val fileName = "运营日报_" + pkgName + "_" + endDay + ".xls"
       ExcelUtils.writerExcelFile(path + fileName, mapData);
-
     })
     val pkgName = "全部游戏"
     val fileName = "运营日报_" + pkgName + "_" + endDay + ".xls"
