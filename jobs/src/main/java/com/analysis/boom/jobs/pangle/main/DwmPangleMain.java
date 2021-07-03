@@ -32,6 +32,12 @@ public class DwmPangleMain {
         for (String userId : map.keySet()) {
             List<String> list = AppDataDao.getDaySiteAdUnitData(startDate, endDate, userId, userId, map.get(userId));
             KafkaUtils.sendDataToKafka("boom_dwm_pangle_day_site_ad_unit_kpi", list);
+            if (endDate.equals(DateUtils.getSysDate()) && (!endDate.equals(startDate))) {
+                List<String> listBefore = AppDataDao.getDaySiteAdUnitData(startDate, DateUtils.addDay(endDate, -1), userId, userId, map.get(userId));
+                KafkaUtils.sendDataToKafka("boom_dwm_pangle_day_site_ad_unit_kpi", listBefore);
+                List<String> listToday = AppDataDao.getDaySiteAdUnitData(startDate, endDate, userId, userId, map.get(userId));
+                KafkaUtils.sendDataToKafka("boom_dwm_pangle_day_site_ad_unit_kpi", listToday);
+            }
         }
         KafkaUtils.close();
     }

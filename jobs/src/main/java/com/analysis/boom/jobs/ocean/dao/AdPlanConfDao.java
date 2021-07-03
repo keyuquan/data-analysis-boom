@@ -52,7 +52,7 @@ public class AdPlanConfDao {
             }
             AdPlanConfEntity.DataDTO data = adPlanConfEntity.getData();
             if (data == null) {
-                continue;
+                break;
             }
             List<JSONObject> list = data.getList();
             String updateTime = DateUtils.getSysFullDate();

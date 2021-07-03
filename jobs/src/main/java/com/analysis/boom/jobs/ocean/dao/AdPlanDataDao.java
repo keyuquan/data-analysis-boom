@@ -58,7 +58,7 @@ public class AdPlanDataDao {
             }
             AdPlanDataEntity.DataDTO data = adPlanDataEntity.getData();
             if (data == null) {
-                continue;
+                break;
             }
             // 数据存入文件
             List<JSONObject> list = data.getList();

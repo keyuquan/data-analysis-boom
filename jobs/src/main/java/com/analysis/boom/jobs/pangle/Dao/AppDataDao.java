@@ -59,6 +59,9 @@ public class AppDataDao {
                 break;
             }
             AppDataEntity.DataDTO data = appDataRealEntity.getData();
+            if (data == null) {
+                break;
+            }
             List<JSONObject> list = data.getReportList();
             String updateTime = DateUtils.getSysFullDate();
             for (JSONObject obj : list) {
