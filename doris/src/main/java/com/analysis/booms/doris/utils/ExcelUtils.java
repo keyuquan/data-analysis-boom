@@ -62,8 +62,8 @@ public class ExcelUtils {
         // 如果文件存在,则删除已有的文件,重新创建一份新的
         if (file.exists()) {
             file.delete();
+            file.createNewFile();
         }
-        file.createNewFile();
         OutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(file);
