@@ -235,10 +235,10 @@ object DwsTaDay {
          |   ,ttzx_earnings,sum(ttzx_earnings)  over( partition by pkg_code order by data_date  )   ttzx_earnings_all
          |   ,ttzx_retain_1,ttzx_retain_2,ttzx_retain_3,ttzx_retain_4,ttzx_retain_5,ttzx_retain_6,ttzx_retain_7,ttzx_retain_15,ttzx_retain_30
          |   ,ttzx_ltv_0,ttzx_ltv_1,ttzx_ltv_2,ttzx_ltv_3,ttzx_ltv_4,ttzx_ltv_5,ttzx_ltv_6,ttzx_ltv_7,ttzx_ltv_15,ttzx_ltv_30
-         |   ,pangle_earnings,sum(pangle_earnings)  over( partition by pkg_code order by data_date  )pangle_earnings_all
+         |   ,pangle_earnings,sum(pangle_earnings)  over( partition by pkg_code order by data_date  )  pangle_earnings_all
          |   ,pangle_retain_1,pangle_retain_2,pangle_retain_3,pangle_retain_4,pangle_retain_5,pangle_retain_6,pangle_retain_7,pangle_retain_15,pangle_retain_30
          |   ,pangle_ltv_0,pangle_ltv_1,pangle_ltv_2,pangle_ltv_3,pangle_ltv_4,pangle_ltv_5,pangle_ltv_6,pangle_ltv_7,pangle_ltv_15,pangle_ltv_30
-         |   ,site_earnings,sum(site_earnings)  over( partition by pkg_code order by data_date  )site_earnings_all
+         |   ,site_earnings,sum(site_earnings)  over( partition by pkg_code order by data_date  )  site_earnings_all
          |   ,site_retain_1,site_retain_2,site_retain_3,site_retain_4,site_retain_5,site_retain_6,site_retain_7,site_retain_15,site_retain_30
          |   ,site_ltv_0,site_ltv_1,site_ltv_2,site_ltv_3,site_ltv_4,site_ltv_5,site_ltv_6,site_ltv_7,site_ltv_15,site_ltv_30
          |   from
