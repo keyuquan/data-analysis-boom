@@ -194,11 +194,11 @@ object DwsTaDay {
          |,now() as  update_time
          |from
          |(
-         |select data_date, pkg_code from dwm_ta_event_day_pkg_kpi  where  data_date between  '$startDay' AND '$endDay'
+         |select data_date, pkg_code from dwm_ta_event_day_pkg_kpi -- where  data_date between  '$startDay' AND '$endDay'
          |union
-         |select data_date, pkg_code from dwm_ta_event_day_pkg_retain   where  data_date between  '$startDay' AND '$endDay'
+         |select data_date, pkg_code from dwm_ta_event_day_pkg_retain  --  where  data_date between  '$startDay' AND '$endDay'
          |union
-         |select data_date, pkg_code from dws_ta_day_pkg_plan_kpi   where  data_date between  '$startDay' AND '$endDay'
+         |select data_date, pkg_code from dws_ta_day_pkg_plan_kpi   --  where  data_date between  '$startDay' AND '$endDay'
          |)  t
          |left join  (select *,sum(earnings) over( partition by pkg_code order by data_date  )   earnings_all from dwm_ta_event_day_pkg_kpi  ) t1 on  t1.data_date=t.data_date and t1.pkg_code=t.pkg_code
          |left join
@@ -225,79 +225,92 @@ object DwsTaDay {
          |,if(datediff(now(), data_date)>=15,sum(if(retain_day<=15,coalesce(earnings,0),0)),0)  ltv_15
          |,if(datediff(now(), data_date)>=30,sum(if(retain_day<=30,coalesce(earnings,0),0)),0)  ltv_30
          |from
-         |dwm_ta_event_day_pkg_retain  where   data_date  between  '$startDay' AND '$endDay'
+         |dwm_ta_event_day_pkg_retain   -- where   data_date  between  '$startDay' AND '$endDay'
          |group  by data_date,pkg_code
          |) t2 on  t2.data_date=t.data_date and t2.pkg_code=t.pkg_code
          |left  join
          |(
-         |select
-         |data_date, pkg_code
-         |,sum(if(classify=1,earnings,0)) ttzx_earnings
-         |,sum(if(classify=1,earnings_all,0)) ttzx_earnings_all
-         |,sum(if(classify=1,retain_1,0)) ttzx_retain_1
-         |,sum(if(classify=1,retain_2,0)) ttzx_retain_2
-         |,sum(if(classify=1,retain_3,0)) ttzx_retain_3
-         |,sum(if(classify=1,retain_4,0)) ttzx_retain_4
-         |,sum(if(classify=1,retain_5,0)) ttzx_retain_5
-         |,sum(if(classify=1,retain_6,0)) ttzx_retain_6
-         |,sum(if(classify=1,retain_7,0)) ttzx_retain_7
-         |,sum(if(classify=1,retain_15,0)) ttzx_retain_15
-         |,sum(if(classify=1,retain_30,0)) ttzx_retain_30
-         |,sum(if(classify=1,ltv_0,0)) ttzx_ltv_0
-         |,sum(if(classify=1,ltv_1,0)) ttzx_ltv_1
-         |,sum(if(classify=1,ltv_2,0)) ttzx_ltv_2
-         |,sum(if(classify=1,ltv_3,0)) ttzx_ltv_3
-         |,sum(if(classify=1,ltv_4,0)) ttzx_ltv_4
-         |,sum(if(classify=1,ltv_5,0)) ttzx_ltv_5
-         |,sum(if(classify=1,ltv_6,0)) ttzx_ltv_6
-         |,sum(if(classify=1,ltv_7,0)) ttzx_ltv_7
-         |,sum(if(classify=1,ltv_15,0)) ttzx_ltv_15
-         |,sum(if(classify=1,ltv_30,0)) ttzx_ltv_30
-         |,sum(if(classify=2,earnings,0)) pangle_earnings
-         |,sum(if(classify=2,earnings_all,0)) pangle_earnings_all
-         |,sum(if(classify=2,retain_1,0)) pangle_retain_1
-         |,sum(if(classify=2,retain_2,0)) pangle_retain_2
-         |,sum(if(classify=2,retain_3,0)) pangle_retain_3
-         |,sum(if(classify=2,retain_4,0)) pangle_retain_4
-         |,sum(if(classify=2,retain_5,0)) pangle_retain_5
-         |,sum(if(classify=2,retain_6,0)) pangle_retain_6
-         |,sum(if(classify=2,retain_7,0)) pangle_retain_7
-         |,sum(if(classify=2,retain_15,0)) pangle_retain_15
-         |,sum(if(classify=2,retain_30,0)) pangle_retain_30
-         |,sum(if(classify=2,ltv_0,0)) pangle_ltv_0
-         |,sum(if(classify=2,ltv_1,0)) pangle_ltv_1
-         |,sum(if(classify=2,ltv_2,0)) pangle_ltv_2
-         |,sum(if(classify=2,ltv_3,0)) pangle_ltv_3
-         |,sum(if(classify=2,ltv_4,0)) pangle_ltv_4
-         |,sum(if(classify=2,ltv_5,0)) pangle_ltv_5
-         |,sum(if(classify=2,ltv_6,0)) pangle_ltv_6
-         |,sum(if(classify=2,ltv_7,0)) pangle_ltv_7
-         |,sum(if(classify=2,ltv_15,0)) pangle_ltv_15
-         |,sum(if(classify=2,ltv_30,0)) pangle_ltv_30
-         |,sum(if(classify=3,earnings,0)) site_earnings
-         |,sum(if(classify=3,earnings_all,0)) site_earnings_all
-         |,sum(if(classify=3,retain_1,0)) site_retain_1
-         |,sum(if(classify=3,retain_2,0)) site_retain_2
-         |,sum(if(classify=3,retain_3,0)) site_retain_3
-         |,sum(if(classify=3,retain_4,0)) site_retain_4
-         |,sum(if(classify=3,retain_5,0)) site_retain_5
-         |,sum(if(classify=3,retain_6,0)) site_retain_6
-         |,sum(if(classify=3,retain_7,0)) site_retain_7
-         |,sum(if(classify=3,retain_15,0)) site_retain_15
-         |,sum(if(classify=3,retain_30,0)) site_retain_30
-         |,sum(if(classify=3,ltv_0,0)) site_ltv_0
-         |,sum(if(classify=3,ltv_1,0)) site_ltv_1
-         |,sum(if(classify=3,ltv_2,0)) site_ltv_2
-         |,sum(if(classify=3,ltv_3,0)) site_ltv_3
-         |,sum(if(classify=3,ltv_4,0)) site_ltv_4
-         |,sum(if(classify=3,ltv_5,0)) site_ltv_5
-         |,sum(if(classify=3,ltv_6,0)) site_ltv_6
-         |,sum(if(classify=3,ltv_7,0)) site_ltv_7
-         |,sum(if(classify=3,ltv_15,0)) site_ltv_15
-         |,sum(if(classify=3,ltv_30,0)) site_ltv_30
-         |from  dws_ta_day_pkg_plan_kpi
-         |where  data_date between  '$startDay' AND '$endDay'
-         |group  by  data_date, pkg_code
+         |   select
+         |   data_date, pkg_code
+         |   ,ttzx_earnings,sum(ttzx_earnings)  over( partition by pkg_code order by data_date  )   ttzx_earnings_all
+         |   ,ttzx_retain_1,ttzx_retain_2,ttzx_retain_3,ttzx_retain_4,ttzx_retain_5,ttzx_retain_6,ttzx_retain_7,ttzx_retain_15,ttzx_retain_30
+         |   ,ttzx_ltv_0,ttzx_ltv_1,ttzx_ltv_2,ttzx_ltv_3,ttzx_ltv_4,ttzx_ltv_5,ttzx_ltv_6,ttzx_ltv_7,ttzx_ltv_15,ttzx_ltv_30
+         |   ,pangle_earnings,sum(pangle_earnings)  over( partition by pkg_code order by data_date  )pangle_earnings_all
+         |   ,pangle_retain_1,pangle_retain_2,pangle_retain_3,pangle_retain_4,pangle_retain_5,pangle_retain_6,pangle_retain_7,pangle_retain_15,pangle_retain_30
+         |   ,pangle_ltv_0,pangle_ltv_1,pangle_ltv_2,pangle_ltv_3,pangle_ltv_4,pangle_ltv_5,pangle_ltv_6,pangle_ltv_7,pangle_ltv_15,pangle_ltv_30
+         |   ,site_earnings,sum(site_earnings)  over( partition by pkg_code order by data_date  )site_earnings_all
+         |   ,site_retain_1,site_retain_2,site_retain_3,site_retain_4,site_retain_5,site_retain_6,site_retain_7,site_retain_15,site_retain_30
+         |   ,site_ltv_0,site_ltv_1,site_ltv_2,site_ltv_3,site_ltv_4,site_ltv_5,site_ltv_6,site_ltv_7,site_ltv_15,site_ltv_30
+         |   from
+         |   (
+         |   select
+         |   data_date, pkg_code
+         |   ,sum(if(classify=1,earnings,0)) ttzx_earnings
+         |   ,sum(if(classify=1,earnings_all,0)) ttzx_earnings_all
+         |   ,sum(if(classify=1,retain_1,0)) ttzx_retain_1
+         |   ,sum(if(classify=1,retain_2,0)) ttzx_retain_2
+         |   ,sum(if(classify=1,retain_3,0)) ttzx_retain_3
+         |   ,sum(if(classify=1,retain_4,0)) ttzx_retain_4
+         |   ,sum(if(classify=1,retain_5,0)) ttzx_retain_5
+         |   ,sum(if(classify=1,retain_6,0)) ttzx_retain_6
+         |   ,sum(if(classify=1,retain_7,0)) ttzx_retain_7
+         |   ,sum(if(classify=1,retain_15,0)) ttzx_retain_15
+         |   ,sum(if(classify=1,retain_30,0)) ttzx_retain_30
+         |   ,sum(if(classify=1,ltv_0,0)) ttzx_ltv_0
+         |   ,sum(if(classify=1,ltv_1,0)) ttzx_ltv_1
+         |   ,sum(if(classify=1,ltv_2,0)) ttzx_ltv_2
+         |   ,sum(if(classify=1,ltv_3,0)) ttzx_ltv_3
+         |   ,sum(if(classify=1,ltv_4,0)) ttzx_ltv_4
+         |   ,sum(if(classify=1,ltv_5,0)) ttzx_ltv_5
+         |   ,sum(if(classify=1,ltv_6,0)) ttzx_ltv_6
+         |   ,sum(if(classify=1,ltv_7,0)) ttzx_ltv_7
+         |   ,sum(if(classify=1,ltv_15,0)) ttzx_ltv_15
+         |   ,sum(if(classify=1,ltv_30,0)) ttzx_ltv_30
+         |   ,sum(if(classify=2,earnings,0)) pangle_earnings
+         |   ,sum(if(classify=2,earnings_all,0)) pangle_earnings_all
+         |   ,sum(if(classify=2,retain_1,0)) pangle_retain_1
+         |   ,sum(if(classify=2,retain_2,0)) pangle_retain_2
+         |   ,sum(if(classify=2,retain_3,0)) pangle_retain_3
+         |   ,sum(if(classify=2,retain_4,0)) pangle_retain_4
+         |   ,sum(if(classify=2,retain_5,0)) pangle_retain_5
+         |   ,sum(if(classify=2,retain_6,0)) pangle_retain_6
+         |   ,sum(if(classify=2,retain_7,0)) pangle_retain_7
+         |   ,sum(if(classify=2,retain_15,0)) pangle_retain_15
+         |   ,sum(if(classify=2,retain_30,0)) pangle_retain_30
+         |   ,sum(if(classify=2,ltv_0,0)) pangle_ltv_0
+         |   ,sum(if(classify=2,ltv_1,0)) pangle_ltv_1
+         |   ,sum(if(classify=2,ltv_2,0)) pangle_ltv_2
+         |   ,sum(if(classify=2,ltv_3,0)) pangle_ltv_3
+         |   ,sum(if(classify=2,ltv_4,0)) pangle_ltv_4
+         |   ,sum(if(classify=2,ltv_5,0)) pangle_ltv_5
+         |   ,sum(if(classify=2,ltv_6,0)) pangle_ltv_6
+         |   ,sum(if(classify=2,ltv_7,0)) pangle_ltv_7
+         |   ,sum(if(classify=2,ltv_15,0)) pangle_ltv_15
+         |   ,sum(if(classify=2,ltv_30,0)) pangle_ltv_30
+         |   ,sum(if(classify=3,earnings,0)) site_earnings
+         |   ,sum(if(classify=3,earnings_all,0)) site_earnings_all
+         |   ,sum(if(classify=3,retain_1,0)) site_retain_1
+         |   ,sum(if(classify=3,retain_2,0)) site_retain_2
+         |   ,sum(if(classify=3,retain_3,0)) site_retain_3
+         |   ,sum(if(classify=3,retain_4,0)) site_retain_4
+         |   ,sum(if(classify=3,retain_5,0)) site_retain_5
+         |   ,sum(if(classify=3,retain_6,0)) site_retain_6
+         |   ,sum(if(classify=3,retain_7,0)) site_retain_7
+         |   ,sum(if(classify=3,retain_15,0)) site_retain_15
+         |   ,sum(if(classify=3,retain_30,0)) site_retain_30
+         |   ,sum(if(classify=3,ltv_0,0)) site_ltv_0
+         |   ,sum(if(classify=3,ltv_1,0)) site_ltv_1
+         |   ,sum(if(classify=3,ltv_2,0)) site_ltv_2
+         |   ,sum(if(classify=3,ltv_3,0)) site_ltv_3
+         |   ,sum(if(classify=3,ltv_4,0)) site_ltv_4
+         |   ,sum(if(classify=3,ltv_5,0)) site_ltv_5
+         |   ,sum(if(classify=3,ltv_6,0)) site_ltv_6
+         |   ,sum(if(classify=3,ltv_7,0)) site_ltv_7
+         |   ,sum(if(classify=3,ltv_15,0)) site_ltv_15
+         |   ,sum(if(classify=3,ltv_30,0)) site_ltv_30
+         |   from  dws_ta_day_pkg_plan_kpi
+         |   group  by  data_date, pkg_code
+         |   ) t
          |) t3 on  t3.data_date=t.data_date and t3.pkg_code=t.pkg_code
          |""".stripMargin
 
