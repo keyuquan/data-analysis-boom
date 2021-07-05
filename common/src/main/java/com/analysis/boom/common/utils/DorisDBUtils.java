@@ -1,5 +1,6 @@
 package com.analysis.boom.common.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.conf.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class DorisDBUtils {
     }
 
 
-    public static List<Map<String, String>> queryMap(Connection conn,String sql) throws SQLException {
+    public static List<Map<String, String>> queryMap(Connection conn, String sql) throws SQLException {
 
         logger.info(sql);
         long start = System.currentTimeMillis();
@@ -150,25 +151,12 @@ public class DorisDBUtils {
     }
 
     public static void main(String[] args) throws SQLException {
-        List<List> list = new ArrayList<List>();
-        for (int i = 0; i < 100; i++) {
-            List l = new ArrayList();
-            l.add("2021-06-10");
-            l.add(100 + i);
-            l.add(1000 + i);
-            l.add(100 + i);
-            list.add(l);
-        }
-        String sql = "insert  into test.detail(create_time,order_id,order_state,total_price)  values(?,?,?,?)";
         Connection connection = getConnection();
-        executeBatch(connection, sql, list);
-        close();
-    }
-    public boolean isNum(String msg){
-        if(java.lang.Character.isDigit(msg.charAt(0))){
-            return true;
+        List<Map<String, String>> list = queryMap(connection, "select  *  from doris_boom.app_day_pkg_kpi");
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(JSONObject.toJSONString(list.get(i)));
         }
-        return false;
     }
+
 }
 
