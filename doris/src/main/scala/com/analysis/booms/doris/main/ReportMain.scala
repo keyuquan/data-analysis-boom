@@ -16,8 +16,8 @@ object ReportMain {
     val path = "./report_data/"
 
     listConf.forEach(map => {
-      val pkgCode = map.get("pkg_code")
-      val pkgName = map.get("pkg_name")
+      val pkgCode = map.get("pkg_code").toString
+      val pkgName = map.get("pkg_name").toString
       val sql =
         s"""
            |select

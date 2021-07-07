@@ -103,9 +103,9 @@ object DwmTa {
     val list = DorisDBUtils.queryMap(connDorisDB,"select  * from  doris_boom.app_pkg_conf  where  ta_project_id is not null and ta_project_id<>''  order  by cast(ta_project_id as  int)");
     DorisDBUtils.close()
     list.forEach(conf => {
-      val taProjectId = conf.get("ta_project_id")
-      val isEarningsEcpm = conf.get("is_earnings_ecpm")
-      val isThingioData = conf.get("is_thingio_data")
+      val taProjectId = conf.get("ta_project_id").toString
+      val isEarningsEcpm = conf.get("is_earnings_ecpm").toString
+      val isThingioData = conf.get("is_thingio_data").toString
 
       if (taProjectId != null && (!taProjectId.equals(""))) {
         var sql_dwm_ta_event_day_pkg_kpi = sql_dwm_ta_event_day_pkg_kpi_base.replaceAll("_5", "_" + taProjectId)
