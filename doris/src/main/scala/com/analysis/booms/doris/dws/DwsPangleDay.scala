@@ -33,18 +33,18 @@ object DwsPangleDay {
          |select
          |t.start_date data_date
          |,t_c.pkg_code
-         |,sum(req_cnt) req_cnt
-         |,sum(api_req_cnt) api_req_cnt
-         |,sum(ret_cnt) ret_cnt
-         |,sum(api_ret_cnt) api_ret_cnt
-         |,sum(imp_cnt) imp_cnt
-         |,sum(api_imp_cnt) api_imp_cnt
-         |,sum(clk_cnt) clk_cnt
-         |,sum(api_clk_cnt) api_clk_cnt
-         |,sum(revenue/imp_cnt)*1000 ecpm
-         |,sum(api_revenue/api_imp_cnt)*1000 api_ecpm
-         |,sum(revenue) revenue
-         |,sum(api_revenue) api_revenue
+         |,sum(t.req_cnt) req_cnt
+         |,sum(t.api_req_cnt) api_req_cnt
+         |,sum(t.ret_cnt) ret_cnt
+         |,sum(t.api_ret_cnt) api_ret_cnt
+         |,sum(t.imp_cnt) imp_cnt
+         |,sum(t.api_imp_cnt) api_imp_cnt
+         |,sum(t.clk_cnt) clk_cnt
+         |,sum(t.api_clk_cnt) api_clk_cnt
+         |,sum(t.revenue/t.imp_cnt)*1000 ecpm
+         |,sum(t.api_revenue/t.api_imp_cnt)*1000 api_ecpm
+         |,sum(t.revenue) revenue
+         |,sum(t.api_revenue) api_revenue
          |from
          |dwm_pangle_day_site_ad_unit_kpi  t
          |join  app_pkg_conf  t_c on   t.subject_id=t_c.pangle_subject_id and t.site_id=t_c.pangle_app_id

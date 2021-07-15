@@ -97,100 +97,100 @@ object DwsTaDay {
       s"""
          |insert into dws_ta_day_pkg_kpi
          |select t.data_date, t.pkg_code
-         |,ifnull(add_user_count,0)
-         |,ifnull(add_count,0)
-         |,ifnull(active_user_count,0)
-         |,ifnull(active_count,0)
-         |,ifnull(add_ad_show_user_count,0)
-         |,ifnull(add_ad_show_count,0)
-         |,ifnull(ad_show_user_count,0)
-         |,ifnull(ad_show_count,0)
-         |,ifnull(ecpm,0)
-         |,ifnull(add_ecpm,0)
-         |,ifnull(earnings,0)
-         |,ifnull(ttzx_earnings,0)
-         |,ifnull(pangle_earnings,0)
-         |,ifnull(site_earnings,0)
-         |,ifnull(earnings_all,0)
-         |,ifnull(ttzx_earnings_all,0)
-         |,ifnull(pangle_earnings_all,0)
-         |,ifnull(site_earnings_all,0)
-         |,ifnull(retain_1,0)
-         |,ifnull(retain_2,0)
-         |,ifnull(retain_3,0)
-         |,ifnull(retain_4,0)
-         |,ifnull(retain_5,0)
-         |,ifnull(retain_6,0)
-         |,ifnull(retain_7,0)
-         |,ifnull(retain_15,0)
-         |,ifnull(retain_30,0)
-         |,ifnull(ltv_0,0)
-         |,ifnull(ltv_1,0)
-         |,ifnull(ltv_2,0)
-         |,ifnull(ltv_3,0)
-         |,ifnull(ltv_4,0)
-         |,ifnull(ltv_5,0)
-         |,ifnull(ltv_6,0)
-         |,ifnull(ltv_7,0)
-         |,ifnull(ltv_15,0)
-         |,ifnull(ltv_30,0)
-         |,ifnull(ttzx_retain_1,0)
-         |,ifnull(ttzx_retain_2,0)
-         |,ifnull(ttzx_retain_3,0)
-         |,ifnull(ttzx_retain_4,0)
-         |,ifnull(ttzx_retain_5,0)
-         |,ifnull(ttzx_retain_6,0)
-         |,ifnull(ttzx_retain_7,0)
-         |,ifnull(ttzx_retain_15,0)
-         |,ifnull(ttzx_retain_30,0)
-         |,ifnull(ttzx_ltv_0,0)
-         |,ifnull(ttzx_ltv_1,0)
-         |,ifnull(ttzx_ltv_2,0)
-         |,ifnull(ttzx_ltv_3,0)
-         |,ifnull(ttzx_ltv_4,0)
-         |,ifnull(ttzx_ltv_5,0)
-         |,ifnull(ttzx_ltv_6,0)
-         |,ifnull(ttzx_ltv_7,0)
-         |,ifnull(ttzx_ltv_15,0)
-         |,ifnull(ttzx_ltv_30,0)
-         |,ifnull(pangle_retain_1,0)
-         |,ifnull(pangle_retain_2,0)
-         |,ifnull(pangle_retain_3,0)
-         |,ifnull(pangle_retain_4,0)
-         |,ifnull(pangle_retain_5,0)
-         |,ifnull(pangle_retain_6,0)
-         |,ifnull(pangle_retain_7,0)
-         |,ifnull(pangle_retain_15,0)
-         |,ifnull(pangle_retain_30,0)
-         |,ifnull(pangle_ltv_0,0)
-         |,ifnull(pangle_ltv_1,0)
-         |,ifnull(pangle_ltv_2,0)
-         |,ifnull(pangle_ltv_3,0)
-         |,ifnull(pangle_ltv_4,0)
-         |,ifnull(pangle_ltv_5,0)
-         |,ifnull(pangle_ltv_6,0)
-         |,ifnull(pangle_ltv_7,0)
-         |,ifnull(pangle_ltv_15,0)
-         |,ifnull(pangle_ltv_30,0)
-         |,ifnull(site_retain_1,0)
-         |,ifnull(site_retain_2,0)
-         |,ifnull(site_retain_3,0)
-         |,ifnull(site_retain_4,0)
-         |,ifnull(site_retain_5,0)
-         |,ifnull(site_retain_6,0)
-         |,ifnull(site_retain_7,0)
-         |,ifnull(site_retain_15,0)
-         |,ifnull(site_retain_30,0)
-         |,ifnull(site_ltv_0,0)
-         |,ifnull(site_ltv_1,0)
-         |,ifnull(site_ltv_2,0)
-         |,ifnull(site_ltv_3,0)
-         |,ifnull(site_ltv_4,0)
-         |,ifnull(site_ltv_5,0)
-         |,ifnull(site_ltv_6,0)
-         |,ifnull(site_ltv_7,0)
-         |,ifnull(site_ltv_15,0)
-         |,ifnull(site_ltv_30,0)
+         |,ifnull(t1.add_user_count,0)  add_user_count
+         |,ifnull(t1.add_count,0) add_count
+         |,ifnull(t1.active_user_count,0) active_user_count
+         |,ifnull(t1.active_count,0) active_count
+         |,ifnull(t1.add_ad_show_user_count,0) add_ad_show_user_count
+         |,ifnull(t1.add_ad_show_count,0) add_ad_show_count
+         |,ifnull(t1.ad_show_user_count,0)  ad_show_user_count
+         |,ifnull(t1.ad_show_count,0)  t1.ad_show_count,0
+         |,ifnull(t1.ecpm,0) ecpm
+         |,ifnull(t1.add_ecpm,0) add_ecpm
+         |,ifnull(t1.earnings,0) earnings
+         |,ifnull(t3.ttzx_earnings,0) ttzx_earnings
+         |,ifnull(t3.pangle_earnings,0) pangle_earnings
+         |,ifnull(t3.site_earnings,0) site_earnings
+         |,ifnull(t1.earnings_all,0)  earnings_all
+         |,ifnull(t3.ttzx_earnings_all,0) ttzx_earnings_all
+         |,ifnull(t3.pangle_earnings_all,0) pangle_earnings_all
+         |,ifnull(t3.site_earnings_all,0) site_earnings_all
+         |,ifnull(t2.retain_1,0) retain_1
+         |,ifnull(t2.retain_2,0) retain_2
+         |,ifnull(t2.retain_3,0) retain_3
+         |,ifnull(t2.retain_4,0) retain_4
+         |,ifnull(t2.retain_5,0) retain_5
+         |,ifnull(t2.retain_6,0) retain_6
+         |,ifnull(t2.retain_7,0) retain_7
+         |,ifnull(t2.retain_15,0) retain_15
+         |,ifnull(t2.retain_30,0) retain_30
+         |,ifnull(t2.ltv_0,0) ltv_0
+         |,ifnull(t2.ltv_1,0) ltv_1
+         |,ifnull(t2.ltv_2,0) ltv_2
+         |,ifnull(t2.ltv_3,0) ltv_3
+         |,ifnull(t2.ltv_4,0) ltv_4
+         |,ifnull(t2.ltv_5,0) ltv_5
+         |,ifnull(t2.ltv_6,0) ltv_6
+         |,ifnull(t2.ltv_7,0) ltv_7
+         |,ifnull(t2.ltv_15,0) ltv_15
+         |,ifnull(t2.ltv_30,0) ltv_30
+         |,ifnull(t3.ttzx_retain_1,0) ttzx_retain_1
+         |,ifnull(t3.ttzx_retain_2,0) ttzx_retain_2
+         |,ifnull(t3.ttzx_retain_3,0) ttzx_retain_3
+         |,ifnull(t3.ttzx_retain_4,0) ttzx_retain_4
+         |,ifnull(t3.ttzx_retain_5,0) ttzx_retain_5
+         |,ifnull(t3.ttzx_retain_6,0) ttzx_retain_6
+         |,ifnull(t3.ttzx_retain_7,0) ttzx_retain_7
+         |,ifnull(t3.ttzx_retain_15,0) ttzx_retain_15
+         |,ifnull(t3.ttzx_retain_30,0)  ttzx_retain_30
+         |,ifnull(t3.ttzx_ltv_0,0) ttzx_ltv_0
+         |,ifnull(t3.ttzx_ltv_1,0) ttzx_ltv_1
+         |,ifnull(t3.ttzx_ltv_2,0) ttzx_ltv_2
+         |,ifnull(t3.ttzx_ltv_3,0) ttzx_ltv_3
+         |,ifnull(t3.ttzx_ltv_4,0) ttzx_ltv_4
+         |,ifnull(t3.ttzx_ltv_5,0) ttzx_ltv_5
+         |,ifnull(t3.ttzx_ltv_6,0) ttzx_ltv_6
+         |,ifnull(t3.ttzx_ltv_7,0) ttzx_ltv_7
+         |,ifnull(t3.ttzx_ltv_15,0) ttzx_ltv_15
+         |,ifnull(t3.ttzx_ltv_30,0) ttzx_ltv_30
+         |,ifnull(t3.pangle_retain_1,0) pangle_retain_1
+         |,ifnull(t3.pangle_retain_2,0) pangle_retain_2
+         |,ifnull(t3.pangle_retain_3,0) pangle_retain_3
+         |,ifnull(t3.pangle_retain_4,0) pangle_retain_4
+         |,ifnull(t3.pangle_retain_5,0) pangle_retain_5
+         |,ifnull(t3.pangle_retain_6,0) pangle_retain_6
+         |,ifnull(t3.pangle_retain_7,0) pangle_retain_7
+         |,ifnull(t3.pangle_retain_15,0) pangle_retain_15
+         |,ifnull(t3.pangle_retain_30,0) pangle_retain_30
+         |,ifnull(t3.pangle_ltv_0,0) pangle_ltv_0
+         |,ifnull(t3.pangle_ltv_1,0) pangle_ltv_1
+         |,ifnull(t3.pangle_ltv_2,0) pangle_ltv_2
+         |,ifnull(t3.pangle_ltv_3,0) pangle_ltv_3
+         |,ifnull(t3.pangle_ltv_4,0) pangle_ltv_4
+         |,ifnull(t3.pangle_ltv_5,0) pangle_ltv_5
+         |,ifnull(t3.pangle_ltv_6,0) pangle_ltv_6
+         |,ifnull(t3.pangle_ltv_7,0) pangle_ltv_7
+         |,ifnull(t3.pangle_ltv_15,0) pangle_ltv_15
+         |,ifnull(t3.pangle_ltv_30,0) pangle_ltv_30
+         |,ifnull(t3.site_retain_1,0) site_retain_1
+         |,ifnull(t3.site_retain_2,0) site_retain_2
+         |,ifnull(t3.site_retain_3,0) site_retain_3
+         |,ifnull(t3.site_retain_4,0) site_retain_4
+         |,ifnull(t3.site_retain_5,0) site_retain_5
+         |,ifnull(t3.site_retain_6,0) site_retain_6
+         |,ifnull(t3.site_retain_7,0) site_retain_7
+         |,ifnull(t3.site_retain_15,0) site_retain_15
+         |,ifnull(t3.site_retain_30,0) site_retain_30
+         |,ifnull(t3.site_ltv_0,0) site_ltv_0
+         |,ifnull(t3.site_ltv_1,0) site_ltv_1
+         |,ifnull(t3.site_ltv_2,0) site_ltv_2
+         |,ifnull(t3.site_ltv_3,0) site_ltv_3
+         |,ifnull(t3.site_ltv_4,0) site_ltv_4
+         |,ifnull(t3.site_ltv_5,0) site_ltv_5
+         |,ifnull(t3.site_ltv_6,0) site_ltv_6
+         |,ifnull(t3.site_ltv_7,0) site_ltv_7
+         |,ifnull(t3.site_ltv_15,0) site_ltv_15
+         |,ifnull(t3.site_ltv_30,0) site_ltv_30
          |,now() as  update_time
          |from
          |(
