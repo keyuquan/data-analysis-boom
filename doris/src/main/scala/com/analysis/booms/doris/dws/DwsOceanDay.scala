@@ -5,6 +5,53 @@ import com.analysis.boom.common.utils.DorisDBUtils
 object DwsOceanDay {
 
   def runData(startDay: String, endDay: String): Unit = {
+    val sql_dws_ocean_day_pkg_plan_kpi =
+      s"""
+         |insert into dws_ocean_day_pkg_plan_kpi
+         |select
+         |t.stat_datetime data_date
+         |,t_f.package pkg_code
+         |,t.ad_id plan_id
+         |,CASE WHEN find_in_set('INVENTORY_UNIVERSAL', t_f.inventory_type)>0 THEN  1
+         |WHEN find_in_set('UNION_BOUTIQUE_GAME', t_f.inventory_type)>0 or find_in_set('INVENTORY_UNION_SLOT', t_f.inventory_type)>0 or find_in_set('INVENTORY_UNION_SPLASH_SLOT', t_f.inventory_type)>0  THEN 2
+         |WHEN  t_f.inventory_type is not  null   THEN 3
+         |ELSE 4  END classify
+         |,t.cost
+         |,t.`show`  show_count
+         |,t.avg_show_cost
+         |,t.click
+         |,t.avg_click_cost
+         |,t.ctr
+         |,t.convert
+         |,t.convert_cost
+         |,t.convert_rate
+         |,t.deep_convert
+         |,t.deep_convert_cost
+         |,t.deep_convert_rate
+         |,t.attribution_convert
+         |,t.attribution_convert_cost
+         |,t.attribution_deep_convert
+         |,t.attribution_deep_convert_cost
+         |,t.download_start
+         |,t.download_start_cost
+         |,t.download_start_rate
+         |,t.download_finish
+         |,t.download_finish_cost
+         |,t.download_finish_rate
+         |,t.click_install
+         |,t.install_finish
+         |,t.install_finish_cost
+         |,t.install_finish_rate
+         |,t.active, active_cost
+         |,t.active_rate
+         |,t.register
+         |,t.active_register_cost
+         |,t.active_register_rate
+         |,t.update_time
+         |from
+         |dwm_ocean_day_ad_plan_kpi t
+         |join ods_ocean_ad_plan_conf t_f on  t.ad_id=t_f.ad_id
+         |""".stripMargin
 
     val sql_dws_ocean_day_pkg_kpi =
       s"""
@@ -40,8 +87,8 @@ object DwsOceanDay {
          |from
          |(
          |select
-         |stat_datetime data_date
-         |,package pkg_code
+         |data_date
+         |,pkg_code
          |,sum(show_count) show_count
          |,sum(cost)   cost
          |,sum(active)  active
@@ -55,42 +102,14 @@ object DwsOceanDay {
          |,sum(if(classify=3,cost,0)) site_cost
          |,sum(if(classify=3,active,0)) site_active
          |from
-         |(
-         |    select
-         |    stat_datetime
-         |    ,package
-         |    ,ad_id
-         |    ,classify
-         |    ,show_count show_count
-         |    ,cost
-         |    ,active
-         |    -- ,sum(t.show_count) over( partition by package,ad_id order by stat_datetime  )  show_all
-         |    -- ,sum(t.cost) over( partition by   package,ad_id order by stat_datetime  )  cost_all
-         |    -- ,sum(t.active) over( partition by  package,ad_id  order by stat_datetime  )  active_all
-         |    from
-         |    (
-         |       select
-         |       t.stat_datetime
-         |       ,t_f.package
-         |       ,t.ad_id
-         |       ,CASE WHEN find_in_set('INVENTORY_UNIVERSAL', t_f.inventory_type)>0 THEN  1
-         |       WHEN find_in_set('UNION_BOUTIQUE_GAME', t_f.inventory_type)>0 or find_in_set('INVENTORY_UNION_SLOT', t_f.inventory_type)>0 or find_in_set('INVENTORY_UNION_SPLASH_SLOT', t_f.inventory_type)>0  THEN 2
-         |       WHEN  t_f.inventory_type is not  null   THEN 3
-         |       ELSE 4  END classify
-         |       ,t.`show`  show_count
-         |       ,t.cost
-         |       ,t.active
-         |       from
-         |       dwm_ocean_day_ad_plan_kpi t
-         |       join ods_ocean_ad_plan_conf t_f on  t.ad_id=t_f.ad_id
-         |    )  t
-         |) t
-         |group  by  stat_datetime,package
+         |dws_ocean_day_pkg_plan_kpi
+         |group  by  data_date,pkg_code
          |) t
          |""".stripMargin
 
     val conn = DorisDBUtils.getConnection;
     DorisDBUtils.execute(conn, "use doris_boom", "use doris_boom");
+    DorisDBUtils.execute(conn, "sql_dws_ocean_day_pkg_plan_kpi", sql_dws_ocean_day_pkg_plan_kpi);
     DorisDBUtils.execute(conn, "sql_dws_ocean_day_pkg_kpi", sql_dws_ocean_day_pkg_kpi);
     DorisDBUtils.close();
   }
