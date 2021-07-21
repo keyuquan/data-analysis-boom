@@ -2,9 +2,9 @@ package com.analysis.boom.jobs.ocean.dao;
 
 import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.utils.DateUtils;
+import com.analysis.boom.common.utils.HttpUtils;
 import com.analysis.boom.jobs.ocean.entity.AdPlanConfEntity;
 import com.analysis.boom.jobs.ocean.entity.AdvertiserEntity;
-import com.analysis.boom.jobs.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

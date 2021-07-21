@@ -1,4 +1,4 @@
-package com.analysis.boom.jobs.utils;
+package com.analysis.boom.common.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -7,11 +7,13 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -22,6 +24,7 @@ import java.util.Map;
  * http 请求工具类
  */
 public class HttpUtils {
+
 
     /**
      * 发送 get 请求: 参数形式: url?name
@@ -48,7 +51,67 @@ public class HttpUtils {
             for (String key : map.keySet()) {
                 uriBuilder.setParameter(key, new JSONObject(map).getString(key));
             }
+            System.out.println(uriBuilder);
             httpEntity.setURI(uriBuilder.build());
+            response = client.execute(httpEntity);
+            if (response != null) {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                StringBuffer result = new StringBuffer();
+                String line = "";
+                while ((line = bufferedReader.readLine()) != null) {
+                    result.append(line);
+                }
+                bufferedReader.close();
+                return result.toString();
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (response != null) {
+                    response.close();
+                }
+                if (client != null) {
+                    client.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 发送 POST 请求
+     *
+     * @param url
+     * @param map
+     * @return
+     */
+    public static String doFilePost(String url, Map<String, Object> map, String accessToken, String filePath) {
+        // 构造请求
+        HttpEntityEnclosingRequestBase httpEntity = new HttpEntityEnclosingRequestBase() {
+            @Override
+            public String getMethod() {
+                return "POST";
+            }
+        };
+        if (StringUtils.isNotEmpty(accessToken)) {
+            httpEntity.setHeader("Access-Token", accessToken);
+        }
+        CloseableHttpResponse response = null;
+        CloseableHttpClient client = null;
+        try {
+            client = HttpClientBuilder.create().build();
+            URIBuilder uriBuilder = new URIBuilder(url);
+            for (String key : map.keySet()) {
+                uriBuilder.setParameter(key, new JSONObject(map).getString(key));
+            }
+            System.out.println(uriBuilder);
+            httpEntity.setURI(uriBuilder.build());
+            httpEntity.setEntity(new FileEntity(new File(filePath),ContentType.DEFAULT_BINARY));
             response = client.execute(httpEntity);
             if (response != null) {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));

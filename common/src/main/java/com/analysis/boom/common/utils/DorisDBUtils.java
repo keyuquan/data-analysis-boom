@@ -103,7 +103,40 @@ public class DorisDBUtils {
         logger.info("queryTaProjectId 执行耗时(毫秒):" + (end - start));
         return list;
     }
-
+    /**
+     * 查询数据，为写入 csv 做准备
+     *
+     * @param conn
+     * @param sql
+     * @return
+     * @throws SQLException
+     */
+    public static List<String> queryCsv(Connection conn, String sql) throws SQLException {
+        logger.info(sql);
+        long start = System.currentTimeMillis();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        ResultSetMetaData metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        List<String> list = new ArrayList();
+        String head = "";
+        for (int i = 0; i < columnCount; i++) {
+            head = head + metaData.getColumnLabel(i + 1) + ",";
+        }
+        list.add(head.substring(0,head.lastIndexOf(",")));
+        while (rs.next()) {
+            String s = "";
+            for (int i = 0; i < columnCount; i++) {
+                s = s + rs.getString(i + 1) + ",";
+            }
+            list.add(s.substring(0,s.lastIndexOf(",")));
+        }
+        rs.close();
+        stmt.close();
+        long end = System.currentTimeMillis();
+        logger.info("queryTaProjectId 执行耗时(毫秒):" + (end - start));
+        return list;
+    }
     /**
      * 获取 Connetion
      *

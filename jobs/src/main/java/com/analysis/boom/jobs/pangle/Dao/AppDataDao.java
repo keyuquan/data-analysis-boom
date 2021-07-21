@@ -2,10 +2,10 @@ package com.analysis.boom.jobs.pangle.Dao;
 
 import com.alibaba.fastjson.JSONObject;
 import com.analysis.boom.common.utils.DateUtils;
+import com.analysis.boom.common.utils.HttpUtils;
 import com.analysis.boom.jobs.ocean.dao.AdPlanConfDao;
 import com.analysis.boom.jobs.pangle.entity.AppDataEntity;
 import com.analysis.boom.jobs.utils.HashUtils;
-import com.analysis.boom.jobs.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
