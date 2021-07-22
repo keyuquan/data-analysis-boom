@@ -27,7 +27,7 @@ object OceanDataToTaMain {
            |,convert planaction
            |,classify adImpressions
            |from doris_boom.dws_ocean_day_pkg_plan_kpi
-           |where  where  data_date  between  '$startDay' AND '$endDay' and pkg_code='$pkgCode'
+           |where  data_date  between  '$startDay' AND '$endDay' and pkg_code='$pkgCode'
            |""".stripMargin
       val list: util.List[String] = DorisDBUtils.queryCsv(conn, sql)
       if (list.size() > 1) {
