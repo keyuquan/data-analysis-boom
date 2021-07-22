@@ -50,7 +50,7 @@ object DwsOceanDay {
          |,t.update_time
          |from
          |dwm_ocean_day_ad_plan_kpi t
-         |join ods_ocean_ad_plan_conf t_f on  t.ad_id=t_f.ad_id
+         |left join ods_ocean_ad_plan_conf t_f on  t.ad_id=t_f.ad_id
          |""".stripMargin
 
     val sql_dws_ocean_day_pkg_kpi =
