@@ -10,10 +10,10 @@ object OceanDataToTaMain {
     val startDay = DateUtils.getStartDay(-1000)
     val endDay = DateUtils.getStartDay(-1)
     val conn = DorisDBUtils.getConnection
-    val listConf = DorisDBUtils.queryMap(conn, "select pkg_code,pkg_name,ta_project_id  from  doris_boom.app_pkg_conf  where  ta_project_id is  not  null and ta_project_id<>''  order  by cast(ta_project_id as  int)")
+    val listConf = DorisDBUtils.queryMap(conn, "select group_concat(pkg_code) pkg_code,ta_project_id  from  doris_boom.app_pkg_conf  where  ta_project_id is  not  null and ta_project_id<>''  group  by  ta_project_id  order  by cast(ta_project_id as  int)")
     val path = "./report_data/"
     listConf.forEach(map => {
-      val pkgCode = map.get("pkg_code").toString
+      val pkgCode = map.get("pkg_code").toString.replace(",","','")
       val taProjectId = Integer.valueOf(map.get("ta_project_id").toString.replace(".0", ""))
       val sql =
         s"""
@@ -27,7 +27,7 @@ object OceanDataToTaMain {
            |,convert planaction
            |,classify adImpressions
            |from doris_boom.dws_ocean_day_pkg_plan_kpi
-           |where  data_date  between  '$startDay' AND '$endDay' and pkg_code='$pkgCode'
+           |where  data_date  between  '$startDay' AND '$endDay' and pkg_code in ('$pkgCode')
            |""".stripMargin
       val list: util.List[String] = DorisDBUtils.queryCsv(conn, sql)
       if (list.size() > 1) {
