@@ -7,7 +7,7 @@ import java.util
 object OceanDataToTaMain {
 
   def main(args: Array[String]): Unit = {
-    val startDay = DateUtils.getStartDay(-40)
+    val startDay = DateUtils.getStartDay(-1000)
     val endDay = DateUtils.getStartDay(-1)
     val conn = DorisDBUtils.getConnection
     val listConf = DorisDBUtils.queryMap(conn, "select pkg_code,pkg_name,ta_project_id  from  doris_boom.app_pkg_conf  where  ta_project_id is  not  null and ta_project_id<>''  order  by cast(ta_project_id as  int)")
@@ -27,7 +27,7 @@ object OceanDataToTaMain {
            |,convert planaction
            |,classify adImpressions
            |from doris_boom.dws_ocean_day_pkg_plan_kpi
-           |where  pkg_code='$pkgCode'
+           |where  where  data_date  between  '$startDay' AND '$endDay' and pkg_code='$pkgCode'
            |""".stripMargin
       val list: util.List[String] = DorisDBUtils.queryCsv(conn, sql)
       if (list.size() > 1) {
