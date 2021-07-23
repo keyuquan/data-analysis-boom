@@ -104,7 +104,7 @@ object DwsTaDay {
          |,ifnull(t1.add_ad_show_user_count,0) add_ad_show_user_count
          |,ifnull(t1.add_ad_show_count,0) add_ad_show_count
          |,ifnull(t1.ad_show_user_count,0)  ad_show_user_count
-         |,ifnull(t1.ad_show_count,0)  t1.ad_show_count,0
+         |,ifnull(t1.ad_show_count,0)  ad_show_count
          |,ifnull(t1.ecpm,0) ecpm
          |,ifnull(t1.add_ecpm,0) add_ecpm
          |,ifnull(t1.earnings,0) earnings
