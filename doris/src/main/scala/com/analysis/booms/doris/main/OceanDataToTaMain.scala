@@ -1,7 +1,6 @@
 package com.analysis.booms.doris.main
 
 import com.analysis.boom.common.utils.{DateUtils, DorisDBUtils, FileUtils, HttpUtils}
-
 import java.util
 
 object OceanDataToTaMain {
@@ -21,7 +20,7 @@ object OceanDataToTaMain {
            |concat(DATE_FORMAT(data_date , 'yyyyMMdd'),'_',plan_id)   ta_id
            |,data_date activeTime
            |,pkg_code pkginfo
-           |,concat(plan_id,'\t')  plan_id
+           |,plan_id
            |,cost plancost
            |,active  planactive
            |,convert planaction
