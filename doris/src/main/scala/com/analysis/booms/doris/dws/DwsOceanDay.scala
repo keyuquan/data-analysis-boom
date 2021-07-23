@@ -12,6 +12,7 @@ object DwsOceanDay {
          |t.stat_datetime data_date
          |,t_f.package pkg_code
          |,t.ad_id plan_id
+         |,t_f.campaign_id
          |,CASE WHEN find_in_set('INVENTORY_UNIVERSAL', t_f.inventory_type)>0 THEN  1
          |WHEN find_in_set('UNION_BOUTIQUE_GAME', t_f.inventory_type)>0 or find_in_set('INVENTORY_UNION_SLOT', t_f.inventory_type)>0 or find_in_set('INVENTORY_UNION_SPLASH_SLOT', t_f.inventory_type)>0  THEN 2
          |WHEN  t_f.inventory_type is not  null   THEN 3
