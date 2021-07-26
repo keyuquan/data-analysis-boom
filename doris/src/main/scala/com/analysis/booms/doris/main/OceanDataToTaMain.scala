@@ -12,7 +12,7 @@ object OceanDataToTaMain {
     val listConf = DorisDBUtils.queryMap(conn, "select group_concat(pkg_code) pkg_code,ta_project_id  from  doris_boom.app_pkg_conf  where  ta_project_id is  not  null and ta_project_id<>''  group  by  ta_project_id  order  by cast(ta_project_id as  int)")
     val path = "./report_data/"
     listConf.forEach(map => {
-      val pkgCode = map.get("pkg_code").toString.replace(",","','")
+      val pkgCode = map.get("pkg_code").toString.replace(",","','").replace(" ","")
       val taProjectId = Integer.valueOf(map.get("ta_project_id").toString.replace(".0", ""))
       val sql =
         s"""
